@@ -426,6 +426,9 @@ router.post('/login', async (req, res) => {
     const hostelToken = jwt.sign({
       id: hostelUserId,
       username: authResult.rollNo || authResult.email?.split('@')[0] || authResult.name,
+      name: authResult.name || authResult.fullName,
+      fullName: authResult.fullName || authResult.name,
+      rollNo: authResult.rollNo || authResult.username || '',
       email: authResult.email,
       gender: studentGender,
       role: hostelRole
@@ -484,18 +487,23 @@ router.get('/me', (req, res) => {
     return res.status(401).json({ success: false, message: 'No active session' });
   }
 
-  jwt.verify(token, GATEWAY_SECRET, (err, decoded) => {
-    let payload = decoded;
-    if (err) {
+  let payload = null;
+  try {
+    payload = jwt.verify(token, HOSTEL_JWT_SECRET);
+  } catch (e1) {
+    try {
+      payload = jwt.verify(token, GATEWAY_SECRET);
+    } catch (e2) {
       try {
         payload = jwt.decode(token);
-      } catch (e) {
+      } catch (e3) {
         return res.status(403).json({ success: false, message: 'Session expired or invalid' });
       }
     }
-    if (!payload) {
-      return res.status(403).json({ success: false, message: 'Session expired or invalid' });
-    }
+  }
+  if (!payload) {
+    return res.status(403).json({ success: false, message: 'Session expired or invalid' });
+  }
 
     const rawRole = String(payload.role || '').toUpperCase();
     const hostelRole = rawRole.includes('ADMIN') ? 'SUPER_ADMIN' : (rawRole.includes('TEACH') || rawRole.includes('FAC') || rawRole.includes('SUPER') ? 'SUPERINTENDENT' : 'STUDENT');
@@ -518,7 +526,6 @@ router.get('/me', (req, res) => {
     };
 
     return res.status(200).json({ success: true, user: formattedUser });
-  });
 });
 
 /**

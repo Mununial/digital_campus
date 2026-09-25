@@ -149,7 +149,10 @@
                 </label>
                 <div style="position: relative;">
                   <i class="fa-solid fa-lock" style="position: absolute; left: 12px; top: 12px; color: #94a3b8; font-size: 0.85rem;"></i>
-                  <input id="login-password" type="password" required placeholder="Enter password (e.g. DOB YYYY-MM-DD)" style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none;">
+                  <input id="login-password" type="password" required placeholder="Enter password (e.g. DOB YYYY-MM-DD)" style="width: 100%; padding: 10px 38px 10px 36px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none; box-sizing: border-box;">
+                  <button type="button" id="toggle-pwd-btn" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility" title="Show / Hide password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 0.85rem; padding: 4px 6px; display: flex; align-items: center; justify-content: center; outline: none;">
+                    <i id="toggle-pwd-icon" class="fa-solid fa-eye"></i>
+                  </button>
                 </div>
                 <p style="font-size: 0.71rem; color: #64748b; margin-top: 5px; margin-bottom: 0;">
                   Students can use Date of Birth (e.g. 2004-06-18)
@@ -387,6 +390,21 @@
     document.addEventListener('DOMContentLoaded', () => {
       checkPortalSession();
     });
+
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('login-password');
+      const icon = document.getElementById('toggle-pwd-icon');
+      if (!pwdInput || !icon) return;
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash';
+        icon.style.color = '#2563eb';
+      } else {
+        pwdInput.type = 'password';
+        icon.className = 'fa-solid fa-eye';
+        icon.style.color = '#94a3b8';
+      }
+    }
 
     function checkPortalSession() {
       const user = PortalAuth.getCurrentUser();

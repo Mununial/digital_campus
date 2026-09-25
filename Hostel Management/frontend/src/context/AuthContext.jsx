@@ -5,9 +5,28 @@ import ForcePasswordChangeModal from '../components/ForcePasswordChangeModal';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const initialToken = localStorage.getItem('authToken');
+  const storedPortalUser = (() => {
+    try {
+      const raw = localStorage.getItem('bec_portal_user') || localStorage.getItem('user');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      const roleStr = String(parsed.role || '').toUpperCase();
+      const hostelRole = roleStr.includes('ADMIN') ? 'SUPER_ADMIN' : (roleStr.includes('TEACH') || roleStr.includes('FAC') || roleStr.includes('SUPER') ? 'SUPERINTENDENT' : 'STUDENT');
+      return {
+        ...parsed,
+        role: hostelRole,
+        username: parsed.rollNo || parsed.username || parsed.email?.split('@')[0],
+        full_name: parsed.fullName || parsed.name
+      };
+    } catch (e) {
+      return null;
+    }
+  })();
+
+  const [user, setUser] = useState(storedPortalUser);
+  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(initialToken));
+  const [isLoading, setIsLoading] = useState(!initialToken);
 
   const checkAuthStatus = async () => {
     try {
@@ -15,15 +34,17 @@ export const AuthProvider = ({ children }) => {
       if (response.success && response.user) {
         setUser(response.user);
         setIsAuthenticated(true);
-      } else {
+      } else if (!initialToken) {
         localStorage.removeItem('authToken');
         setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
-      localStorage.removeItem('authToken');
-      setUser(null);
-      setIsAuthenticated(false);
+      if (error?.status === 401 || error?.status === 403) {
+        localStorage.removeItem('authToken');
+        setUser(null);
+        setIsAuthenticated(false);
+      }
     } finally {
       setIsLoading(false);
     }

@@ -44,10 +44,20 @@ import Loading from './components/Loading';
  * RoleRedirect — sends authenticated users to their role-specific dashboard.
  * Unauthenticated users go to /login (handled by ProtectedRoute).
  */
+const DoorwayLoginRedirect = () => {
+  React.useEffect(() => {
+    window.location.replace('/');
+  }, []);
+  return null;
+};
+
 const RoleRedirect = () => {
   const { user, isLoading } = useAuth();
   if (isLoading) return <div className="fullscreen-loading"><Loading message="Loading..." /></div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) {
+    window.location.replace('/');
+    return null;
+  }
   switch (user.role) {
     case 'SUPER_ADMIN':     return <Navigate to="/admin/dashboard" replace />;
     case 'SUPERINTENDENT':  return <Navigate to="/superintendent/dashboard" replace />;
@@ -59,10 +69,10 @@ const RoleRedirect = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/hostel">
         <Routes>
           {/* Public */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<DoorwayLoginRedirect />} />
 
           {/* Root — redirect by role */}
           <Route

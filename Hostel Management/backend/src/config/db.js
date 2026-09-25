@@ -999,6 +999,10 @@ const mockQuery = async (sql, params = []) => {
       }
     }
 
+    const VALID_STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+    const VALID_CATEGORIES = ['ELECTRICAL', 'PLUMBING', 'CARPENTRY', 'CLEANING', 'OTHER', 'CIVIL', 'INTERNET'];
+    const VALID_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+
     // Filter by status
     if (queryLower.includes('c.status = ?')) {
       const st = params.find(p => typeof p === 'string' && VALID_STATUSES.includes(p.toUpperCase()));
