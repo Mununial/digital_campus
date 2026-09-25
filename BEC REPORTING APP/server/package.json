@@ -1,0 +1,23 @@
+{
+  "name": "srms-backend",
+  "version": "1.0.0",
+  "description": "Backend for BEC SRMS",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^149.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "firebase-admin": "^14.2.0",
+    "puppeteer": "^25.4.0",
+    "puppeteer-core": "^25.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

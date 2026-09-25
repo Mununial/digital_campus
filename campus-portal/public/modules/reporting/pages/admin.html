@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Admin Dashboard - GenZ University SRMS</title>
+    <link rel="icon" type="image/png" href="../assets/images/bec_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <script src="/api/config.js"></script>
+    
+    <!-- Libraries for Excel, Security, and ZIP (Deferred for non-blocking fast render) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
+    <style>
+        .admin-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: var(--space-3) 0;
+            margin-bottom: var(--space-4);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse-green {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                transform: scale(1.08);
+                box-shadow: 0 0 0 7px rgba(16, 185, 129, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes pulse-red {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                transform: scale(1.08);
+                box-shadow: 0 0 0 7px rgba(239, 68, 68, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        /* 8 Compact Metric Cards */
+        .summary-cards-8 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: var(--space-4);
+        }
+        .summary-card-sm {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .summary-card-sm h3 {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            margin: 0;
+            font-weight: 700;
+        }
+        .summary-card-sm p {
+            color: var(--text-muted);
+            margin: 4px 0 0 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        /* Toolbar */
+        .admin-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: var(--space-4);
+            background: white;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            align-items: center;
+        }
+        .admin-toolbar input, .admin-toolbar select {
+            padding: 7px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        .admin-toolbar input {
+            flex: 2;
+            min-width: 220px;
+        }
+        .admin-toolbar select {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        /* 8-Column Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .data-table th, .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .data-table td {
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+        .data-table tbody tr:nth-child(even), table.data-table tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .data-table tbody tr, table.data-table tbody tr, .profile-panel-body table tbody tr {
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .data-table tbody tr:hover, table.data-table tbody tr:hover, .profile-panel-body table tbody tr:hover {
+            background-color: #e0f2fe !important; /* Soft distinct sky blue hover highlight */
+            box-shadow: inset 4px 0 0 #0284c7; /* Vibrant blue left indicator accent bar */
+            cursor: pointer;
+        }
+        .student-photo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #e2e8f0;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-draft { background: #e2e8f0; color: #475569; }
+        .badge-progress { background: #fef3c7; color: #b45309; }
+        .badge-submitted { background: #dbeafe; color: #1e40af; }
+        .badge-verified { background: #d1fae5; color: #047857; }
+        .badge-completed { background: #10b981; color: white; }
+        
+        .badge-facility {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .badge-facility.hostel { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+        .badge-facility.transport { background: #fae8ff; color: #86198f; border-color: #f5d0fe; }
+
+        /* Manage Button */
+        .btn-manage {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-manage:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        /* FULL-WIDTH STUDENT PROFILE PANEL */
+        .profile-panel-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        .profile-panel-overlay.active { display: flex; }
+        .profile-panel {
+            background: white;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .profile-panel-header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #1d4ed8;
+        }
+        .student-banner {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .student-banner-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+            background: #cbd5e1;
+        }
+        
+        .profile-nav-tabs {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .profile-nav-btn {
+            padding: 11px 16px;
+            border: none;
+            background: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .profile-nav-btn:hover { color: var(--primary-blue); background: #f1f5f9; }
+        .profile-nav-btn.active {
+            color: var(--primary-blue);
+            font-weight: 700;
+            border-bottom: 3px solid var(--primary-blue);
+            background: white;
+        }
+        
+        .profile-panel-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        .profile-tab-pane { display: none; }
+        .profile-tab-pane.active { display: block; }
+        
+        /* 2-Column Info Grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: white;
+            padding: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+        .detail-item {
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .detail-item label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .detail-item span {
+            font-size: 0.92rem;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        /* Mobile Card View Transformation */
+        @media (max-width: 768px) {
+            .data-table, .data-table tbody, .data-table tr, .data-table td {
+                display: block;
+                width: 100%;
+            }
+            .data-table thead { display: none; }
+            .data-table tr {
+                margin-bottom: 12px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                background: white;
+                padding: 12px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+            .data-table td {
+                padding: 4px 0;
+                border: none;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .data-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                font-size: 0.75rem;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+        }
+    </style>
+    <script src="../js/utils/errorHandler.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div>
+                        <h1 style="margin: 0; font-size: 1.4rem;">BEC Admin Reporting Management System</h1>
+                        <span style="font-size: 0.8rem; opacity: 0.9;">Official Master Portal</span>
+                    </div>
+
+                    <!-- GREEN LIVE SERVER ACTIVE STATUS BADGE -->
+                    <div id="server-status-indicator" style="display: flex; align-items: center; gap: 7px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; color: #10B981; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" title="Server Online & Operational">
+                        <span id="server-status-dot" style="width: 9px; height: 9px; background-color: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10B981; animation: pulse-green 2s infinite;"></span>
+                        <span id="server-status-text">Server Active</span>
+                    </div>
+                </div>
+                <div id="admin-user-info"></div>
+            </div>
+        </header>
+        
+        <main id="main-content" class="container" style="max-width: 1250px; flex: 1 0 auto; display: flex; flex-direction: column;">
+            <!-- 8 COMPACT SUMMARY CARDS -->
+            <div class="summary-cards-8">
+                <div class="summary-card-sm">
+                    <h3 id="stat-total">0</h3>
+                    <p>Total Registered</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-today" style="color: #2563eb;">0</h3>
+                    <p>Today's Reporting</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-completed" style="color: var(--success);">0</h3>
+                    <p>Completed</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-progress" style="color: #d97706;">0</h3>
+                    <p>In Progress</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-hostel" style="color: #4f46e5;">0</h3>
+                    <p>Hostel Req.</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-transport" style="color: #9333ea;">0</h3>
+                    <p>Transport Req.</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-pending-reg" style="color: #dc2626;">0</h3>
+                    <p>Pending Regd.</p>
+                </div>
+                <div class="summary-card-sm">
+                    <h3 id="stat-pending-id" style="color: #0891b2;">0</h3>
+                    <p>ID Card Pending</p>
+                </div>
+            </div>
+            
+            <!-- SINGLE CLEAN TOOLBAR -->
+            <div class="admin-toolbar">
+                <input type="text" id="search-input" placeholder="Search by Student Name, Student ID, Reg No, Mobile, Aadhaar...">
+                
+                <select id="filter-course">
+                    <option value="">All Courses</option>
+                    <option value="B.Tech">B.Tech</option>
+                    <option value="MBA">MBA</option>
+                    <option value="Diploma">Diploma</option>
+                </select>
+
+                <select id="filter-admission-type">
+                    <option value="">All Admission Types</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Lateral Entry">Lateral Entry (LE)</option>
+                    <option value="BTech-Regular">B.Tech Regular</option>
+                    <option value="BTech-LE">B.Tech Lateral Entry (LE)</option>
+                    <option value="Diploma-Regular">Diploma Regular</option>
+                    <option value="Diploma-LE">Diploma Lateral Entry (LE)</option>
+                    <option value="MBA">MBA</option>
+                </select>
+
+                <select id="filter-branch">
+                    <option value="">All Branches</option>
+                    <option value="Aeronautical Engineering">Aeronautical Engineering</option>
+                    <option value="Agriculture Engineering">Agriculture Engineering</option>
+                    <option value="Aircraft Maintenance Engineering">Aircraft Maintenance Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Civil and Environmental Engineering">Civil & Environmental Engg</option>
+                    <option value="Computer Science Engineering">Computer Science Engineering</option>
+                    <option value="CSE (Data Science)">CSE (Data Science)</option>
+                    <option value="Electrical Engineering">Electrical Engineering</option>
+                    <option value="Electrical and Computer Engineering">Electrical & Computer Engg</option>
+                    <option value="Food Engineering">Food Engineering</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Mechanical Mechatronics Engineering">Mechanical Mechatronics Engg</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Human Resource">Human Resource</option>
+                    <option value="Agri-Business">Agri-Business</option>
+                </select>
+
+                <select id="filter-caste">
+                    <option value="">All Castes / Categories</option>
+                    <option value="General">General</option>
+                    <option value="OBC">OBC</option>
+                    <option value="SC">SC</option>
+                    <option value="ST">ST</option>
+                    <option value="SEBC">SEBC</option>
+                    <option value="EWS">EWS</option>
+                    <option value="TFW">TFW</option>
+                </select>
+
+                <select id="filter-status">
+                    <option value="">All Statuses</option>
+                    <option value="Draft">Draft</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="SUBMITTED">Submitted</option>
+                    <option value="REVERTED">Reverted</option>
+                    <option value="VERIFIED">Verified</option>
+                    <option value="COMPLETED">Completed</option>
+                </select>
+
+                <select id="filter-facility">
+                    <option value="">All Facilities</option>
+                    <option value="Hostel">Hostel Only</option>
+                    <option value="Transport">Transport Only</option>
+                    <option value="Both">Hostel + Transport</option>
+                    <option value="None">No Facility (Day Scholar)</option>
+                </select>
+
+                <button class="btn btn-secondary" style="padding: 7px 12px; font-size: 0.85rem;" id="clear-filter-btn">Clear</button>
+                <button class="btn" style="padding: 7px 14px; font-size: 0.85rem; background-color: #10B981; color: white; border: none; margin-left: auto;" id="export-excel-btn">Export Excel</button>
+            </div>
+            
+            <!-- SIMPLE 8-COLUMN DATA TABLE -->
+            <div style="overflow-x: auto; margin-bottom: var(--space-4);">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Photo</th>
+                            <th>Student</th>
+                            <th>Course / Branch</th>
+                            <th>Mobile</th>
+                            <th>Facility</th>
+                            <th>Registration No.</th>
+                            <th>Status</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION CONTROLS -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) 0; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="page-size-select" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Show:</label>
+                    <select id="page-size-select" style="padding: 5px 10px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border-color); background: white; cursor: pointer; font-weight: 500;">
+                        <option value="10" selected>10 per page</option>
+                        <option value="25">25 per page</option>
+                        <option value="50">50 per page</option>
+                        <option value="100">100 per page</option>
+                        <option value="all">View All Students</option>
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button id="prev-page-btn" class="btn btn-secondary" style="padding: 6px 16px; font-size: 0.85rem;" disabled>Previous Page</button>
+                    <span id="page-info" style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">Page 1</span>
+                    <button id="next-page-btn" class="btn btn-secondary" style="padding: 6px 16px; font-size: 0.85rem;" disabled>Next Page</button>
+                </div>
+            </div>
+        </main>
+        <footer id="footer-container" style="margin-top: auto;"></footer>
+    </div>
+
+    <!-- FULL-WIDTH STRUCTURED STUDENT PROFILE PANEL (12 TABS) -->
+    <div class="profile-panel-overlay" id="profile-panel-overlay">
+        <div class="profile-panel">
+            <!-- PANEL HEADER -->
+            <div class="profile-panel-header">
+                <div class="student-banner">
+                    <img id="sp-banner-photo" class="student-banner-photo" src="" alt="Student Photo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23cbd5e1\'/><circle cx=\'50\' cy=\'38\' r=\'20\' fill=\'%2364748b\'/><path d=\'M 20 82 A 32 30 0 0 1 80 82 Z\' fill=\'%2364748b\'/></svg>'">
+                    <div>
+                        <h3 id="sp-banner-name" style="margin:0; font-size: 1.2rem;">Student Full Name</h3>
+                        <span id="sp-banner-sub" style="font-size: 0.82rem; opacity: 0.9;">B.Tech • CSE | Student ID: BEC-2026-001</span>
+                    </div>
+                </div>
+                <div>
+                    <span id="sp-banner-status" class="badge badge-progress" style="margin-right: 15px; font-size: 0.8rem;">IN PROGRESS</span>
+                    <button class="btn" style="background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1;" id="sp-close-btn">&times;</button>
+                </div>
+            </div>
+
+            <!-- 12 NAVIGATION TABS -->
+            <div class="profile-nav-tabs">
+                <button class="profile-nav-btn active" data-tab="tab-overview">Overview</button>
+                <button class="profile-nav-btn" data-tab="tab-personal">Personal</button>
+                <button class="profile-nav-btn" data-tab="tab-academic">Academic</button>
+                <button class="profile-nav-btn" data-tab="tab-contact">Contact</button>
+                <button class="profile-nav-btn" data-tab="tab-fees">Fees</button>
+                <button class="profile-nav-btn" data-tab="tab-documents">Documents</button>
+                <button class="profile-nav-btn" data-tab="tab-facilities">Facilities</button>
+                <button class="profile-nav-btn" data-tab="tab-antiragging">Anti-Ragging</button>
+                <button class="profile-nav-btn" data-tab="tab-registration">Registration</button>
+                <button class="profile-nav-btn" data-tab="tab-generated-forms">Generated Forms</button>
+                <button class="profile-nav-btn" data-tab="tab-idcard">ID Card</button>
+                <button class="profile-nav-btn" data-tab="tab-audit-log">Audit Log</button>
+            </div>
+
+            <!-- PANEL BODY PANES -->
+            <div class="profile-panel-body">
+                <!-- TAB 1: OVERVIEW -->
+                <div class="profile-tab-pane active" id="tab-overview">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Quick Executive Summary</h4>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; font-size:0.8rem;" id="btn-toggle-edit-overview">Edit Details</button>
+                    </div>
+                    <div id="overview-pane-content"></div>
+                </div>
+
+                <!-- TAB 2: PERSONAL -->
+                <div class="profile-tab-pane" id="tab-personal">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Personal Profile Details</h4>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; font-size:0.8rem;" id="btn-toggle-edit-personal">Edit Details</button>
+                    </div>
+                    <div id="personal-pane-content"></div>
+                </div>
+
+                <!-- TAB 3: ACADEMIC -->
+                <div class="profile-tab-pane" id="tab-academic">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Academic & Enrollment Record</h4>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; font-size:0.8rem;" id="btn-toggle-edit-academic">Edit Details</button>
+                    </div>
+                    <div id="academic-pane-content"></div>
+                </div>
+
+                <!-- TAB 4: CONTACT -->
+                <div class="profile-tab-pane" id="tab-contact">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Contact & Address Details</h4>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; font-size:0.8rem;" id="btn-toggle-edit-contact">Edit Details</button>
+                    </div>
+                    <div id="contact-pane-content"></div>
+                </div>
+
+                <!-- TAB 5: FEES -->
+                <div class="profile-tab-pane" id="tab-fees">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Fee Payment & Receipts Summary</h4>
+                        <button class="btn btn-secondary" style="padding: 4px 12px; font-size:0.8rem;" id="btn-toggle-edit-fees">Edit / Add Fees</button>
+                    </div>
+                    <div id="fees-pane-content"></div>
+                </div>
+
+                <!-- TAB 6: DOCUMENTS -->
+                <div class="profile-tab-pane" id="tab-documents">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; color:var(--primary-blue);">Uploaded Documents Checklist & Verification</h4>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn" style="padding: 5px 12px; font-size:0.8rem; background:#10B981; color:white; border:none;" id="btn-verify-all-docs">✓ Verify All Documents</button>
+                            <button class="btn btn-secondary" style="padding: 5px 12px; font-size:0.8rem;" id="btn-dl-verified-docs">Download Verified Docs</button>
+                            <button class="btn" style="padding: 5px 12px; font-size:0.8rem; background:#1e3a8a; color:white;" id="btn-dl-all-docs-zip">Download All (ZIP)</button>
+                        </div>
+                    </div>
+                    <div id="documents-pane-content"></div>
+                </div>
+
+                <!-- TAB 7: FACILITIES -->
+                <div class="profile-tab-pane" id="tab-facilities">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">Hostel & Transport Allotments</h4>
+                    <div id="facilities-pane-content"></div>
+                </div>
+
+                <!-- TAB 8: ANTI-RAGGING -->
+                <div class="profile-tab-pane" id="tab-antiragging">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">Anti-Ragging Undertaking Status</h4>
+                    <div id="antiragging-pane-content"></div>
+                </div>
+
+                <!-- TAB 9: REGISTRATION (ADMIN ONLY) -->
+                <div class="profile-tab-pane" id="tab-registration">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">Official Registration & Roll Assignment (Admin Only)</h4>
+                    <div id="registration-pane-content"></div>
+                </div>
+
+                <!-- TAB 10: GENERATED FORMS -->
+                <div class="profile-tab-pane" id="tab-generated-forms">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">Official Forms PDF Generation</h4>
+                    <div id="forms-pane-content"></div>
+                </div>
+
+                <!-- TAB 11: ID CARD (ADMIN ONLY) -->
+                <div class="profile-tab-pane" id="tab-idcard">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">Official Student Identity Card (CR-80 Standard • Admin Only)</h4>
+                    <div id="idcard-pane-content"></div>
+                </div>
+
+                <!-- TAB 12: AUDIT LOG -->
+                <div class="profile-tab-pane" id="tab-audit-log">
+                    <h4 style="margin-top:0; color:var(--primary-blue);">System Activity Audit Trail</h4>
+                    <div id="audit-pane-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REJECTION REASON MODAL -->
+    <div class="profile-panel-overlay" id="rejection-modal-overlay" style="z-index: 4000;">
+        <div style="background:white; padding:20px; border-radius:8px; width:90%; max-width:450px;">
+            <h4 style="margin-top:0; color:#dc2626;">Reject Document</h4>
+            <p style="font-size:0.85rem; color:#475569;">Please specify the reason for document rejection:</p>
+            <textarea id="rejection-reason-input" class="form-control" rows="3" style="width:100%; margin-bottom:15px;" placeholder="e.g. Image is blurry / Certificate signature not visible..."></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-secondary" style="padding: 5px 12px; font-size:0.85rem;" id="btn-cancel-rejection">Cancel</button>
+                <button class="btn" style="padding: 5px 12px; font-size:0.85rem; background:#dc2626; color:white; border:none;" id="btn-confirm-rejection">Confirm Rejection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANAGE ADMIN ACCOUNTS MODAL -->
+    <div class="profile-panel-overlay" id="admin-management-modal-overlay" style="z-index: 4500; display: none;">
+        <div style="background: white; padding: 24px; border-radius: 12px; width: 92%; max-width: 580px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #E2E8F0; padding-bottom: 12px;">
+                <h3 style="margin: 0; color: #1E293B; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                    🔑 Manage Admin Accounts
+                </h3>
+                <button id="btn-close-admin-modal" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748B;">&times;</button>
+            </div>
+
+            <!-- ADMIN REGISTRATION RESTRICTED BANNER -->
+            <div style="background: #FFFBEB; border: 1px solid #FCD34D; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                <h4 style="margin-top: 0; margin-bottom: 6px; font-size: 0.9rem; color: #92400E; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    🔒 Admin Registration Locked
+                </h4>
+                <p style="margin: 0; font-size: 0.82rem; color: #B45309; line-height: 1.4;">
+                    Creation of new Sub-Admin accounts has been permanently restricted by system security policy. Existing authorized admin accounts below will retain full management privileges.
+                </p>
+            </div>
+
+            <!-- EXISTING ADMINS LIST -->
+            <div>
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 0.95rem; color: #1E293B; font-weight: 600;">Authorized Admin Accounts</h4>
+                <div id="admin-accounts-list-container" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="text-align: center; color: #94A3B8; font-size: 0.85rem; padding: 12px;">Loading admin accounts...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHANGE ADMIN PASSWORD MODAL -->
+    <div class="profile-panel-overlay" id="change-password-modal-overlay" style="z-index: 4500; display: none;">
+        <div style="background: white; padding: 24px; border-radius: 12px; width: 92%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #E2E8F0; padding-bottom: 12px;">
+                <h3 style="margin: 0; color: #1E293B; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                    🔒 Change Admin Password
+                </h3>
+                <button id="btn-close-change-pass-modal" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748B;">&times;</button>
+            </div>
+
+            <form id="form-change-admin-password">
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Current Password</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="admin-current-password" placeholder="Enter current password" required class="form-control" style="width: 100%; padding: 8px 36px 8px 8px; font-size: 0.85rem; border: 1px solid #CBD5E1; border-radius: 6px;">
+                        <button type="button" class="btn-toggle-password" data-target="admin-current-password" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1rem; color: #64748B; padding: 2px;" title="Toggle Password Visibility">👁️</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">New Password (Min 6 characters)</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="admin-new-password" placeholder="Enter new password" required minlength="6" class="form-control" style="width: 100%; padding: 8px 36px 8px 8px; font-size: 0.85rem; border: 1px solid #CBD5E1; border-radius: 6px;">
+                        <button type="button" class="btn-toggle-password" data-target="admin-new-password" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1rem; color: #64748B; padding: 2px;" title="Toggle Password Visibility">👁️</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block; margin-bottom: 4px;">Confirm New Password</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="admin-confirm-password" placeholder="Re-enter new password" required minlength="6" class="form-control" style="width: 100%; padding: 8px 36px 8px 8px; font-size: 0.85rem; border: 1px solid #CBD5E1; border-radius: 6px;">
+                        <button type="button" class="btn-toggle-password" data-target="admin-confirm-password" style="position: absolute; right: 8px; background: none; border: none; cursor: pointer; font-size: 1rem; color: #64748B; padding: 2px;" title="Toggle Password Visibility">👁️</button>
+                    </div>
+                </div>
+
+                <div id="change-pass-error-msg" style="display: none; background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 14px; font-weight: 600;"></div>
+                <div id="change-pass-success-msg" style="display: none; background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 14px; font-weight: 600;"></div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="btn-cancel-change-pass" class="btn btn-secondary" style="flex: 1; padding: 9px; font-size: 0.85rem;">Cancel</button>
+                    <button type="submit" id="btn-submit-change-pass" class="btn" style="flex: 2; padding: 9px; font-size: 0.85rem; background: #0284c7; color: white; border: none; font-weight: 600; border-radius: 6px; cursor: pointer;">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../js/admin.js?v=1.1.7&t=1785261"></script>
+</body>
+</html>

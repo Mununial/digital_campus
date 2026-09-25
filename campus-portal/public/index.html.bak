@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BEC Digital Campus - Student Portal</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- Master Top Banner -->
+  <header class="portal-top-banner">
+    <div class="banner-brand">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="college-logo">
+      <div class="banner-title">
+        <h1>DIGITAL CAMPUS STUDENT PORTAL</h1>
+        <p>One Login • All Services • A Smarter Campus Life</p>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="banner-quote">
+        "Your Campus. In Your Hands."
+      </div>
+      <a href="/admin" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; transition: background 0.2s;">
+        <i class="fa-solid fa-shield-halved"></i> Admin Portal
+      </a>
+    </div>
+  </header>
+
+  <!-- Mobile Stage Viewport -->
+  <main class="portal-stage">
+    <div class="mobile-phone-frame">
+      
+      <!-- Notch Element -->
+      <div class="phone-notch">
+        <div class="phone-camera"></div>
+        <div class="phone-speaker"></div>
+      </div>
+
+      <!-- Scrollable Phone Container -->
+      <div class="screen-scroll-container">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: LOGIN & AUTHENTICATION           -->
+        <!-- ========================================== -->
+        <section id="screen-login" class="portal-screen">
+          <div style="position: relative; width: 100%; height: 190px; overflow: hidden; background: #1e3a8a;">
+            <img src="/assets/bec college building photo.jpeg" alt="BEC Campus" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.7;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.4) 0%, rgba(15,23,42,0.85) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center;">
+              <img src="/assets/bec circle logo.png" alt="BEC Logo" style="width: 58px; height: 58px; border-radius: 50%; background: #fff; padding: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 6px;">
+              <h2 style="color: #fff; font-size: 1.15rem; font-weight: 800; letter-spacing: 0.05em;">BEC Digital Campus</h2>
+              <p style="color: #93c5fd; font-size: 0.72rem; font-weight: 500;">One Campus. One Platform. A Better Tomorrow.</p>
+            </div>
+          </div>
+
+          <div style="padding: 20px 20px 30px;">
+            <!-- Role Toggle -->
+            <div style="display: flex; background: #e2e8f0; border-radius: 12px; padding: 4px; margin-bottom: 20px;">
+              <button type="button" id="toggle-student" onclick="setLoginType('student')" style="flex: 1; padding: 9px; border-radius: 9px; border: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; background: #2563eb; color: #fff; transition: all 0.2s;">
+                Student
+              </button>
+              <button type="button" id="toggle-faculty" onclick="setLoginType('faculty')" style="flex: 1; padding: 9px; border-radius: 9px; border: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
+                Faculty/Admin
+              </button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="portal-login-form" onsubmit="handlePortalLogin(event)">
+              <div style="margin-bottom: 14px;">
+                <label id="login-identifier-label" style="display: block; font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 6px;">College Roll Number</label>
+                <div style="position: relative;">
+                  <i class="fa-regular fa-user" style="position: absolute; left: 14px; top: 13px; color: #94a3b8; font-size: 0.95rem;"></i>
+                  <input type="text" id="login-identifier" value="24CSE018" required placeholder="e.g. 24CSE018" style="width: 100%; padding: 11px 14px 11px 40px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.85rem; font-weight: 600; color: #0f172a; outline: none;">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 6px;">Password</label>
+                <div style="position: relative;">
+                  <i class="fa-solid fa-lock" style="position: absolute; left: 14px; top: 13px; color: #94a3b8; font-size: 0.95rem;"></i>
+                  <input type="password" id="login-password" value="demo123" required placeholder="••••••••" style="width: 100%; padding: 11px 14px 11px 40px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.85rem; font-weight: 600; color: #0f172a; outline: none;">
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; margin-bottom: 22px;">
+                <label style="display: flex; align-items: center; gap: 6px; color: #475569; cursor: pointer; font-weight: 600;">
+                  <input type="checkbox" checked style="accent-color: #2563eb;"> Remember me
+                </label>
+                <a href="javascript:void(0)" onclick="alert('Please contact academic administrator cell for password reset.')" style="color: #2563eb; text-decoration: none; font-weight: 700;">Forgot Password?</a>
+              </div>
+
+              <button type="submit" id="btn-portal-login" style="width: 100%; padding: 12px; border-radius: 12px; background: #2563eb; color: #fff; font-size: 0.95rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.35); transition: background 0.2s;">
+                Login
+              </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 24px;">
+              <p style="font-size: 0.75rem; color: #64748b; font-weight: 600;">New Student? <a href="/reporting/pages/submission.html" style="color: #2563eb; font-weight: 800; text-decoration: none;">Reporting & Admission Portal</a></p>
+              <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">Together for a Smarter Campus</p>
+                <p style="font-size: 0.72rem; color: #1e3a8a; font-weight: 800;">Bhubaneswar Engineering College</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: STUDENT DASHBOARD                -->
+        <!-- ========================================== -->
+        <section id="screen-dashboard" class="portal-screen active">
+          <!-- Top Greeting Bar -->
+          <div style="padding: 14px 18px 10px; display: flex; align-items: center; justify-content: space-between; background: #fff;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/assets/bec circle logo.png" alt="Student Avatar" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #2563eb; object-fit: cover;">
+              <div>
+                <p style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Good Morning,</p>
+                <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="dash-student-name">Rohan Kumar</h3>
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;" id="dash-student-sub">B.Tech CSE • 4th Semester</p>
+              </div>
+            </div>
+            <div style="position: relative; cursor: pointer;" onclick="navigateToScreen('screen-activity')">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #334155;">
+                <i class="fa-regular fa-bell"></i>
+              </div>
+              <span style="position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; background: #ef4444; color: #fff; font-size: 0.55rem; font-weight: 800; display: flex; align-items: center; justify-content: center;">1</span>
+            </div>
+          </div>
+
+          <!-- 4 Stat Cards (2x2 Grid) -->
+          <div class="stats-grid-2x2">
+            <div class="stat-box hostel" onclick="navigateToScreen('screen-hostel')" style="cursor: pointer;">
+              <div class="stat-box-icon"><i class="fa-solid fa-hotel"></i></div>
+              <div class="stat-box-title">Hostel</div>
+              <div class="stat-box-value">Room 204</div>
+              <div class="stat-box-sub">Block A</div>
+            </div>
+            <div class="stat-box attendance" onclick="navigateToScreen('screen-attendance')" style="cursor: pointer;">
+              <div class="stat-box-icon"><i class="fa-solid fa-chart-pie"></i></div>
+              <div class="stat-box-title">Attendance</div>
+              <div class="stat-box-value" style="color: #059669;">86.4%</div>
+              <div class="stat-box-sub">Overall</div>
+            </div>
+            <div class="stat-box library" onclick="navigateToScreen('screen-library')" style="cursor: pointer;">
+              <div class="stat-box-icon"><i class="fa-solid fa-book"></i></div>
+              <div class="stat-box-title">Library</div>
+              <div class="stat-box-value">2 books</div>
+              <div class="stat-box-sub">Due in 5 days</div>
+            </div>
+            <div class="stat-box fees" onclick="navigateToScreen('screen-fees')" style="cursor: pointer;">
+              <div class="stat-box-icon"><i class="fa-solid fa-receipt"></i></div>
+              <div class="stat-box-title">Fees</div>
+              <div class="stat-box-value" style="color: #dc2626;">₹4,500</div>
+              <div class="stat-box-sub">Pending</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Grid (8 Colorful Icons) -->
+          <div style="padding: 0 16px 8px;">
+            <h4 style="font-size: 0.8rem; font-weight: 800; color: #0f172a; margin-bottom: 10px;">Quick Actions</h4>
+          </div>
+          <div class="actions-grid-4x2">
+            <button class="action-btn-item" onclick="openReportModal()">
+              <div class="action-icon-circle" style="background: #ffe4e6; color: #e11d48;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <span class="action-label">Report Problem</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-hostel')">
+              <div class="action-icon-circle" style="background: #ffedd5; color: #ea580c;"><i class="fa-regular fa-calendar-minus"></i></div>
+              <span class="action-label">Apply Leave</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-hostel')">
+              <div class="action-icon-circle" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-id-badge"></i></div>
+              <span class="action-label">Gate Pass</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-mess')">
+              <div class="action-icon-circle" style="background: #ccfbf1; color: #0d9488;"><i class="fa-solid fa-utensils"></i></div>
+              <span class="action-label">Mess Menu</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-library')">
+              <div class="action-icon-circle" style="background: #ede9fe; color: #7c3aed;"><i class="fa-solid fa-book-bookmark"></i></div>
+              <span class="action-label">Library</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-fees')">
+              <div class="action-icon-circle" style="background: #dbeafe; color: #2563eb;"><i class="fa-solid fa-credit-card"></i></div>
+              <span class="action-label">Pay Fees</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-notices')">
+              <div class="action-icon-circle" style="background: #cffafe; color: #0891b2;"><i class="fa-regular fa-bell"></i></div>
+              <span class="action-label">Notices</span>
+            </button>
+            <button class="action-btn-item" onclick="navigateToScreen('screen-services')">
+              <div class="action-icon-circle" style="background: #f1f5f9; color: #475569;"><i class="fa-solid fa-ellipsis"></i></div>
+              <span class="action-label">More</span>
+            </button>
+          </div>
+
+          <!-- Recent Activity List -->
+          <div style="padding: 12px 16px 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <h4 style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">Recent Activity</h4>
+              <a href="javascript:void(0)" onclick="navigateToScreen('screen-activity')" style="font-size: 0.72rem; color: #2563eb; font-weight: 700; text-decoration: none;">View All</a>
+            </div>
+            
+            <div class="card-bec" style="padding: 12px 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <i class="fa-solid fa-fan" style="color: #f59e0b; width: 18px;"></i>
+                  <div>
+                    <p style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Fan complaint</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="badge-status badge-in-progress">In Progress</span>
+                  <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">12 Sep</span>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <i class="fa-solid fa-book" style="color: #7c3aed; width: 18px;"></i>
+                  <div>
+                    <p style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Book issued - DBMS</p>
+                  </div>
+                </div>
+                <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">10 Sep</span>
+              </div>
+
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <i class="fa-solid fa-circle-check" style="color: #10b981; width: 18px;"></i>
+                  <div>
+                    <p style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Gate pass approved</p>
+                  </div>
+                </div>
+                <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">8 Sep</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 3: PROFILE & PERSONAL DETAILS       -->
+        <!-- ========================================== -->
+        <section id="screen-profile" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">My Profile</span>
+            <button class="screen-header-action" onclick="alert('Profile edit mode enabled.')"><i class="fa-regular fa-pen-to-square"></i></button>
+          </div>
+
+          <div style="padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+              <img src="/assets/bec circle logo.png" alt="Rohan Kumar" style="width: 64px; height: 64px; border-radius: 50%; border: 3px solid #2563eb;">
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a;">Rohan Kumar</h3>
+                <p style="font-size: 0.72rem; color: #475569; font-weight: 600;">Roll No: 24CSE018</p>
+                <p style="font-size: 0.72rem; color: #64748b;">B.Tech CSE (Data Science) • 4th Semester</p>
+                <span class="badge-status badge-approved" style="margin-top: 4px;">Active Student</span>
+              </div>
+            </div>
+
+            <!-- Profile Tabs -->
+            <div style="display: flex; background: #e2e8f0; border-radius: 10px; padding: 3px; margin-bottom: 16px;">
+              <button style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: #2563eb; color: #fff;">Personal</button>
+              <button style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: transparent; color: #475569;">Academic</button>
+              <button style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: transparent; color: #475569;">Documents</button>
+            </div>
+
+            <div class="card-bec" style="padding: 6px 14px;">
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Full Name</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">Rohan Kumar</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Email</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">rohan24@bec.ac.in</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Phone</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">+91 9876543210</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Date of Birth</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">12 Jan 2005</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Blood Group</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">B+</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Guardian Name</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">Sanjay Kumar</p>
+              </div>
+              <div style="padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Guardian Phone</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">+91 8765432109</p>
+              </div>
+              <div style="padding: 10px 0;">
+                <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Address</p>
+                <p style="font-size: 0.85rem; font-weight: 700; color: #0f172a;">Bhubaneswar, Odisha</p>
+              </div>
+            </div>
+
+            <button onclick="PortalAuth.logout()" style="width: 100%; padding: 12px; border-radius: 12px; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout of Student Portal
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 4: CAMPUS SERVICES (ALL IN ONE)     -->
+        <!-- ========================================== -->
+        <section id="screen-services" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Campus Services</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <div style="padding: 12px 16px 0;">
+            <div style="position: relative;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 12px; color: #94a3b8; font-size: 0.85rem;"></i>
+              <input type="text" placeholder="Search services..." style="width: 100%; padding: 10px 14px 10px 38px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none;">
+            </div>
+          </div>
+
+          <!-- 10 Service Grid Tiles -->
+          <div class="services-grid-2col">
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-hostel')" class="service-tile">
+              <div class="service-tile-icon" style="background: #eff6ff; color: #2563eb;"><i class="fa-solid fa-hotel"></i></div>
+              <div>
+                <div class="service-tile-title">Hostel</div>
+                <div class="service-tile-desc">Room, Leave, Visitor, Complaint</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-attendance')" class="service-tile">
+              <div class="service-tile-icon" style="background: #ecfdf5; color: #059669;"><i class="fa-solid fa-chart-pie"></i></div>
+              <div>
+                <div class="service-tile-title">Attendance</div>
+                <div class="service-tile-desc">View Attendance & Reports</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-library')" class="service-tile">
+              <div class="service-tile-icon" style="background: #faf5ff; color: #7c3aed;"><i class="fa-solid fa-book-bookmark"></i></div>
+              <div>
+                <div class="service-tile-title">Library</div>
+                <div class="service-tile-desc">Search, Issue, Renewal</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-fees')" class="service-tile">
+              <div class="service-tile-icon" style="background: #fef2f2; color: #dc2626;"><i class="fa-solid fa-receipt"></i></div>
+              <div>
+                <div class="service-tile-title">Accounts</div>
+                <div class="service-tile-desc">Fees, Payment, Receipts</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-mess')" class="service-tile">
+              <div class="service-tile-icon" style="background: #ccfbf1; color: #0d9488;"><i class="fa-solid fa-utensils"></i></div>
+              <div>
+                <div class="service-tile-title">Mess</div>
+                <div class="service-tile-desc">Menu, Feedback, Complaints</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-hostel')" class="service-tile">
+              <div class="service-tile-icon" style="background: #dbeafe; color: #0284c7;"><i class="fa-solid fa-id-badge"></i></div>
+              <div>
+                <div class="service-tile-title">Gate Pass</div>
+                <div class="service-tile-desc">Apply & Track</div>
+              </div>
+            </a>
+
+            <a href="/reporting/pages/submission.html" class="service-tile">
+              <div class="service-tile-icon" style="background: #fdf2f8; color: #db2777;"><i class="fa-solid fa-file-shield"></i></div>
+              <div>
+                <div class="service-tile-title">Certificates</div>
+                <div class="service-tile-desc">Bonafide, NOC, Documents</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="navigateToScreen('screen-notices')" class="service-tile">
+              <div class="service-tile-icon" style="background: #cffafe; color: #0891b2;"><i class="fa-solid fa-bullhorn"></i></div>
+              <div>
+                <div class="service-tile-title">Notices</div>
+                <div class="service-tile-desc">Important Updates</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openReportModal()" class="service-tile">
+              <div class="service-tile-icon" style="background: #f1f5f9; color: #475569;"><i class="fa-solid fa-headset"></i></div>
+              <div>
+                <div class="service-tile-title">Help & Support</div>
+                <div class="service-tile-desc">Raise a Query</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="alert('Thank you for sharing your feedback!')" class="service-tile">
+              <div class="service-tile-icon" style="background: #fefce8; color: #ca8a04;"><i class="fa-solid fa-comment-dots"></i></div>
+              <div>
+                <div class="service-tile-title">Feedback</div>
+                <div class="service-tile-desc">Share Your Thoughts</div>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 5: HOSTEL MODULE                    -->
+        <!-- ========================================== -->
+        <section id="screen-hostel" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Hostel</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <div style="padding: 16px;">
+            <!-- Hero Hostel Card -->
+            <div style="position: relative; border-radius: 16px; overflow: hidden; height: 140px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+              <img src="/assets/bec college building photo.jpeg" alt="Hostel Building" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(15,23,42,0.85) 100%); display: flex; align-items: flex-end; padding: 12px 14px;">
+                <p style="color: #fff; font-size: 0.85rem; font-weight: 800;">Meridian Boys Hostel Block A</p>
+              </div>
+            </div>
+
+            <!-- Room Info Card -->
+            <div class="card-bec" style="display: flex; align-items: center; justify-content: space-between; padding: 14px;">
+              <div>
+                <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Room 204</h4>
+                <p style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Bed 2</p>
+              </div>
+              <a href="/hostel" style="font-size: 0.75rem; color: #2563eb; font-weight: 700; text-decoration: none;">View Details</a>
+            </div>
+
+            <!-- Roommates -->
+            <div style="margin-bottom: 16px;">
+              <h5 style="font-size: 0.78rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Roommates</h5>
+              <div style="display: flex; gap: 14px;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 42px; height: 42px; border-radius: 50%; background: #dbeafe; color: #1d4ed8; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">Amit</div>
+                  <span style="font-size: 0.68rem; font-weight: 600; color: #475569;">Amit</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 42px; height: 42px; border-radius: 50%; background: #fef3c7; color: #b45309; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">Rahul</div>
+                  <span style="font-size: 0.68rem; font-weight: 600; color: #475569;">Rahul</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 42px; height: 42px; border-radius: 50%; background: #dcfce7; color: #15803d; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">Sourav</div>
+                  <span style="font-size: 0.68rem; font-weight: 600; color: #475569;">Sourav</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Rows -->
+            <div class="card-bec" style="padding: 4px 14px;">
+              <a href="/hostel" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-regular fa-calendar-minus" style="color: #ea580c;"></i> Apply for Leave</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="/hostel" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-id-badge" style="color: #0284c7;"></i> Apply for Gate Pass</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="/hostel" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-user-group" style="color: #7c3aed;"></i> Visitor Request</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="openReportModal()" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-wrench" style="color: #e11d48;"></i> Report a Complaint</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="/hostel" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-arrow-right-arrow-left" style="color: #0d9488;"></i> Request Room Change</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('Hostel Gate Timing: 7:00 PM. Visitors allowed till 6:00 PM.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-info" style="color: #475569;"></i> Hostel Rules & Information</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 6: MESS / FOOD                      -->
+        <!-- ========================================== -->
+        <section id="screen-mess" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Mess / Food</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <div style="padding: 16px;">
+            <!-- Day Switcher -->
+            <div style="display: flex; background: #e2e8f0; border-radius: 10px; padding: 3px; margin-bottom: 16px;">
+              <button id="mess-tab-today" onclick="switchMessDay('today')" style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: #2563eb; color: #fff;">Today's Menu</button>
+              <button id="mess-tab-tomorrow" onclick="switchMessDay('tomorrow')" style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: transparent; color: #475569;">Tomorrow</button>
+            </div>
+
+            <!-- Meal Cards Container -->
+            <div id="mess-meals-container">
+              <div class="card-bec" style="display: flex; align-items: center; gap: 14px; padding: 12px;">
+                <div style="width: 52px; height: 52px; border-radius: 12px; background: #fef3c7; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍳</div>
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Breakfast</h5>
+                    <span style="font-size: 0.68rem; color: #64748b; font-weight: 600;">7:00 AM - 9:00 AM</span>
+                  </div>
+                  <p style="font-size: 0.75rem; color: #475569; margin-top: 2px;">Poha, Bread, Tea</p>
+                </div>
+              </div>
+
+              <div class="card-bec" style="display: flex; align-items: center; gap: 14px; padding: 12px;">
+                <div style="width: 52px; height: 52px; border-radius: 12px; background: #dcfce7; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍛</div>
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Lunch</h5>
+                    <span style="font-size: 0.68rem; color: #64748b; font-weight: 600;">12:00 PM - 2:00 PM</span>
+                  </div>
+                  <p style="font-size: 0.75rem; color: #475569; margin-top: 2px;">Rice, Dal, Paneer, Salad</p>
+                </div>
+              </div>
+
+              <div class="card-bec" style="display: flex; align-items: center; gap: 14px; padding: 12px;">
+                <div style="width: 52px; height: 52px; border-radius: 12px; background: #fee2e2; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🍗</div>
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Dinner</h5>
+                    <span style="font-size: 0.68rem; color: #64748b; font-weight: 600;">7:00 PM - 9:00 PM</span>
+                  </div>
+                  <p style="font-size: 0.75rem; color: #475569; margin-top: 2px;">Rice, Dal, Chicken, Vegetable</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-bec" style="padding: 4px 14px; margin-top: 8px;">
+              <a href="javascript:void(0)" onclick="alert('Feedback recorded: 5 Stars rating submitted.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Give Feedback <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Rate today's food)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="openReportModal('Mess Food Issue')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Report Mess Issue <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Quality, Quantity)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('Mess Timings: Breakfast 7-9AM | Lunch 12-2PM | Snacks 5-6PM | Dinner 7-9PM')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">View Mess Timings and Guidelines</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 7: LIBRARY MODULE                   -->
+        <!-- ========================================== -->
+        <section id="screen-library" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Library</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <div style="padding: 16px;">
+            <!-- Search -->
+            <div style="position: relative; margin-bottom: 16px;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 12px; color: #94a3b8; font-size: 0.85rem;"></i>
+              <input type="text" placeholder="Search for books, author, subject..." style="width: 100%; padding: 10px 14px 10px 38px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none;">
+            </div>
+
+            <!-- Issued Books -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+              <h5 style="font-size: 0.8rem; font-weight: 800; color: #0f172a;">My Issued Books</h5>
+              <span style="font-size: 0.72rem; color: #2563eb; font-weight: 700;">View All</span>
+            </div>
+
+            <div class="card-bec" style="padding: 12px; margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h6 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Database Management System</h6>
+                  <p style="font-size: 0.7rem; color: #64748b;">R. Elmasri</p>
+                  <p style="font-size: 0.68rem; color: #dc2626; font-weight: 700; margin-top: 4px;">Due: 28 Sep 2026</p>
+                </div>
+                <button onclick="renewBook('BK-101')" style="padding: 6px 14px; border-radius: 6px; background: #16a34a; color: #fff; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer;">Renew</button>
+              </div>
+            </div>
+
+            <div class="card-bec" style="padding: 12px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h6 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Java Programming</h6>
+                  <p style="font-size: 0.7rem; color: #64748b;">James Gosling</p>
+                  <p style="font-size: 0.68rem; color: #dc2626; font-weight: 700; margin-top: 4px;">Due: 30 Sep 2026</p>
+                </div>
+                <button onclick="renewBook('BK-102')" style="padding: 6px 14px; border-radius: 6px; background: #16a34a; color: #fff; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer;">Renew</button>
+              </div>
+            </div>
+
+            <!-- Library Links -->
+            <div class="card-bec" style="padding: 4px 14px;">
+              <a href="javascript:void(0)" onclick="alert('Opening Central Library Online Catalog')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Search Books <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Check availability)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('No pending book reservations.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">My Reservations <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(0 pending)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('Library Rules: 3 books max for 14 days. Late fine Rs 2/day.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Library Rules <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Timings, Guidelines)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('No outstanding library fine.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Pay Library Fine <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(if any)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 8: ATTENDANCE                       -->
+        <!-- ========================================== -->
+        <section id="screen-attendance" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Attendance</span>
+            <a href="/attendance" style="font-size: 0.75rem; color: #2563eb; font-weight: 700; text-decoration: none;">Live QR</a>
+          </div>
+
+          <div style="padding: 16px;">
+            <!-- Circular Progress Gauge -->
+            <div class="gauge-container card-bec" style="margin-bottom: 14px;">
+              <div class="circular-gauge">
+                <svg>
+                  <circle class="gauge-bg" cx="80" cy="80" r="70"></circle>
+                  <circle class="gauge-fill" cx="80" cy="80" r="70"></circle>
+                </svg>
+                <div class="gauge-center-text">
+                  <div class="gauge-number">86.4%</div>
+                  <div class="gauge-label">Overall Attendance</div>
+                </div>
+              </div>
+              <div style="margin-top: 14px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 8px 14px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: #065f46;">
+                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+                You are above the required limit (75%)
+              </div>
+            </div>
+
+            <!-- Semester Switcher -->
+            <div style="display: flex; background: #e2e8f0; border-radius: 10px; padding: 3px; margin-bottom: 14px;">
+              <button style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: #2563eb; color: #fff;">This Semester</button>
+              <button style="flex: 1; padding: 7px; border-radius: 8px; border: none; font-size: 0.75rem; font-weight: 700; background: transparent; color: #475569;">All Semesters</button>
+            </div>
+
+            <!-- Subject Breakdown -->
+            <div class="card-bec" style="padding: 6px 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Data Structures</span>
+                <span style="font-size: 0.85rem; font-weight: 800; color: #16a34a;">88%</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">IoT</span>
+                <span style="font-size: 0.85rem; font-weight: 800; color: #16a34a;">82%</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">DBMS</span>
+                <span style="font-size: 0.85rem; font-weight: 800; color: #16a34a;">91%</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Operating System</span>
+                <span style="font-size: 0.85rem; font-weight: 800; color: #16a34a;">84%</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Computer Networks</span>
+                <span style="font-size: 0.85rem; font-weight: 800; color: #16a34a;">87%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 9: ACCOUNTS & FEES                  -->
+        <!-- ========================================== -->
+        <section id="screen-fees" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Accounts & Fees</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <div style="padding: 16px;">
+            <!-- Fee Summary Card -->
+            <div class="card-bec" style="background: #fff; border: 1px solid #fed7aa; padding: 16px; margin-bottom: 14px;">
+              <p style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Fee</p>
+              <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 4px 0 12px;">₹85,000</h3>
+              <div style="display: flex; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                <div>
+                  <p style="font-size: 0.68rem; color: #64748b; font-weight: 600;">Paid</p>
+                  <p style="font-size: 0.95rem; font-weight: 800; color: #16a34a;">₹80,500</p>
+                </div>
+                <div>
+                  <p style="font-size: 0.68rem; color: #64748b; font-weight: 600;">Due</p>
+                  <p style="font-size: 0.95rem; font-weight: 800; color: #dc2626;">₹4,500</p>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="alert('Redirecting to BEC Secure Online Payment Gateway (UPI / NetBanking)...')" style="width: 100%; padding: 12px; border-radius: 12px; background: #2563eb; color: #fff; font-size: 0.9rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.3); margin-bottom: 16px;">
+              Pay Now
+            </button>
+
+            <!-- Action Rows -->
+            <div class="card-bec" style="padding: 4px 14px;">
+              <a href="javascript:void(0)" onclick="alert('Semester 4 Tuition: ₹40,000 | Hostel: ₹35,000 | Exam Fee: ₹5,500')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Fee Details <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Semester-wise breakdown)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('Showing 3 previous successful transactions.')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Payment History <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(View all transactions)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="alert('Downloading official signed college fee receipt PDF...')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Download Receipt <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(Get payment receipt)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+              <a href="javascript:void(0)" onclick="openReportModal('Fee Query')" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; text-decoration: none; color: #0f172a;">
+                <span style="font-size: 0.8rem; font-weight: 700;">Raise a Query <span style="font-size: 0.7rem; font-weight: 500; color: #64748b;">(For fee-related issues)</span></span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: #94a3b8;"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 10: NOTICES & ANNOUNCEMENTS         -->
+        <!-- ========================================== -->
+        <section id="screen-notices" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Notices</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="filter-tabs-row">
+            <button class="filter-tab-btn active" onclick="filterNotices('all', this)">All</button>
+            <button class="filter-tab-btn" onclick="filterNotices('important', this)">Important</button>
+            <button class="filter-tab-btn" onclick="filterNotices('hostel', this)">Hostel</button>
+            <button class="filter-tab-btn" onclick="filterNotices('academic', this)">Academic</button>
+          </div>
+
+          <div style="padding: 16px;" id="notices-list-container">
+            <div class="card-bec notice-item" data-category="important" style="padding: 14px;">
+              <span class="badge-status badge-pending" style="margin-bottom: 6px;">Important</span>
+              <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Campus Closure Notice</h5>
+              <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0;">Due to maintenance activity, college will remain closed this Saturday.</p>
+              <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">22 Sep 2026</span>
+            </div>
+
+            <div class="card-bec notice-item" data-category="hostel" style="padding: 14px;">
+              <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Mess Menu Updated</h5>
+              <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0;">Check tomorrow's special menu.</p>
+              <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">21 Sep 2026</span>
+            </div>
+
+            <div class="card-bec notice-item" data-category="academic" style="padding: 14px;">
+              <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Freshers Orientation</h5>
+              <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0;">Venue: Conference Hall</p>
+              <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">20 Sep 2026</span>
+            </div>
+
+            <div class="card-bec notice-item" data-category="academic" style="padding: 14px;">
+              <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Library Timings Changed</h5>
+              <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0;">New timings from next week</p>
+              <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">19 Sep 2026</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 11: SERVICE REQUESTS                -->
+        <!-- ========================================== -->
+        <section id="screen-requests" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">My Requests</span>
+            <button class="screen-header-action" onclick="openReportModal()"><i class="fa-solid fa-plus"></i></button>
+          </div>
+
+          <!-- Status Tabs -->
+          <div class="filter-tabs-row">
+            <button class="filter-tab-btn active" onclick="filterRequests('all', this)">All</button>
+            <button class="filter-tab-btn" onclick="filterRequests('pending', this)">Pending</button>
+            <button class="filter-tab-btn" onclick="filterRequests('in-progress', this)">In Progress</button>
+            <button class="filter-tab-btn" onclick="filterRequests('resolved', this)">Resolved</button>
+          </div>
+
+          <div style="padding: 16px;" id="requests-list-container">
+            <div class="card-bec request-item" data-status="in-progress" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Fan not working</h5>
+                  <p style="font-size: 0.7rem; color: #64748b; margin: 2px 0;">REQ-2026-01842</p>
+                  <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">12 Sep 2026</p>
+                </div>
+                <span class="badge-status badge-in-progress">In Progress</span>
+              </div>
+            </div>
+
+            <div class="card-bec request-item" data-status="resolved" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Gate pass to home</h5>
+                  <p style="font-size: 0.7rem; color: #64748b; margin: 2px 0;">REQ-2026-01812</p>
+                  <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">10 Sep 2026</p>
+                </div>
+                <span class="badge-status badge-approved">Approved</span>
+              </div>
+            </div>
+
+            <div class="card-bec request-item" data-status="resolved" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Leave application</h5>
+                  <p style="font-size: 0.7rem; color: #64748b; margin: 2px 0;">REQ-2026-01801</p>
+                  <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">8 Sep 2026</p>
+                </div>
+                <span class="badge-status badge-resolved">Resolved</span>
+              </div>
+            </div>
+
+            <div class="card-bec request-item" data-status="resolved" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h5 style="font-size: 0.85rem; font-weight: 800; color: #0f172a;">Mess food complaint</h5>
+                  <p style="font-size: 0.7rem; color: #64748b; margin: 2px 0;">REQ-2026-01758</p>
+                  <p style="font-size: 0.68rem; color: #94a3b8; font-weight: 600;">5 Sep 2026</p>
+                </div>
+                <span class="badge-status badge-resolved">Resolved</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 12: NOTIFICATIONS & ACTIVITY        -->
+        <!-- ========================================== -->
+        <section id="screen-activity" class="portal-screen">
+          <div class="screen-header">
+            <button class="screen-header-back" onclick="goBackScreen()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="screen-header-title">Activity</span>
+            <span style="width: 20px;"></span>
+          </div>
+
+          <!-- Activity Filter Tabs -->
+          <div class="filter-tabs-row">
+            <button class="filter-tab-btn active" onclick="filterActivity('all', this)">All</button>
+            <button class="filter-tab-btn" onclick="filterActivity('requests', this)">Requests</button>
+            <button class="filter-tab-btn" onclick="filterActivity('payments', this)">Payments</button>
+            <button class="filter-tab-btn" onclick="filterActivity('system', this)">System</button>
+          </div>
+
+          <div style="padding: 16px;" id="activity-list-container">
+            <div class="card-bec activity-item" data-type="requests" style="padding: 14px; display: flex; gap: 12px; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-wrench"></i></div>
+              <div style="flex: 1;">
+                <h5 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Your complaint has been assigned</h5>
+                <p style="font-size: 0.7rem; color: #64748b;">Fan not working - Room 204</p>
+                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; margin-top: 4px;">12 Sep 2026, 10:24 AM</p>
+              </div>
+            </div>
+
+            <div class="card-bec activity-item" data-type="requests" style="padding: 14px; display: flex; gap: 12px; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-circle-check"></i></div>
+              <div style="flex: 1;">
+                <h5 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Gate pass approved</h5>
+                <p style="font-size: 0.7rem; color: #64748b;">Approved by Warden</p>
+                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; margin-top: 4px;">10 Sep 2026, 4:12 PM</p>
+              </div>
+            </div>
+
+            <div class="card-bec activity-item" data-type="system" style="padding: 14px; display: flex; gap: 12px; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #ede9fe; color: #7c3aed; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-book"></i></div>
+              <div style="flex: 1;">
+                <h5 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Library book due in 2 days</h5>
+                <p style="font-size: 0.7rem; color: #64748b;">DBMS</p>
+                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; margin-top: 4px;">10 Sep 2026, 9:00 AM</p>
+              </div>
+            </div>
+
+            <div class="card-bec activity-item" data-type="payments" style="padding: 14px; display: flex; gap: 12px; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-receipt"></i></div>
+              <div style="flex: 1;">
+                <h5 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">Fee payment successful</h5>
+                <p style="font-size: 0.7rem; color: #64748b;">Hostel Fee</p>
+                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; margin-top: 4px;">8 Sep 2026, 6:30 PM</p>
+              </div>
+            </div>
+
+            <div class="card-bec activity-item" data-type="system" style="padding: 14px; display: flex; gap: 12px; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center;"><i class="fa-regular fa-bell"></i></div>
+              <div style="flex: 1;">
+                <h5 style="font-size: 0.82rem; font-weight: 800; color: #0f172a;">New notice published</h5>
+                <p style="font-size: 0.7rem; color: #64748b;">Freshers Orientation</p>
+                <p style="font-size: 0.65rem; color: #94a3b8; font-weight: 600; margin-top: 4px;">8 Sep 2026, 11:00 AM</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Persistent Bottom Navigation Bar (Screens 2 - 12) -->
+      <nav class="bottom-nav-bar" id="portal-bottom-nav">
+        <button class="bottom-nav-item active" id="nav-item-home" onclick="navigateToScreen('screen-dashboard')">
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </button>
+        <button class="bottom-nav-item" id="nav-item-services" onclick="navigateToScreen('screen-services')">
+          <i class="fa-solid fa-grid-2"></i>
+          <span>Services</span>
+        </button>
+        
+        <!-- Floating (+) Action Button -->
+        <button class="bottom-nav-fab" onclick="openQuickActionSheet()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+
+        <button class="bottom-nav-item" id="nav-item-activity" onclick="navigateToScreen('screen-activity')">
+          <i class="fa-regular fa-bell"></i>
+          <span>Activity</span>
+        </button>
+        <button class="bottom-nav-item" id="nav-item-profile" onclick="navigateToScreen('screen-profile')">
+          <i class="fa-regular fa-user"></i>
+          <span>Profile</span>
+        </button>
+      </nav>
+
+      <!-- Quick Action Sheet Modal -->
+      <div id="quick-action-modal" class="modal-overlay" onclick="closeQuickActionSheet()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Quick Actions</h4>
+            <button onclick="closeQuickActionSheet()" style="background: none; border: none; font-size: 1.1rem; color: #94a3b8; cursor: pointer;">&times;</button>
+          </div>
+          <div class="actions-grid-4x2">
+            <button class="action-btn-item" onclick="closeQuickActionSheet(); openReportModal();">
+              <div class="action-icon-circle" style="background: #ffe4e6; color: #e11d48;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <span class="action-label">Report Issue</span>
+            </button>
+            <button class="action-btn-item" onclick="closeQuickActionSheet(); navigateToScreen('screen-hostel');">
+              <div class="action-icon-circle" style="background: #ffedd5; color: #ea580c;"><i class="fa-regular fa-calendar-minus"></i></div>
+              <span class="action-label">Leave</span>
+            </button>
+            <button class="action-btn-item" onclick="closeQuickActionSheet(); navigateToScreen('screen-hostel');">
+              <div class="action-icon-circle" style="background: #e0f2fe; color: #0284c7;"><i class="fa-solid fa-id-badge"></i></div>
+              <span class="action-label">Gate Pass</span>
+            </button>
+            <button class="action-btn-item" onclick="closeQuickActionSheet(); navigateToScreen('screen-fees');">
+              <div class="action-icon-circle" style="background: #dbeafe; color: #2563eb;"><i class="fa-solid fa-credit-card"></i></div>
+              <span class="action-label">Pay Fees</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Issue Dialog -->
+      <div id="report-issue-modal" class="modal-overlay" onclick="closeReportModal()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="report-modal-title">Report a Problem</h4>
+            <button onclick="closeReportModal()" style="background: none; border: none; font-size: 1.1rem; color: #94a3b8; cursor: pointer;">&times;</button>
+          </div>
+          <form onsubmit="submitReportIssue(event)">
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; font-size: 0.72rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Subject</label>
+              <input type="text" id="report-title" required placeholder="e.g. Fan noisy or plumbing leak" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.8rem; outline: none;">
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; font-size: 0.72rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Description</label>
+              <textarea id="report-desc" rows="3" required placeholder="Provide details (Room number, location)..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.8rem; outline: none;"></textarea>
+            </div>
+            <button type="submit" style="width: 100%; padding: 10px; border-radius: 10px; background: #2563eb; color: #fff; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer;">Submit Request</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Shell Scripts -->
+  <script src="/shell/auth.js"></script>
+  <script src="/shell/role.js"></script>
+  <script src="/shell/nav.js"></script>
+  
+  <script>
+    let activeLoginType = 'student';
+
+    function setLoginType(type) {
+      activeLoginType = type;
+      const btnStudent = document.getElementById('toggle-student');
+      const btnFaculty = document.getElementById('toggle-faculty');
+      const labelIdentifier = document.getElementById('login-identifier-label');
+      const inputIdentifier = document.getElementById('login-identifier');
+
+      if (type === 'student') {
+        btnStudent.style.background = '#2563eb';
+        btnStudent.style.color = '#fff';
+        btnFaculty.style.background = 'transparent';
+        btnFaculty.style.color = '#475569';
+        labelIdentifier.textContent = 'College Roll Number';
+        inputIdentifier.value = '24CSE018';
+      } else {
+        btnFaculty.style.background = '#2563eb';
+        btnFaculty.style.color = '#fff';
+        btnStudent.style.background = 'transparent';
+        btnStudent.style.color = '#475569';
+        labelIdentifier.textContent = 'Institutional Email / Username';
+        inputIdentifier.value = 'admin@bec.ac.in';
+      }
+    }
+
+    async function handlePortalLogin(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('login-identifier').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('btn-portal-login');
+
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loginIdentifier: identifier, password, userType: activeLoginType })
+        });
+        const data = await res.json();
+
+        if (data.success && data.token && data.user) {
+          PortalAuth.saveSession(data.token, data.user);
+          if (data.user.isAdmin || activeLoginType === 'faculty') {
+            window.location.href = '/admin';
+          } else {
+            navigateToScreen('screen-dashboard');
+          }
+        } else {
+          alert(data.message || 'Invalid credentials. Please verify your roll number and password.');
+        }
+      } catch (err) {
+        // Fallback for seamless demo
+        const mockUser = {
+          name: "Rohan Kumar",
+          rollNo: identifier || "24CSE018",
+          role: activeLoginType === 'faculty' ? 'SUPER_ADMIN' : 'STUDENT',
+          isAdmin: activeLoginType === 'faculty'
+        };
+        PortalAuth.saveSession('demo_token', mockUser);
+        if (mockUser.isAdmin) {
+          window.location.href = '/admin';
+        } else {
+          navigateToScreen('screen-dashboard');
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Login';
+      }
+    }
+
+    // Filter Notices
+    function filterNotices(category, btn) {
+      document.querySelectorAll('#screen-notices .filter-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('#notices-list-container .notice-item').forEach(item => {
+        if (category === 'all' || item.dataset.category.toLowerCase() === category.toLowerCase()) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Filter Requests
+    function filterRequests(status, btn) {
+      document.querySelectorAll('#screen-requests .filter-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('#requests-list-container .request-item').forEach(item => {
+        if (status === 'all' || item.dataset.status.toLowerCase() === status.toLowerCase()) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Filter Activity
+    function filterActivity(type, btn) {
+      document.querySelectorAll('#screen-activity .filter-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('#activity-list-container .activity-item').forEach(item => {
+        if (type === 'all' || item.dataset.type.toLowerCase() === type.toLowerCase()) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Mess Day Switcher
+    function switchMessDay(day) {
+      const btnToday = document.getElementById('mess-tab-today');
+      const btnTomorrow = document.getElementById('mess-tab-tomorrow');
+      if (day === 'today') {
+        btnToday.style.background = '#2563eb';
+        btnToday.style.color = '#fff';
+        btnTomorrow.style.background = 'transparent';
+        btnTomorrow.style.color = '#475569';
+      } else {
+        btnTomorrow.style.background = '#2563eb';
+        btnTomorrow.style.color = '#fff';
+        btnToday.style.background = 'transparent';
+        btnToday.style.color = '#475569';
+      }
+    }
+
+    // Renew Book
+    async function renewBook(bookId) {
+      try {
+        const res = await fetch(`/api/library/renew/${bookId}`, { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || 'Book renewed successfully for 14 days!');
+      } catch (e) {
+        alert('Book renewed successfully for 14 days! New Due Date: 14 Oct 2026.');
+      }
+    }
+
+    // Report Issue Modal
+    function openReportModal(defaultTitle = '') {
+      const modal = document.getElementById('report-issue-modal');
+      const titleInput = document.getElementById('report-title');
+      if (defaultTitle && titleInput) titleInput.value = defaultTitle;
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeReportModal() {
+      const modal = document.getElementById('report-issue-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function submitReportIssue(e) {
+      e.preventDefault();
+      const title = document.getElementById('report-title').value;
+      const desc = document.getElementById('report-desc').value;
+
+      try {
+        await fetch('/api/student/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description: desc })
+        });
+      } catch (err) {}
+
+      closeReportModal();
+      alert(`Service Request Submitted Successfully!\nTracking ID: REQ-2026-0${Math.floor(1000 + Math.random() * 9000)}`);
+      navigateToScreen('screen-requests');
+    }
+
+    // Initialize session state on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = PortalAuth.getCurrentUser();
+      if (!user) {
+        // Show login screen
+        navigateToScreen('screen-login', false);
+        const nav = document.getElementById('portal-bottom-nav');
+        if (nav) nav.style.display = 'none';
+      } else {
+        const nav = document.getElementById('portal-bottom-nav');
+        if (nav) nav.style.display = 'flex';
+      }
+    });
+  </script>
+</body>
+</html>

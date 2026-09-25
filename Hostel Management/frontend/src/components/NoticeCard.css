@@ -1,0 +1,284 @@
+/* NoticeCard styling - mobile first responsive design */
+.notice-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.notice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+/* Unread Notice Highlight for Students */
+.notice-card.unread-card {
+  border-left: 5px solid #2563eb;
+  background-color: #f8fafc;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.notice-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.notice-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Priority Badges - Color + Text + Icon */
+.notice-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.priority-urgent {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.priority-important {
+  background-color: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fdba74;
+}
+
+.priority-general {
+  background-color: #e0f2fe;
+  color: #075985;
+  border: 1px solid #bae6fd;
+}
+
+/* Read / Unread Badges */
+.read-state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.read-state-badge.unread {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.read-state-badge.read {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+.read-state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Status Badges */
+.notice-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.status-draft {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.status-published {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.status-archived {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Target Tag */
+.notice-target-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  background-color: #f8fafc;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Card Body */
+.notice-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.notice-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.notice-title:hover {
+  color: #2563eb;
+}
+
+.notice-description-snippet {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+/* Card Footer */
+.notice-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.notice-timestamps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.notice-date {
+  font-weight: 500;
+}
+
+.notice-expiration {
+  color: #b45309;
+  font-weight: 600;
+}
+
+/* Actions */
+.notice-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.notice-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-view {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.btn-view:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-edit {
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-edit:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-publish {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.btn-publish:hover {
+  background-color: #15803d;
+}
+
+.btn-archive {
+  background-color: #d97706;
+  color: #ffffff;
+}
+
+.btn-archive:hover {
+  background-color: #b45309;
+}
+
+.btn-delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 0.4rem 0.5rem;
+}
+
+.btn-delete:hover {
+  background-color: #fca5a5;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 480px) {
+  .notice-card {
+    padding: 1rem;
+  }
+  .notice-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .notice-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

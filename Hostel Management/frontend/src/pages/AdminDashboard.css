@@ -1,0 +1,179 @@
+/* AdminDashboard.css — Phase 6.5 */
+
+.admin-dashboard.page-container {
+  padding: 1.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dashboard-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dashboard-subtitle {
+  font-size: 0.83rem;
+  color: #64748b;
+  margin: 0.2rem 0 0;
+}
+
+.refresh-btn {
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 40px;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.refresh-btn:hover:not(:disabled) { opacity: 0.85; }
+.refresh-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.refresh-btn:focus-visible { outline: 3px solid #6366f1; outline-offset: 2px; }
+
+/* Quick actions */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.qa-btn {
+  padding: 0.45rem 0.9rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.7);
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  min-height: 38px;
+}
+.qa-btn:hover { background: #f1f5f9; border-color: #6366f1; color: #6366f1; }
+.qa-btn:active { transform: scale(0.97); }
+.qa-btn:focus-visible { outline: 3px solid #6366f1; outline-offset: 2px; }
+
+/* Error */
+.dashboard-error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  color: #b91c1c;
+  font-size: 0.88rem;
+  flex-wrap: wrap;
+}
+.dashboard-error p { margin: 0; flex: 1; }
+
+.retry-btn {
+  padding: 0.35rem 0.85rem;
+  border: 1px solid #dc2626;
+  border-radius: 7px;
+  background: transparent;
+  color: #dc2626;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.retry-btn:hover { background: #fca5a5; }
+.retry-btn:focus-visible { outline: 3px solid #dc2626; outline-offset: 2px; }
+
+/* Overall stats grid */
+.overall-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 0.9rem;
+}
+
+/* Charts row */
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Hostel section */
+.hostels-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.hostel-filter {
+  padding: 0.4rem 0.7rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.8);
+  font-size: 0.83rem;
+  color: #374151;
+  cursor: pointer;
+  min-height: 38px;
+}
+.hostel-filter:focus { outline: 3px solid #6366f1; border-color: #6366f1; }
+
+.hostel-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dashboard-charts { grid-template-columns: 1fr; }
+  .overall-stats-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .hostel-cards-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard.page-container { padding: 0.85rem; gap: 1rem; }
+  .dashboard-title { font-size: 1.25rem; }
+  .overall-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
+}
+
+@media (max-width: 360px) {
+  .overall-stats-grid { grid-template-columns: 1fr 1fr; }
+}

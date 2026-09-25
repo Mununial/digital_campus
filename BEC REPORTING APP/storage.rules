@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && firestore.get(/databases/(default)/documents/students/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Students can upload only to their own directory
+    match /students/{userId}/{docType}/{fileName} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      
+      // Strict upload rules for security
+      allow write: if request.auth != null 
+                   && request.auth.uid == userId
+                   // Restrict to max 5MB (5 * 1024 * 1024)
+                   && request.resource.size < 5242880
+                   // Restrict to images and PDFs
+                   && (request.resource.contentType.matches('image/.*') 
+                       || request.resource.contentType == 'application/pdf');
+                       
+      allow delete: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+  }
+}

@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if user is admin or sub-admin
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == 'admin@becbbsr.ac.in' ||
+        request.auth.token.email == 'becreportingapp@gmail.com' ||
+        request.auth.token.email == 'academic@becbbsr.ac.in' ||
+        (request.auth.token.email != null && (request.auth.token.email.matches('.*@becbbsr[.]ac[.]in$') || request.auth.token.email.matches('.*@becbbsr[.]in$'))) ||
+        (exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin') ||
+        (exists(/databases/$(database)/documents/students/$(request.auth.uid)) && get(/databases/$(database)/documents/students/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+    
+    // Function to check if user is reporting staff
+    function isStaff() {
+      return request.auth != null && (
+        (exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'staff') ||
+        (exists(/databases/$(database)/documents/students/$(request.auth.uid)) && get(/databases/$(database)/documents/students/$(request.auth.uid)).data.role == 'staff')
+      );
+    }
+
+    match /students/{studentId} {
+      // Students can read/update their own document where admin.uid matches their Firebase Auth UID
+      // Admins and Staff can read everything
+      
+      allow read: if request.auth != null && (
+        (resource != null && resource.data.admin.uid == request.auth.uid) || 
+        isAdmin() || 
+        isStaff()
+      );
+      
+      allow create: if request.auth != null && (
+        request.resource.data.admin.uid == request.auth.uid || 
+        isAdmin() || 
+        isStaff()
+      );
+      
+      allow update: if request.auth != null && (
+        (resource != null && resource.data.admin.uid == request.auth.uid) || 
+        isAdmin() || 
+        isStaff()
+      );
+      
+      allow delete: if request.auth != null && isAdmin();
+    }
+    
+    match /audit_logs/{logId} {
+      // Any authenticated user can create a log about themselves
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Only Admin and Staff can read logs
+      allow read: if isAdmin() || isStaff();
+      // Logs are immutable
+      allow update, delete: if false;
+    }
+  }
+}

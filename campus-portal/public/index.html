@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BEC Digital Campus - Unified Portal</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .portal-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .portal-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37,99,235,0.12);
+      border-color: #93c5fd;
+    }
+    .portal-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .portal-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+    .portal-desc {
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .portal-arrow {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .role-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .role-student { background: #dbeafe; color: #1e40af; }
+    .role-faculty { background: #fef3c7; color: #92400e; }
+    .role-admin { background: #fee2e2; color: #991b1b; }
+  </style>
+  <!-- Firebase Client SDK for Module A Seamless Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8-xW8PG4xDf-UI9pBH0jMwrWIIfk2mUQ",
+      authDomain: "bec-at-system.firebaseapp.com",
+      projectId: "bec-at-system",
+      storageBucket: "bec-at-system.firebasestorage.app",
+      messagingSenderId: "5275309105",
+      appId: "1:5275309105:web:051261270458c3695bb110"
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      window.firebaseClient = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword };
+    } catch (e) {
+      console.warn("Client Firebase notice:", e.message);
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <header class="portal-top-banner">
+    <div class="banner-brand">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="college-logo">
+      <div class="banner-title">
+        <h1>BHUBANESWAR ENGINEERING COLLEGE</h1>
+        <p>Digital Campus Unified Portal • One Login • All Modules</p>
+      </div>
+    </div>
+    <div id="header-right-action">
+      <a href="/admin" id="header-admin-btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-shield-halved"></i> Admin Hub
+      </a>
+    </div>
+  </header>
+
+  <!-- Stage Viewport -->
+  <main class="portal-stage">
+
+    <!-- ============================================================= -->
+    <!-- VIEW 1: ONE UNIFIED LOGIN PAGE (The only login in the portal) -->
+    <!-- ============================================================= -->
+    <section id="view-login" class="portal-screen active" style="display: block;">
+      <div class="login-card-container">
+        <div style="position: relative; width: 100%; height: 180px; overflow: hidden; background: #1e3a8a;">
+          <img src="/assets/bec college building photo.jpeg" alt="BEC Campus" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.65;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.35) 0%, rgba(15,23,42,0.92) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; text-align: center;">
+            <img src="/assets/bec circle logo.png" alt="BEC Logo" style="width: 56px; height: 56px; border-radius: 50%; background: #fff; padding: 2px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 6px;">
+            <h2 style="color: #fff; font-size: 1.25rem; font-weight: 800;">Digital Campus Sign-In</h2>
+            <p style="color: #93c5fd; font-size: 0.78rem; font-weight: 600;">One Single Sign-In to Unlock All Campus Systems</p>
+          </div>
+        </div>
+
+        <div style="padding: 28px 24px;">
+
+            <!-- Unified Single Login Form -->
+            <form id="portalLoginForm" onsubmit="handleUnifiedLogin(event)">
+              <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                  Username, Email, or Roll Number
+                </label>
+                <div style="position: relative;">
+                  <i class="fa-solid fa-user" style="position: absolute; left: 12px; top: 12px; color: #94a3b8; font-size: 0.85rem;"></i>
+                  <input id="login-identifier" type="text" required placeholder="e.g. BEC26002 or admin@bec.ac.in" style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none;">
+                </div>
+              </div>
+
+              <div style="margin-bottom: 18px;">
+                <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                  Password (or DOB YYYY-MM-DD)
+                </label>
+                <div style="position: relative;">
+                  <i class="fa-solid fa-lock" style="position: absolute; left: 12px; top: 12px; color: #94a3b8; font-size: 0.85rem;"></i>
+                  <input id="login-password" type="password" required placeholder="Enter password (e.g. DOB YYYY-MM-DD)" style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.82rem; outline: none;">
+                </div>
+                <p style="font-size: 0.71rem; color: #64748b; margin-top: 5px; margin-bottom: 0;">
+                  Students can use Date of Birth (e.g. 2004-06-18)
+                </p>
+              </div>
+
+              <button type="submit" id="login-submit-btn" style="width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 10px; font-weight: 800; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+                <i class="fa-solid fa-right-to-bracket"></i> Sign In Once
+              </button>
+
+              <div id="login-error-msg" style="display: none; margin-top: 12px; padding: 10px; border-radius: 8px; background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; font-size: 0.74rem; font-weight: 600;"></div>
+            </form>
+
+            <div style="margin-top: 26px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center;">
+              <p style="font-size: 0.72rem; color: #64748b; line-height: 1.4;">
+                <i class="fa-solid fa-shield-halved" style="color: #2563eb; margin-right: 4px;"></i>
+                Single unified access for Students, Faculty, and Administrators across all college modules.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= -->
+      <!-- VIEW 2: UNIFIED DASHBOARD (Minimal doorway dashboard)         -->
+      <!-- ============================================================= -->
+      <section id="view-dashboard" class="portal-screen" style="display: none;">
+
+        <!-- Authenticated Header Banner -->
+        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); color: #fff; padding: 24px 28px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <img src="/assets/bec circle logo.png" alt="BEC Logo" style="width: 50px; height: 50px; border-radius: 50%; background: #fff; padding: 2px;">
+              <div>
+                <h3 id="dash-user-name" style="font-size: 1.25rem; font-weight: 800; line-height: 1.2;">Welcome</h3>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                  <span id="dash-user-role" class="role-pill role-student">Student</span>
+                  <span id="dash-user-sub" style="font-size: 0.8rem; color: #93c5fd; font-weight: 600;"></span>
+                </div>
+              </div>
+            </div>
+            <button onclick="PortalAuth.logout()" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">
+              <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 6px;"></i> Logout
+            </button>
+          </div>
+          <p style="font-size: 0.82rem; color: #bfdbfe; font-weight: 500;">
+            All modules unlocked • Click any service below to enter directly
+          </p>
+        </div>
+
+        <div>
+          <!-- SERVICE SECTION TITLE -->
+          <div style="margin-bottom: 14px;">
+            <h4 style="font-size: 0.9rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.05em;">
+              Campus Services
+            </h4>
+          </div>
+
+          <!-- Services Grid -->
+          <div class="portal-services-grid">
+
+            <!-- SERVICE 1: ATTENDANCE (Direct Role Destination) -->
+            <a id="link-attendance" href="/attendance/student" class="portal-card">
+              <div class="portal-icon" style="background: #ecfdf5; color: #059669;">
+                <i class="fa-solid fa-qrcode"></i>
+              </div>
+              <div>
+                <div class="portal-title">Attendance</div>
+                <div class="portal-desc">View BPUT attendance records, daily subjects & QR scanner</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 2: HOSTEL (Direct Role Destination) -->
+            <a id="link-hostel" href="/hostel/student/dashboard" class="portal-card">
+              <div class="portal-icon" style="background: #eff6ff; color: #2563eb;">
+                <i class="fa-solid fa-hotel"></i>
+              </div>
+              <div>
+                <div class="portal-title">Hostel</div>
+                <div class="portal-desc">Room details, mess menu, leave requests & complaints</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 3: LIBRARY -->
+            <a href="/reporting/pages/dashboard.html" class="portal-card">
+              <div class="portal-icon" style="background: #faf5ff; color: #7c3aed;">
+                <i class="fa-solid fa-book-bookmark"></i>
+              </div>
+              <div>
+                <div class="portal-title">Library</div>
+                <div class="portal-desc">Search catalog, check issued books & renewal deadlines</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 4: FEES & ACCOUNTS -->
+            <a href="/reporting/pages/dashboard.html" class="portal-card">
+              <div class="portal-icon" style="background: #fef2f2; color: #dc2626;">
+                <i class="fa-solid fa-receipt"></i>
+              </div>
+              <div>
+                <div class="portal-title">Fees & Accounts</div>
+                <div class="portal-desc">College fee ledgers, payment history & official receipts</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 5: NOTICES -->
+            <a href="/hostel/student/notices" class="portal-card">
+              <div class="portal-icon" style="background: #cffafe; color: #0891b2;">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <div>
+                <div class="portal-title">Notices</div>
+                <div class="portal-desc">Official college circulars & departmental announcements</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 6: REQUESTS & COMPLAINTS -->
+            <a href="/hostel/student/complaints" class="portal-card">
+              <div class="portal-icon" style="background: #fdf2f8; color: #db2777;">
+                <i class="fa-solid fa-headset"></i>
+              </div>
+              <div>
+                <div class="portal-title">Requests & Complaints</div>
+                <div class="portal-desc">Raise maintenance tickets, gate passes & track resolution</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+
+            <!-- SERVICE 7: ACTIVITY -->
+            <a href="/hostel/student/activity" class="portal-card">
+              <div class="portal-icon" style="background: #fefce8; color: #ca8a04;">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              <div>
+                <div class="portal-title">Activity</div>
+                <div class="portal-desc">Timeline of gate passes, attendance logs & service actions</div>
+              </div>
+              <div class="portal-arrow">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+
+          <!-- ADMIN CONSOLES SECTION (Shown ONLY to Admin users) -->
+          <div id="admin-consoles-section" style="display: none; margin-top: 28px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <h4 style="font-size: 0.9rem; font-weight: 800; color: #991b1b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">
+              Administrator Consoles
+            </h4>
+
+            <div class="portal-services-grid">
+              <a href="/attendance/admin" class="portal-card" style="border-left: 4px solid #059669;">
+                <div class="portal-icon" style="background: #ecfdf5; color: #059669;">
+                  <i class="fa-solid fa-clipboard-user"></i>
+                </div>
+                <div>
+                  <div class="portal-title">Attendance Admin Console</div>
+                  <div class="portal-desc">Daily roll calls, live faculty photos & branch reports</div>
+                </div>
+                <div class="portal-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+              </a>
+
+              <a href="/hostel/admin/dashboard" class="portal-card" style="border-left: 4px solid #2563eb;">
+                <div class="portal-icon" style="background: #eff6ff; color: #2563eb;">
+                  <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div>
+                  <div class="portal-title">Hostel Admin Console</div>
+                  <div class="portal-desc">Room allotments, complaints, passes & mess ops</div>
+                </div>
+                <div class="portal-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+              </a>
+
+              <a href="/reporting/pages/admin.html" class="portal-card" style="border-left: 4px solid #7c3aed;">
+                <div class="portal-icon" style="background: #faf5ff; color: #7c3aed;">
+                  <i class="fa-solid fa-file-signature"></i>
+                </div>
+                <div>
+                  <div class="portal-title">Reporting Admin Console</div>
+                  <div class="portal-desc">Student records verification & dossier PDF generator</div>
+                </div>
+                <div class="portal-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Bottom Navigation Bar (Mobile only) -->
+      <nav class="portal-bottom-nav">
+        <a href="/" class="bottom-nav-item active">
+          <i class="fa-solid fa-house"></i>
+          <span>Portal</span>
+        </a>
+        <a id="nav-attendance" href="/attendance/student" class="bottom-nav-item">
+          <i class="fa-solid fa-qrcode"></i>
+          <span>Attendance</span>
+        </a>
+        <a id="nav-hostel" href="/hostel/student/dashboard" class="bottom-nav-item">
+          <i class="fa-solid fa-hotel"></i>
+          <span>Hostel</span>
+        </a>
+        <a href="/reporting/pages/dashboard.html" class="bottom-nav-item">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Reporting</span>
+        </a>
+        <a href="/admin" class="bottom-nav-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Admin</span>
+        </a>
+      </nav>
+
+  </main>
+
+  <script src="/shell/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      checkPortalSession();
+    });
+
+    function checkPortalSession() {
+      const user = PortalAuth.getCurrentUser();
+      const token = PortalAuth.getToken();
+
+      const loginView = document.getElementById('view-login');
+      const dashView = document.getElementById('view-dashboard');
+
+      if (token && user) {
+        loginView.style.display = 'none';
+        dashView.style.display = 'block';
+
+        const nameEl = document.getElementById('dash-user-name');
+        const roleEl = document.getElementById('dash-user-role');
+        const subEl = document.getElementById('dash-user-sub');
+        const adminSection = document.getElementById('admin-consoles-section');
+
+        const linkAttendance = document.getElementById('link-attendance');
+        const linkHostel = document.getElementById('link-hostel');
+        const navAttendance = document.getElementById('nav-attendance');
+        const navHostel = document.getElementById('nav-hostel');
+
+        nameEl.textContent = user.fullName || user.displayName || user.name || user.email || 'User';
+
+        const roleStr = String(user.role || (user.isAdmin ? 'Admin' : 'Student')).toUpperCase();
+        roleEl.textContent = roleStr;
+
+        if (roleStr === 'ADMIN' || roleStr === 'SUPER_ADMIN') {
+          roleEl.className = 'role-pill role-admin';
+          if (adminSection) adminSection.style.display = 'block';
+          if (linkAttendance) linkAttendance.href = '/attendance/admin';
+          if (linkHostel) linkHostel.href = '/hostel/admin/dashboard';
+          if (navAttendance) navAttendance.href = '/attendance/admin';
+          if (navHostel) navHostel.href = '/hostel/admin/dashboard';
+        } else if (roleStr === 'FACULTY' || roleStr === 'SUPERINTENDENT' || roleStr === 'TEACHER') {
+          roleEl.className = 'role-pill role-faculty';
+          if (adminSection) adminSection.style.display = 'block';
+          if (linkAttendance) linkAttendance.href = '/attendance/teacher';
+          if (linkHostel) linkHostel.href = '/hostel/superintendent/dashboard';
+          if (navAttendance) navAttendance.href = '/attendance/teacher';
+          if (navHostel) navHostel.href = '/hostel/superintendent/dashboard';
+        } else {
+          roleEl.className = 'role-pill role-student';
+          if (adminSection) adminSection.style.display = 'none';
+          if (linkAttendance) linkAttendance.href = '/attendance/student';
+          if (linkHostel) linkHostel.href = '/hostel/student/dashboard';
+          if (navAttendance) navAttendance.href = '/attendance/student';
+          if (navHostel) navHostel.href = '/hostel/student/dashboard';
+        }
+
+        subEl.textContent = user.rollNo || user.rollNumber || user.email || '';
+      } else {
+        loginView.style.display = 'block';
+        dashView.style.display = 'none';
+      }
+    }
+
+    async function handleUnifiedLogin(e) {
+      e.preventDefault();
+      const id = document.getElementById('login-identifier').value.trim();
+      const pwd = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-submit-btn');
+      const errBox = document.getElementById('login-error-msg');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying credentials...';
+      errBox.style.display = 'none';
+
+      try {
+        // Step 1: Call Unified Authentication Gateway
+        const res = await fetch('/api/gateway/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: id, password: pwd })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success && data.user) {
+          // Step 2: Try Firebase Client Sign-In if client SDK available
+          if (window.firebaseClient?.auth && data.user.email) {
+            try {
+              await window.firebaseClient.signInWithEmailAndPassword(
+                window.firebaseClient.auth,
+                data.user.email,
+                pwd
+              );
+            } catch (fbErr) {
+              console.warn("Client Firebase SDK login notice:", fbErr.message);
+              if (window.firebaseClient.createUserWithEmailAndPassword) {
+                try {
+                  await window.firebaseClient.createUserWithEmailAndPassword(
+                    window.firebaseClient.auth,
+                    data.user.email,
+                    pwd
+                  );
+                } catch (cErr) {
+                  console.warn("Client Firebase Auth sync notice:", cErr.message);
+                }
+              }
+            }
+          }
+
+          // Step 3: Seed tokens across Module A, Module B, and Module C
+          PortalAuth.saveSession(
+            data.tokens?.gateway || data.tokens?.hostel || 'token',
+            data.user,
+            data.tokens || {}
+          );
+
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Success! Opening Dashboard...';
+          btn.style.background = '#16a34a';
+
+          setTimeout(() => {
+            checkPortalSession();
+          }, 250);
+        } else {
+          errBox.style.display = 'block';
+          errBox.textContent = data.message || 'Invalid credentials. User not found or incorrect password.';
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In Once';
+          btn.style.background = '#2563eb';
+        }
+      } catch (err) {
+        errBox.style.display = 'block';
+        errBox.textContent = 'Server connection error. Please try again.';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In Once';
+        btn.style.background = '#2563eb';
+      }
+    }
+  </script>
+</body>
+</html>

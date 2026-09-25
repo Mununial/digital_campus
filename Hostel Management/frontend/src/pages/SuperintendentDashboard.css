@@ -1,0 +1,54 @@
+/* SuperintendentDashboard.css — reuses shared pattern from AdminDashboard */
+
+.super-dashboard.page-container {
+  padding: 1.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.super-dashboard .dashboard-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.super-dashboard .dashboard-subtitle {
+  font-size: 0.83rem;
+  color: #64748b;
+  margin: 0.2rem 0 0;
+}
+
+/* Shared classes — dashboard-header, refresh-btn, quick-actions, qa-btn,
+   dashboard-error, retry-btn, overall-stats-grid, dashboard-charts,
+   hostels-section, hostels-section__header, section-title, hostel-filter,
+   hostel-cards-grid, empty-state are defined in AdminDashboard.css.
+   We keep this file for superintendent-specific overrides only. */
+
+.super-dashboard .refresh-btn {
+  background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+}
+
+.super-dashboard .qa-btn:hover {
+  color: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+@media (max-width: 768px) {
+  .super-dashboard .dashboard-charts { grid-template-columns: 1fr; }
+  .super-dashboard .overall-stats-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .super-dashboard .hostel-cards-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .super-dashboard.page-container { padding: 0.85rem; gap: 1rem; }
+  .super-dashboard .dashboard-title { font-size: 1.25rem; }
+  .super-dashboard .overall-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
+}

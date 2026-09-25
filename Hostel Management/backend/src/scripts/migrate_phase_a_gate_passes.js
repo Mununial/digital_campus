@@ -1,0 +1,47 @@
+const db = require('../config/db');
+
+async function runMigration() {
+  try {
+    console.log('Running Gate Passes migration on Hostinger MySQL database...');
+
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS \`gate_passes\` (
+        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`pass_number\` VARCHAR(50) NOT NULL UNIQUE,
+        \`student_id\` INT NOT NULL,
+        \`hostel_id\` INT NOT NULL,
+        \`pass_type\` ENUM('LOCAL_OUTING', 'OUTSTATION', 'LATE_NIGHT', 'EMERGENCY') NOT NULL DEFAULT 'LOCAL_OUTING',
+        \`out_date_time\` DATETIME NOT NULL,
+        \`expected_in_date_time\` DATETIME NOT NULL,
+        \`actual_out_time\` DATETIME NULL DEFAULT NULL,
+        \`actual_in_time\` DATETIME NULL DEFAULT NULL,
+        \`reason\` TEXT NOT NULL,
+        \`destination\` VARCHAR(255) NULL DEFAULT NULL,
+        \`parent_phone\` VARCHAR(20) NULL DEFAULT NULL,
+        \`status\` ENUM('PENDING', 'APPROVED', 'REJECTED', 'CHECKED_OUT', 'RETURNED', 'EXPIRED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+        \`approved_by\` INT NULL DEFAULT NULL,
+        \`approved_at\` DATETIME NULL DEFAULT NULL,
+        \`rejection_reason\` TEXT NULL DEFAULT NULL,
+        \`security_remarks\` TEXT NULL DEFAULT NULL,
+        \`created_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        \`updated_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (\`student_id\`) REFERENCES \`students\` (\`id\`) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY (\`hostel_id\`) REFERENCES \`hostels\` (\`id\`) ON DELETE RESTRICT ON UPDATE CASCADE,
+        FOREIGN KEY (\`approved_by\`) REFERENCES \`users\` (\`id\`) ON DELETE SET NULL ON UPDATE CASCADE,
+        INDEX \`idx_gate_pass_student_status\` (\`student_id\`, \`status\`),
+        INDEX \`idx_gate_pass_hostel_status\` (\`hostel_id\`, \`status\`),
+        INDEX \`idx_gate_pass_number\` (\`pass_number\`),
+        INDEX \`idx_gate_pass_out_time\` (\`out_date_time\`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `;
+
+    await db.pool.query(createTableQuery);
+    console.log('✓ Successfully created `gate_passes` table with indexes and constraints.');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Migration failed:', error);
+    process.exit(1);
+  }
+}
+
+runMigration();

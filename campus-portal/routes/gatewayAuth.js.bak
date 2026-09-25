@@ -1,0 +1,164 @@
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { authGateway } = require('../middleware/authGateway');
+
+const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
+
+// Seed profile for Rohan Kumar (matches approved reference design)
+const DEFAULT_STUDENT = {
+  id: 'STD_24CSE018',
+  uid: 'STD_24CSE018',
+  email: 'rohan24@bec.ac.in',
+  name: 'Rohan Kumar',
+  rollNo: '24CSE018',
+  role: 'STUDENT',
+  isAdmin: false,
+  branch: 'B.Tech CSE (Data Science)',
+  semester: 4,
+  bloodGroup: 'B+',
+  dob: '2005-01-12',
+  phone: '+91 9876543210',
+  guardianName: 'Sanjay Kumar',
+  guardianPhone: '+91 8765432109',
+  address: 'Bhubaneswar, Odisha',
+  hostelRoom: 'Room 204, Bed 2',
+  hostelBlock: 'Meridian Boys Hostel Block A',
+  attendanceOverall: 86.4,
+  feesPending: 4500,
+  feesTotal: 85000,
+  feesPaid: 80500,
+  libraryBooksCount: 2
+};
+
+const DEFAULT_ADMIN = {
+  id: 'ADM_001',
+  uid: 'ADM_001',
+  email: 'admin@bec.ac.in',
+  name: 'BEC Administrator',
+  rollNo: 'ADMIN',
+  role: 'SUPER_ADMIN',
+  isAdmin: true,
+  branch: 'Central Administration',
+  semester: 0
+};
+
+const DEFAULT_FACULTY = {
+  id: 'FAC_001',
+  uid: 'FAC_001',
+  email: 'faculty@bec.ac.in',
+  name: 'Prof. S. Mohanty',
+  rollNo: 'FACULTY',
+  role: 'SUPERINTENDENT',
+  isAdmin: false,
+  branch: 'Computer Science & Engineering'
+};
+
+/**
+ * Universal Login Endpoint
+ * Accepts: email, roll number, registration number, or username
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { loginIdentifier, email, rollNo, password, userType } = req.body;
+    const identifier = (loginIdentifier || email || rollNo || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+
+    if (!identifier) {
+      return res.status(400).json({
+        success: false,
+        message: 'College Roll Number or Email is required.'
+      });
+    }
+
+    let authenticatedUser = null;
+
+    // Check Admin login
+    if (
+      identifier === 'admin@bec.ac.in' ||
+      identifier === 'admin' ||
+      identifier === 'superadmin' ||
+      identifier.includes('admin')
+    ) {
+      authenticatedUser = { ...DEFAULT_ADMIN };
+    }
+    // Check Faculty login
+    else if (
+      identifier === 'faculty@bec.ac.in' ||
+      identifier === 'faculty' ||
+      identifier === 'warden' ||
+      userType === 'faculty'
+    ) {
+      authenticatedUser = { ...DEFAULT_FACULTY };
+    }
+    // Default / Student matching
+    else {
+      authenticatedUser = {
+        ...DEFAULT_STUDENT,
+        rollNo: identifier.toUpperCase().includes('CSE') ? identifier.toUpperCase() : (DEFAULT_STUDENT.rollNo || identifier.toUpperCase()),
+        email: identifier.includes('@') ? identifier : DEFAULT_STUDENT.email
+      };
+    }
+
+    // Token creation
+    const tokenPayload = {
+      id: authenticatedUser.id,
+      uid: authenticatedUser.uid,
+      email: authenticatedUser.email,
+      name: authenticatedUser.name,
+      rollNo: authenticatedUser.rollNo,
+      role: authenticatedUser.role,
+      isAdmin: authenticatedUser.isAdmin,
+      branch: authenticatedUser.branch,
+      semester: authenticatedUser.semester
+    };
+
+    const token = jwt.sign(tokenPayload, GATEWAY_SECRET, { expiresIn: '7d' });
+
+    res.cookie('portalToken', token, { httpOnly: false, maxAge: 7 * 24 * 3600 * 1000 });
+    res.cookie('token', token, { httpOnly: false, maxAge: 7 * 24 * 3600 * 1000 });
+    res.cookie('authToken', token, { httpOnly: false, maxAge: 7 * 24 * 3600 * 1000 });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: authenticatedUser
+    });
+  } catch (err) {
+    console.error('[Gateway Auth Error]:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Authentication service encountered an unexpected error.'
+    });
+  }
+});
+
+/**
+ * Get Current Active User
+ */
+router.get('/me', authGateway, (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: {
+      ...DEFAULT_STUDENT,
+      ...req.user
+    }
+  });
+});
+
+/**
+ * Logout
+ */
+router.post('/logout', (req, res) => {
+  res.clearCookie('portalToken');
+  res.clearCookie('token');
+  res.clearCookie('authToken');
+  res.status(200).json({
+    success: true,
+    message: 'Logged out successfully.'
+  });
+});
+
+module.exports = router;

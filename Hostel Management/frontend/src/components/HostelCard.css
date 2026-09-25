@@ -1,0 +1,110 @@
+/* HostelCard.css */
+
+.hostel-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  min-width: 0;
+}
+
+.hostel-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.hostel-card__header {
+  border-bottom: 2px solid rgba(99,102,241,0.2);
+  padding-bottom: 0.65rem;
+}
+
+.hostel-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.hostel-card__empty {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0;
+}
+
+.hostel-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hostel-card__section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+  margin: 0;
+}
+
+.hostel-card__stats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hostel-card__stats li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.83rem;
+  color: #475569;
+}
+
+.hostel-card__stats li span  { font-weight: 500; }
+.hostel-card__stats li strong { font-weight: 700; color: #1e293b; }
+
+/* Accent colors — text only, accessible */
+.stat--green strong { color: #16a34a; }
+.stat--red    strong { color: #dc2626; }
+.stat--grey   strong { color: #64748b; }
+.stat--blue   strong { color: #2563eb; }
+.stat--purple strong { color: #7c3aed; }
+.stat--amber  strong { color: #d97706; }
+
+.hostel-card__btn {
+  margin-top: auto;
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s, transform 0.15s;
+  min-height: 40px; /* touch target */
+}
+
+.hostel-card__btn:hover  { opacity: 0.87; }
+.hostel-card__btn:active { transform: scale(0.97); }
+.hostel-card__btn:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .hostel-card { padding: 1rem; }
+}

@@ -1,0 +1,413 @@
+/* Gate Pass & Outing System Styling */
+.gatepass-container {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.gatepass-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gatepass-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-main, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gatepass-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.kpi-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.kpi-icon-wrapper.yellow { background: #fef3c7; color: #d97706; }
+.kpi-icon-wrapper.green { background: #dcfce7; color: #15803d; }
+.kpi-icon-wrapper.purple { background: #f3e8ff; color: #7e22ce; }
+.kpi-icon-wrapper.blue { background: #e0f2fe; color: #0369a1; }
+
+.kpi-info h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.kpi-info p {
+  margin: 0.2rem 0 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Controls & Tabs */
+.gatepass-controls {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tab-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.tab-btn.active {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+.tab-btn.security-tab {
+  margin-left: auto;
+  background: #1e1b4b;
+  color: #fbbf24;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  min-width: 250px;
+  position: relative;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding: 0.6rem 1rem 0.6rem 2.2rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.filter-select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* Card Grid */
+.pass-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+.pass-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.pass-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.pass-number {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+  font-family: monospace;
+  background: #f8fafc;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-type {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.badge-type.LOCAL_OUTING { background: #e0e7ff; color: #4338ca; }
+.badge-type.OUTSTATION { background: #fce7f3; color: #be185d; }
+.badge-type.LATE_NIGHT { background: #fef3c7; color: #b45309; }
+.badge-type.EMERGENCY { background: #fee2e2; color: #b91c1c; }
+
+.pass-status-pill {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.status-PENDING { background: #fef3c7; color: #b45309; }
+.status-APPROVED { background: #dcfce7; color: #15803d; }
+.status-CHECKED_OUT { background: #f3e8ff; color: #7e22ce; }
+.status-RETURNED { background: #e0f2fe; color: #0369a1; }
+.status-REJECTED { background: #fee2e2; color: #b91c1c; }
+.status-CANCELLED { background: #f1f5f9; color: #64748b; }
+
+.student-info-block {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.student-name {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.student-sub {
+  font-size: 0.85rem;
+  color: #64748b;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.timing-block {
+  background: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+
+}
+
+.timing-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.timing-row:last-child {
+  margin-bottom: 0;
+}
+
+.timing-label {
+  color: #64748b;
+}
+
+.timing-val {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.pass-reason {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.pass-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: background 0.2s;
+}
+
+.btn-approve { background: #16a34a; color: #ffffff; }
+.btn-approve:hover { background: #15803d; }
+
+.btn-reject { background: #dc2626; color: #ffffff; }
+.btn-reject:hover { background: #b91c1c; }
+
+.btn-ticket { background: #4f46e5; color: #ffffff; width: 100%; }
+.btn-ticket:hover { background: #4338ca; }
+
+.btn-cancel { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+.btn-cancel:hover { background: #e2e8f0; color: #0f172a; }
+
+/* Security Guard Scanner Box */
+.security-scanner-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px rgba(30, 27, 75, 0.25);
+}
+
+.scanner-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scanner-input-box {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.scanner-input-box input {
+  flex: 1;
+  min-width: 280px;
+  padding: 0.8rem 1.25rem;
+  border-radius: 10px;
+  border: 2px solid #6366f1;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-family: monospace;
+}
+
+.btn-verify {
+  background: #fbbf24;
+  color: #0f172a;
+  font-weight: 800;
+  padding: 0.8rem 1.75rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn-verify:hover {
+  background: #f59e0b;
+}
+
+/* Modal Ticket */
+.ticket-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90%;
+  padding: 1.75rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.ticket-border-header {
+  text-align: center;
+  border-bottom: 2px dashed #cbd5e1;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.ticket-border-header h2 {
+  margin: 0;
+  color: #1e1b4b;
+  font-size: 1.4rem;
+}
+
+.qr-code-placeholder {
+  width: 140px;
+  height: 140px;
+  background: #f8fafc;
+  border: 2px solid #0f172a;
+  border-radius: 12px;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}

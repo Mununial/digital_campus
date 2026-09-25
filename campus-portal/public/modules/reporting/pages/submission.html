@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Submission - BEC SRMS</title>
+    <link rel="icon" type="image/png" href="../assets/images/bec_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    
+    <!-- Libraries for Zipping -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        .progress-header {
+            background-color: white;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: var(--space-4);
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        .summary-box {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+            text-align: center;
+        }
+        .status-checks {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            margin: var(--space-4) 0;
+            text-align: left;
+            max-width: 400px;
+            margin-inline: auto;
+        }
+        .status-check {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 1rem;
+            color: var(--success);
+        }
+        .btn-download {
+            background-color: var(--secondary-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            margin-bottom: var(--space-2);
+        }
+        .btn-download:hover {
+            background-color: var(--primary-blue);
+        }
+        .btn-zip {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            margin-bottom: var(--space-2);
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .final-submit-bar {
+            margin-top: var(--space-5);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* PDF Templates (Hidden from UI) */
+        #pdf-templates {
+            display: none;
+        }
+        .pdf-page {
+            width: 794px; /* A4 width */
+            padding: 40px;
+            background: white;
+            font-family: Arial, sans-serif;
+            color: black;
+            box-sizing: border-box;
+        }
+        .pdf-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+        }
+        .pdf-header img {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+        .pdf-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .pdf-subtitle {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .pdf-form-title {
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 20px;
+        }
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .pdf-table th, .pdf-table td {
+            border: 1px solid black;
+            padding: 8px;
+            font-size: 12px;
+            text-align: left;
+        }
+        .pdf-table th {
+            background-color: #f0f0f0;
+            width: 40%;
+        }
+        .pdf-signatures {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .pdf-sig-box {
+            text-align: center;
+            width: 200px;
+        }
+        .pdf-sig-img {
+            max-width: 150px;
+            height: 50px;
+            object-fit: contain;
+            border-bottom: 1px solid black;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .pdf-sig-placeholder {
+            height: 50px;
+            border-bottom: 1px solid black;
+            margin-bottom: 5px;
+        }
+        
+        /* Overlay for locking */
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+    </style>
+    <script src="../js/utils/errorHandler.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header id="header-container"></header>
+        
+        <div class="progress-header" id="step-indicator">
+            <div class="container">
+                Step 7 of 7: PDF Generation & Final Submission
+            </div>
+        </div>
+        
+        <main id="main-content" class="container">
+            <div class="summary-box">
+                <h2>Application Summary</h2>
+                <div style="margin: var(--space-3) 0;">
+                    <p><strong>Student Name:</strong> <span id="sum-name"></span></p>
+                    <p><strong>Course:</strong> <span id="sum-course"></span> | <strong>Branch:</strong> <span id="sum-branch"></span></p>
+                    <p><strong>Accommodation:</strong> <span id="sum-accommodation"></span></p>
+                    <p><strong>Status:</strong> <span id="sum-status" style="font-weight:bold; color: var(--primary-blue);">PENDING FINAL SUBMISSION</span></p>
+                </div>
+                
+                <div class="status-checks" id="status-checks">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <div class="actions-grid" id="pdf-download-buttons">
+                <!-- Buttons injected via JS -->
+            </div>
+
+            <div class="final-submit-bar" id="submit-bar" style="gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'" style="background: #2563eb; color: white; border: none; font-weight: 600;">✏️ Edit Form / Re-upload Docs</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='preview.html'">Back to Review</button>
+                <button type="button" class="btn btn-primary" id="final-submit-btn" style="background-color: var(--success); border-color: var(--success);">Confirm & Final Submit</button>
+            </div>
+
+            <!-- CENTERED LOGOUT BUTTON FOR FINAL SUBMITTED STUDENTS ONLY -->
+            <div id="submitted-logout-container" style="display: none; justify-content: center; align-items: center; margin-top: 35px; margin-bottom: 25px;">
+                <button type="button" id="submitted-center-logout-btn" class="btn" style="padding: 14px 40px; font-size: 1.1rem; font-weight: 700; background: #dc2626; color: white; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); transition: all 0.2s;">
+                    🔒 Logout Account
+                </button>
+            </div>
+        </main>
+        
+        <footer id="footer-container"></footer>
+    </div>
+
+    <!-- Hidden PDF Templates Container -->
+    <div id="pdf-templates">
+        <!-- Rendered by PdfService.js -->
+    </div>
+    
+    <div id="loading-overlay">
+        <h3 id="loading-text" style="color: var(--primary-blue); margin-bottom: var(--space-2);">Processing...</h3>
+        <p>Please do not close this window.</p>
+    </div>
+
+    <script type="module" src="../js/main.js?v=1.0.5"></script>
+    <script type="module" src="../js/submission.js?v=1.0.5"></script>
+</body>
+</html>

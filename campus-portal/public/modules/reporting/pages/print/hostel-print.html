@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Residency Allotment Application - BEC</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 12mm 15mm;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000000;
+            margin: 0 auto;
+            padding: 10mm 12mm;
+            width: 100%;
+            max-width: 794px;
+            box-sizing: border-box;
+            background: #ffffff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2.5px solid #000000;
+            padding-bottom: 6px;
+            margin-bottom: 15px;
+        }
+        .header-table td {
+            vertical-align: middle;
+        }
+        .college-title {
+            font-size: 16pt;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            color: #000000;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .college-address {
+            font-size: 11pt;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            margin-top: 4px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 13pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .salutation {
+            margin-bottom: 12px;
+            font-size: 11pt;
+            line-height: 1.4;
+        }
+
+        .letter-body {
+            text-align: justify;
+            margin-bottom: 20px;
+            font-size: 11pt;
+            line-height: 1.6;
+        }
+
+        .val-underline {
+            font-weight: bold;
+            border-bottom: 1px dotted #000000;
+            padding: 0 4px;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        .details-table td {
+            padding: 6px 0;
+            vertical-align: top;
+            font-size: 11pt;
+        }
+
+        .signature-block {
+            width: 100%;
+            margin-top: 35px;
+            margin-bottom: 35px;
+            text-align: right;
+        }
+        .signature-title {
+            font-weight: normal;
+            font-size: 11pt;
+            margin-top: 40px;
+        }
+
+        .office-section-title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .office-body {
+            text-align: justify;
+            font-size: 11pt;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .allotment-details {
+            font-size: 11pt;
+            line-height: 2.0;
+            margin-bottom: 40px;
+        }
+
+        .office-signatures {
+            width: 100%;
+            margin-top: 50px;
+            border-collapse: collapse;
+        }
+        .office-signatures td {
+            vertical-align: bottom;
+            font-size: 11pt;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COLLEGE HEADER -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 75px; text-align: left;">
+                <img src="../../assets/images/bec_logo.jpeg" alt="BEC Logo" style="width: 70px; height: 70px; object-fit: contain; display: block;">
+            </td>
+            <td style="text-align: center;">
+                <div class="college-title">BHUBANESWAR ENGINEERING COLLEGE (BEC)</div>
+                <div class="college-address">N.K.Nagar, Grama Diha, Gangapada, Bhubaneswar - 752054</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- DOCUMENT TITLE -->
+    <div class="form-title">RESIDENCY ALLOTMENT APPLICATION</div>
+
+    <!-- SALUTATION -->
+    <div class="salutation">
+        To<br>
+        The Director (A&A)/ Principal
+    </div>
+
+    <!-- LETTER BODY -->
+    <div class="letter-body">
+        Sir,<br>
+        I am a student of your esteemed organization bearing Regd. No. <span class="val-underline" id="val-registrationNumber">PENDING BY COLLEGE</span> of <span class="val-underline" id="val-academicYear">1st Year</span> (Reg/LE) <span class="val-underline" id="val-program">Btech</span>/Diploma/MBA branch <span class="val-underline" id="val-branch">CSE</span> and want to stay in the college hostel from the session <span class="val-underline" id="val-academicSession">2026-2030</span> as hostelite as per the availability and allotment from your end.<br>
+        The hostel may be allotted for which I shall be obliged.
+    </div>
+
+    <div style="margin-bottom: 12px; font-size: 11pt;">Yours obediently</div>
+
+    <!-- DETAILS TABLE -->
+    <table class="details-table">
+        <tr>
+            <td style="width: 60%;">Name of the Student: <span class="val-underline" id="val-studentFullName">________________________</span></td>
+            <td style="width: 40%; text-align: right;">Mob: <span class="val-underline" id="val-studentMobile">____________</span></td>
+        </tr>
+        <tr>
+            <td style="width: 60%;">Father's Name: <span class="val-underline" id="val-fatherName">________________________</span></td>
+            <td style="width: 40%; text-align: right;">Mob: <span class="val-underline" id="val-fatherMobile">____________</span></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding-top: 6px;">Address for Correspondence: <span class="val-underline" id="val-permanentAddress">________________________________________________________</span></td>
+        </tr>
+    </table>
+
+    <!-- APPLICANT SIGNATURE -->
+    <div class="signature-block">
+        <div class="signature-title">Signature of the student</div>
+    </div>
+
+    <!-- OFFICE USE SECTION -->
+    <div class="office-section-title">HOSTEL ALLOTMENT</div>
+
+    <div class="office-body">
+        The student Sri/Ms. <span class="val-underline" id="val-adm-studentName">________________________</span> bearing Regd. No. <span class="val-underline" id="val-adm-registrationNumber">PENDING BY COLLEGE</span> of <span class="val-underline" id="val-adm-academicYear">1st Year</span> (Reg/LE) <span class="val-underline" id="val-adm-program">Btech</span>/Diploma/MBA branch <span class="val-underline" id="val-adm-branch">CSE</span> has been allotted in the following Room and Hostel.
+    </div>
+
+    <div class="allotment-details">
+        Room No: <span class="val-underline" id="val-hostelRoomNo">PENDING ALLOTMENT</span><br>
+        Hostel No: <span class="val-underline" id="val-hostelNo">MAIN HOSTEL</span>
+    </div>
+
+    <!-- OFFICE SIGNATURES -->
+    <table class="office-signatures">
+        <tr>
+            <td style="text-align: left; width: 50%;">
+                Sign of Care Taker
+            </td>
+            <td style="text-align: right; width: 50%;">
+                Signature of Hostel Superintendent
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

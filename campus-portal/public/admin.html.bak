@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEC Digital Campus - Unified Administrator Portal</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      background: #0f172a;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    .admin-layout {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 72px);
+      background: #f8fafc;
+      overflow: hidden;
+    }
+    .admin-sidebar {
+      width: 260px;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid #334155;
+    }
+    .admin-sidebar-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .admin-nav-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .admin-nav-item i {
+      font-size: 1rem;
+      width: 20px;
+    }
+    .admin-nav-item:hover, .admin-nav-item.active {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .admin-content-viewport {
+      flex: 1;
+      overflow-y: auto;
+      background: #f8fafc;
+      padding: 24px;
+    }
+    .admin-tab-view {
+      display: none;
+    }
+    .admin-tab-view.active {
+      display: block;
+    }
+    .admin-stat-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .table-container {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    table.bec-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+    table.bec-table th {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 12px 16px;
+      font-weight: 700;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    table.bec-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+    .module-embed-iframe {
+      width: 100%;
+      height: 800px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Admin Bar -->
+  <header class="portal-top-banner">
+    <div class="banner-brand">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="college-logo">
+      <div class="banner-title">
+        <h1>BEC CENTRAL ADMINISTRATOR PORTAL</h1>
+        <p>Unified Management • Attendance • Hostel & Facilities • SRMS Reporting • Audit</p>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="/dashboard" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-mobile-screen"></i> Student App
+      </a>
+      <button onclick="PortalAuth.logout()" style="background: #ef4444; border: none; color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div style="width: 36px; height: 36px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-weight: 800;">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 0.85rem; font-weight: 800;">Admin Console</h4>
+          <span style="font-size: 0.68rem; color: #22c55e;">Super Administrator</span>
+        </div>
+      </div>
+
+      <nav class="admin-nav-list">
+        <button class="admin-nav-item active" onclick="switchAdminTab('tab-overview', this)">
+          <i class="fa-solid fa-chart-line"></i> Dashboard & Metrics
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-attendance', this)">
+          <i class="fa-solid fa-clipboard-user"></i> Attendance Admin
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-hostel', this)">
+          <i class="fa-solid fa-hotel"></i> Hostel & Facilities
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-reporting', this)">
+          <i class="fa-solid fa-id-card"></i> Student SRMS & ID Cards
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-requests', this)">
+          <i class="fa-solid fa-wrench"></i> Complaints & Requests
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-mess', this)">
+          <i class="fa-solid fa-utensils"></i> Mess Management
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-library', this)">
+          <i class="fa-solid fa-book"></i> Central Library Admin
+        </button>
+        <button class="admin-nav-item" onclick="switchAdminTab('tab-audit', this)">
+          <i class="fa-solid fa-shield-halved"></i> Central Audit Trail
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Viewport -->
+    <main class="admin-content-viewport">
+      
+      <!-- ============================================== -->
+      <!-- TAB 1: OVERVIEW & KEY METRICS                  -->
+      <!-- ============================================== -->
+      <section id="tab-overview" class="admin-tab-view active">
+        <div style="margin-bottom: 24px;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Campus Operational Overview</h2>
+          <p style="font-size: 0.82rem; color: #64748b;">Live status of student reporting, hostel facilities, attendance, and pending tickets.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+          <div class="admin-stat-card">
+            <p style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Students</p>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-top: 4px;">1,248</h3>
+            <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">● Active Academic Roll</span>
+          </div>
+
+          <div class="admin-stat-card">
+            <p style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Avg Attendance</p>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #16a34a; margin-top: 4px;">84.2%</h3>
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">Above 75% BPUT limit</span>
+          </div>
+
+          <div class="admin-stat-card">
+            <p style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Pending Complaints</p>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #e11d48; margin-top: 4px;">3</h3>
+            <span style="font-size: 0.72rem; color: #f59e0b; font-weight: 700;">Avg Ageing: 1.2 Days</span>
+          </div>
+
+          <div class="admin-stat-card">
+            <p style="font-size: 0.72rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Hostel Occupancy</p>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #2563eb; margin-top: 4px;">92.5%</h3>
+            <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">520 / 560 Beds</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+          <!-- Recent Requests Queue -->
+          <div class="table-container">
+            <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+              <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Live Support & Service Queue</h4>
+              <button onclick="switchAdminTab('tab-requests')" style="font-size: 0.75rem; color: #2563eb; font-weight: 700; border: none; background: none; cursor: pointer;">Manage All &rarr;</button>
+            </div>
+            <table class="bec-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Student</th>
+                  <th>Location</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Ageing</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>REQ-01842</strong></td>
+                  <td>Rohan Kumar (24CSE018)</td>
+                  <td>Meridian Room 204</td>
+                  <td>Fan not working properly</td>
+                  <td><span class="badge-status badge-in-progress">In Progress</span></td>
+                  <td>1 Day</td>
+                </tr>
+                <tr>
+                  <td><strong>REQ-01812</strong></td>
+                  <td>Rohan Kumar (24CSE018)</td>
+                  <td>Main Gate</td>
+                  <td>Gate pass to home</td>
+                  <td><span class="badge-status badge-approved">Approved</span></td>
+                  <td>Resolved</td>
+                </tr>
+                <tr>
+                  <td><strong>REQ-01758</strong></td>
+                  <td>Amit Patra (24CSE015)</td>
+                  <td>Mess Block 1</td>
+                  <td>Dinner rice replenishment</td>
+                  <td><span class="badge-status badge-resolved">Resolved</span></td>
+                  <td>Same day</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Quick System Actions -->
+          <div class="admin-stat-card">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 14px;">Direct Module Links</h4>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <a href="/attendance" target="_blank" style="padding: 10px 14px; border-radius: 8px; background: #ecfdf5; border: 1px solid #a7f3d0; text-decoration: none; color: #065f46; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-solid fa-clipboard-user"></i> Full Attendance App (Module A)</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+              <a href="/hostel" target="_blank" style="padding: 10px 14px; border-radius: 8px; background: #eff6ff; border: 1px solid #bfdbfe; text-decoration: none; color: #1e40af; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-solid fa-hotel"></i> Hostel Management (Module B)</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+              <a href="/reporting/pages/admin.html" target="_blank" style="padding: 10px 14px; border-radius: 8px; background: #faf5ff; border: 1px solid #e9d5ff; text-decoration: none; color: #6b21a8; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-solid fa-id-card"></i> Student SRMS Admin (Module C)</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: ATTENDANCE ADMIN (MODULE A)             -->
+      <!-- ============================================== -->
+      <section id="tab-attendance" class="admin-tab-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Attendance Administration</h2>
+            <p style="font-size: 0.82rem; color: #64748b;">Class-wise & student-wise attendance records, medical exemption booster, and Excel reports.</p>
+          </div>
+          <a href="/attendance" target="_blank" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; color: #fff; font-weight: 700; font-size: 0.82rem; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Standalone Attendance Console
+          </a>
+        </div>
+        <iframe class="module-embed-iframe" src="/attendance" title="Module A Attendance Administration"></iframe>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: HOSTEL & FACILITIES (MODULE B)          -->
+      <!-- ============================================== -->
+      <section id="tab-hostel" class="admin-tab-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Hostel & Facilities Management</h2>
+            <p style="font-size: 0.82rem; color: #64748b;">Rooms, bed allocations, complaint queues, gate logs, and superintendent records.</p>
+          </div>
+          <a href="/hostel" target="_blank" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; color: #fff; font-weight: 700; font-size: 0.82rem; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Standalone Hostel Console
+          </a>
+        </div>
+        <iframe class="module-embed-iframe" src="/hostel" title="Module B Hostel Management"></iframe>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: STUDENT SRMS & ID CARDS (MODULE C)      -->
+      <!-- ============================================== -->
+      <section id="tab-reporting" class="admin-tab-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Student Reporting & ID Card Verification</h2>
+            <p style="font-size: 0.82rem; color: #64748b;">Student admission dossiers, document validation, official ID card printing, and export spreadsheets.</p>
+          </div>
+          <a href="/reporting/pages/admin.html" target="_blank" style="padding: 8px 16px; border-radius: 8px; background: #2563eb; color: #fff; font-weight: 700; font-size: 0.82rem; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Fullscreen SRMS Admin
+          </a>
+        </div>
+        <iframe class="module-embed-iframe" src="/reporting/pages/admin.html" title="Module C Reporting Administration"></iframe>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 5: COMPLAINTS & SERVICE TICKETING          -->
+      <!-- ============================================== -->
+      <section id="tab-requests" class="admin-tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Complaints & Service Requests Queue</h2>
+          <p style="font-size: 0.82rem; color: #64748b;">Central cross-module ticketing queue with priority assignment and status updates.</p>
+        </div>
+        <div class="table-container">
+          <table class="bec-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Description</th>
+                <th>Reported By</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>REQ-2026-01842</strong></td>
+                <td>FAN / AC</td>
+                <td><span style="color: #ea580c; font-weight: 800;">HIGH</span></td>
+                <td>Fan not working in Room 204. Squeaking noise.</td>
+                <td>Rohan Kumar</td>
+                <td><span class="badge-status badge-in-progress">In Progress</span></td>
+                <td>
+                  <button onclick="alert('Ticket REQ-01842 marked as Resolved!')" style="padding: 4px 10px; border-radius: 6px; background: #16a34a; color: #fff; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer;">Resolve</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>REQ-2026-01812</strong></td>
+                <td>GATE PASS</td>
+                <td><span style="color: #2563eb; font-weight: 800;">STANDARD</span></td>
+                <td>Gate pass to hometown for Diwali weekend</td>
+                <td>Rohan Kumar</td>
+                <td><span class="badge-status badge-approved">Approved</span></td>
+                <td>
+                  <button onclick="alert('Gate Pass details verified with parents.')" style="padding: 4px 10px; border-radius: 6px; background: #e2e8f0; color: #334155; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer;">View Log</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 6: MESS MANAGEMENT                         -->
+      <!-- ============================================== -->
+      <section id="tab-mess" class="admin-tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Mess Menu Editor & Feedback</h2>
+          <p style="font-size: 0.82rem; color: #64748b;">Configure 4-meal daily menu for hostels and review student quality ratings.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="admin-stat-card">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 14px;">Today's Active Menu</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <p style="font-size: 0.72rem; color: #64748b; font-weight: 700;">BREAKFAST (7-9 AM)</p>
+                <p style="font-size: 0.85rem; font-weight: 700;">Poha, Bread, Tea</p>
+              </div>
+              <div>
+                <p style="font-size: 0.72rem; color: #64748b; font-weight: 700;">LUNCH (12-2 PM)</p>
+                <p style="font-size: 0.85rem; font-weight: 700;">Rice, Dal, Paneer, Salad</p>
+              </div>
+              <div>
+                <p style="font-size: 0.72rem; color: #64748b; font-weight: 700;">DINNER (7-9 PM)</p>
+                <p style="font-size: 0.85rem; font-weight: 700;">Rice, Dal, Chicken, Vegetable</p>
+              </div>
+            </div>
+            <button onclick="alert('Menu Editor: Menu updated for tomorrow!')" style="margin-top: 18px; padding: 10px 16px; border-radius: 8px; background: #2563eb; color: #fff; font-weight: 700; font-size: 0.8rem; border: none; cursor: pointer;">Save & Broadcast Menu</button>
+          </div>
+          <div class="admin-stat-card">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 14px;">Student Food Ratings</h4>
+            <p style="font-size: 1.5rem; font-weight: 800; color: #16a34a;">4.6 / 5.0 ⭐</p>
+            <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Based on 214 daily feedbacks</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 7: CENTRAL LIBRARY ADMIN                   -->
+      <!-- ============================================== -->
+      <section id="tab-library" class="admin-tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Central Library Administration</h2>
+          <p style="font-size: 0.82rem; color: #64748b;">Manage catalog, issue/return desks, book renewals, and fines.</p>
+        </div>
+        <div class="table-container">
+          <table class="bec-table">
+            <thead>
+              <tr>
+                <th>Accession No</th>
+                <th>Title</th>
+                <th>Borrower</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>BK-101</strong></td>
+                <td>Database Management System</td>
+                <td>Rohan Kumar (24CSE018)</td>
+                <td>14 Sep 2026</td>
+                <td>28 Sep 2026</td>
+                <td><span class="badge-status badge-approved">Normal</span></td>
+              </tr>
+              <tr>
+                <td><strong>BK-102</strong></td>
+                <td>Java Programming</td>
+                <td>Rohan Kumar (24CSE018)</td>
+                <td>16 Sep 2026</td>
+                <td>30 Sep 2026</td>
+                <td><span class="badge-status badge-approved">Normal</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- TAB 8: AUDIT TRAIL                             -->
+      <!-- ============================================== -->
+      <section id="tab-audit" class="admin-tab-view">
+        <div style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a;">Central System Audit Trail</h2>
+          <p style="font-size: 0.82rem; color: #64748b;">Chronological log of administrative operations, logins, approvals, and record modifications.</p>
+        </div>
+        <div class="table-container">
+          <table class="bec-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User / Actor</th>
+                <th>Module</th>
+                <th>Action</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Just now</td>
+                <td>Super Admin (admin@bec.ac.in)</td>
+                <td>PORTAL GATEWAY</td>
+                <td>User Session Authenticated</td>
+                <td>127.0.0.1</td>
+              </tr>
+              <tr>
+                <td>25 Sep 2026, 12:15 PM</td>
+                <td>Academic Cell</td>
+                <td>SRMS REPORTING</td>
+                <td>Student ID Card Generated (24CSE018)</td>
+                <td>192.168.1.45</td>
+              </tr>
+              <tr>
+                <td>24 Sep 2026, 04:30 PM</td>
+                <td>Warden Block A</td>
+                <td>HOSTEL</td>
+                <td>Gate Pass Approved (REQ-01812)</td>
+                <td>192.168.1.12</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/shell/auth.js"></script>
+  <script src="/shell/role.js"></script>
+  <script>
+    function switchAdminTab(tabId, btn) {
+      document.querySelectorAll('.admin-tab-view').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

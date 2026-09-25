@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEC Digital Campus - Administrator Launcher Hub</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      background: #0f172a;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow-y: auto;
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+    .admin-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .admin-header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .launcher-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .launcher-card:hover {
+      transform: translateY(-4px);
+      border-color: #3b82f6;
+      box-shadow: 0 12px 30px rgba(59,130,246,0.15);
+    }
+    .launcher-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+    .launcher-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 8px;
+    }
+    .launcher-desc {
+      font-size: 0.84rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 22px;
+      flex: 1;
+    }
+    .launcher-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .status-panel {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 20px 26px;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <header class="portal-top-banner">
+    <div class="banner-brand">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="college-logo">
+      <div class="banner-title">
+        <h1>BHUBANESWAR ENGINEERING COLLEGE</h1>
+        <p>Central Administrator Launcher Hub • Unified Console Gateway</p>
+      </div>
+    </div>
+    <div>
+      <a href="/" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-arrow-left"></i> Student Doorway
+      </a>
+    </div>
+  </header>
+
+  <main class="admin-container">
+
+    <!-- Header Box -->
+    <div class="admin-header">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #86efac; text-transform: uppercase; letter-spacing: 0.05em;">Administrative Node Active</span>
+        </div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin: 0;">Institutional Management Hub</h2>
+        <p style="font-size: 0.84rem; color: #94a3b8; margin-top: 4px;">Launch original module administrative interfaces with full native controls</p>
+      </div>
+      <div>
+        <button onclick="PortalAuth.clearSession(); location.href='/';" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Admin Hub
+        </button>
+      </div>
+    </div>
+
+    <!-- Launcher 3-Grid Cards -->
+    <div class="launcher-grid">
+
+      <!-- CARD 1: ATTENDANCE ADMIN CONSOLE -->
+      <div class="launcher-card">
+        <div>
+          <div class="launcher-icon" style="background: rgba(16,185,129,0.15); color: #34d399;">
+            <i class="fa-solid fa-clipboard-user"></i>
+          </div>
+          <div class="launcher-title">Attendance Administration</div>
+          <div class="launcher-desc">
+            Direct access to Module A's faculty & administrative console. Manage daily roll calls, QR sessions, live photo verification stream, branch attendance sheets, and export official BPUT reports.
+          </div>
+        </div>
+        <a href="/attendance/admin" class="launcher-btn" style="background: #059669; color: #fff;">
+          Launch Attendance Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+
+      <!-- CARD 2: HOSTEL ADMIN CONSOLE -->
+      <div class="launcher-card">
+        <div>
+          <div class="launcher-icon" style="background: rgba(59,130,246,0.15); color: #60a5fa;">
+            <i class="fa-solid fa-hotel"></i>
+          </div>
+          <div class="launcher-title">Hostel & Chief Warden</div>
+          <div class="launcher-desc">
+            Direct access to Module B's administrative console. Manage hostel blocks, room allotments, superintendent assignments, disciplinary complaints, student gate passes, mess menus, and fee records.
+          </div>
+        </div>
+        <a href="/hostel/admin/dashboard" class="launcher-btn" style="background: #2563eb; color: #fff;">
+          Launch Hostel Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+
+      <!-- CARD 3: REPORTING & SRMS CONSOLE -->
+      <div class="launcher-card">
+        <div>
+          <div class="launcher-icon" style="background: rgba(168,85,247,0.15); color: #c084fc;">
+            <i class="fa-solid fa-file-signature"></i>
+          </div>
+          <div class="launcher-title">Academic Reporting & SRMS</div>
+          <div class="launcher-desc">
+            Direct access to Module C's master reporting and verification console. Inspect 1st Year student databases, verify certificates, approve admission documentation, and generate student dossier PDFs.
+          </div>
+        </div>
+        <a href="/reporting/pages/admin.html" class="launcher-btn" style="background: #7c3aed; color: #fff;">
+          Launch Reporting Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Live System Telemetry Status -->
+    <div class="status-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h4 style="font-size: 0.95rem; font-weight: 800; color: #f8fafc; margin: 0;">
+          <i class="fa-solid fa-server" style="margin-right: 8px; color: #38bdf8;"></i> Unified Gateway Telemetry
+        </h4>
+        <span id="gateway-status-pill" style="font-size: 0.75rem; background: #064e3b; color: #6ee7b7; padding: 4px 10px; border-radius: 6px; font-weight: 700;">Checking...</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 0.8rem;">
+        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
+          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module A Mount</div>
+          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/attendance/*</div>
+          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">Cloud Firestore & React</div>
+        </div>
+        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
+          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module B Mount</div>
+          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/hostel/*</div>
+          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">Hostel MySQL & Express</div>
+        </div>
+        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
+          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module C Mount</div>
+          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/reporting/*</div>
+          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">SRMS MySQL & PDF Engine</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="/shell/auth.js"></script>
+  <script>
+    // Live Health Check
+    fetch('/api/health')
+      .then(res => res.json())
+      .then(data => {
+        const pill = document.getElementById('gateway-status-pill');
+        if (data.status === 'ONLINE') {
+          pill.textContent = 'ONLINE (Port ' + (location.port || '80') + ')';
+        } else {
+          pill.textContent = 'STATUS: ' + data.status;
+        }
+      })
+      .catch(err => {
+        const pill = document.getElementById('gateway-status-pill');
+        pill.textContent = 'OFFLINE / UNREACHABLE';
+        pill.style.background = '#7f1d1d';
+        pill.style.color = '#fca5a5';
+      });
+  </script>
+</body>
+</html>

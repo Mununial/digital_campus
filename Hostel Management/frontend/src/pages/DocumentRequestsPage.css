@@ -1,0 +1,721 @@
+/* DocumentRequestsPage.css */
+
+.doc-requests-container {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: #1e293b;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.doc-header-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+  margin-bottom: 2rem;
+}
+
+.doc-header-content h1 {
+  font-size: 1.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.doc-header-content p {
+  color: #c7d2fe;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.btn-request-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.btn-request-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
+}
+
+/* Stats Row */
+.doc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.doc-stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.doc-stat-card .stat-info h3 {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.doc-stat-card .stat-info .stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.doc-stat-card .stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.doc-stat-card.pending .stat-icon-wrapper {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.doc-stat-card.issued .stat-icon-wrapper {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.doc-stat-card.rejected .stat-icon-wrapper {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.doc-stat-card.total .stat-icon-wrapper {
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+/* Controls & Filter Bar */
+.doc-controls-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.doc-search-box {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+
+.doc-search-box input {
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 2.5rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.doc-search-box input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.doc-search-box .search-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.doc-filter-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.doc-filter-group select {
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  background: white;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Table Container */
+.doc-table-card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.doc-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.doc-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.doc-table tr:hover {
+  background: #f8fafc;
+}
+
+/* Badges */
+.badge-status {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-transform: uppercase;
+}
+
+.badge-status.PENDING {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-status.ISSUED {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-status.REJECTED {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-status.CANCELLED {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.doc-type-tag {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.25rem 0.64rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.cert-num-chip {
+  font-family: monospace;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+  font-size: 0.82rem;
+}
+
+/* Action Buttons */
+.doc-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.doc-actions button {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-view {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.btn-view:hover {
+  background: #e2e8f0;
+}
+
+.btn-issue {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-issue:hover {
+  background: #15803d;
+}
+
+.btn-reject {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-reject:hover {
+  background: #b91c1c;
+}
+
+.btn-cancel {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-cancel:hover {
+  background: #fca5a5;
+}
+
+.btn-print {
+  background: #4f46e5;
+  color: white;
+}
+
+.btn-print:hover {
+  background: #4338ca;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalSlideUp 0.25s ease-out;
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.modal-header h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.modal-header .btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.modal-header .btn-close:hover {
+  color: #0f172a;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.modal-footer button {
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-footer .btn-secondary {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.modal-footer .btn-submit {
+  background: #4f46e5;
+  color: white;
+}
+
+/* ==========================================================================
+   OFFICIAL A4 SIZE CERTIFICATE STYLING (SCREEN & PRINT)
+   ========================================================================== */
+
+.cert-document-wrapper {
+  background: #ffffff;
+  border: 4px double #0f172a;
+  border-radius: 4px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Times New Roman', Georgia, serif;
+  color: #0f172a;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  box-sizing: border-box;
+  max-width: 800px;
+  min-height: 900px;
+}
+
+/* Watermark background */
+.cert-document-wrapper::before {
+  content: 'BEC HOSTELS';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(15, 23, 42, 0.04);
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: 0.12em;
+}
+
+.cert-college-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2.5px solid #0f172a;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.cert-logo-box img {
+  width: 85px;
+  height: auto;
+}
+
+.cert-college-title {
+  text-align: center;
+  flex: 1;
+}
+
+.cert-college-title h2 {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cert-college-title .cert-sub-text {
+  font-size: 0.88rem;
+  color: #334155;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.cert-college-title .cert-dept {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.cert-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: #f8fafc;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 2rem;
+}
+
+.cert-main-heading {
+  text-align: center;
+  margin: 1.5rem 0 2rem 0;
+}
+
+.cert-main-heading h3 {
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #0f172a;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 0.3rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cert-body-content {
+  font-size: 1.08rem;
+  line-height: 2.1;
+  text-align: justify;
+  color: #0f172a;
+  margin-bottom: 2.5rem;
+}
+
+.cert-body-content strong {
+  color: #0f172a;
+  font-weight: 800;
+  border-bottom: 1px dotted #475569;
+}
+
+.fee-table-preview {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+
+  th, td {
+    border: 1px solid #475569;
+    padding: 0.6rem 1rem;
+    text-align: left;
+  }
+
+  th {
+    background: #f1f5f9;
+    font-weight: 800;
+  }
+}
+
+.cert-signatures-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 3.5rem;
+  padding-top: 1rem;
+}
+
+.cert-stamp-badge {
+  border: 2px solid #047857;
+  background: #ecfdf5;
+  color: #047857;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cert-sign-box {
+  text-align: center;
+  width: 220px;
+}
+
+.cert-sign-line {
+  border-top: 2px solid #0f172a;
+  margin-top: 3rem;
+  padding-top: 0.4rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.cert-sign-box .sign-sub {
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+/* ==========================================================================
+   BULLETPROOF A4 SINGLE-PAGE PRINT OVERRIDES
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* Completely eliminate background elements from layout flow */
+  body > * {
+    display: none !important;
+  }
+
+  /* Show modal container */
+  #root,
+  .modal-overlay,
+  .modal-content,
+  .modal-body {
+    display: block !important;
+    position: static !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Hide modal chrome buttons & background UI */
+  .modal-header,
+  .modal-footer,
+  .sidebar,
+  .doc-header-card,
+  .doc-stats-grid,
+  .doc-controls-card,
+  .doc-table-card,
+  .btn-close {
+    display: none !important;
+  }
+
+  /* Render exact A4 Certificate Box */
+  .cert-document-wrapper {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    min-height: 270mm !important;
+    padding: 12mm 15mm !important;
+    margin: 0 auto !important;
+    border: 3px double #000000 !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    font-size: 11pt !important;
+    line-height: 1.8 !important;
+  }
+
+  .cert-body-content {
+    font-size: 11pt !important;
+    line-height: 2 !important;
+  }
+}
