@@ -130,21 +130,29 @@ export const StudentDashboard = () => {
           <div className="absolute top-0 right-0 -mr-16 -mt-16 w-72 h-72 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
 
           <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                <span className="px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-md">
-                  Student Portal
-                </span>
-                <span className="px-3 py-1 bg-emerald-400/30 text-emerald-100 border border-emerald-400/40 rounded-full text-xs font-bold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" /> Account Verified &amp; Active
-                </span>
-                <button
-                  onClick={handleOpenEditProfile}
-                  className="px-3 py-1 bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-full text-xs font-bold flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-all hover:scale-105"
-                >
-                  <Edit3 className="w-3.5 h-3.5" /> Edit Profile
-                </button>
-              </div>
+            <div className="flex items-center gap-4 sm:gap-6 flex-wrap sm:flex-nowrap">
+              {(userProfile?.studentPhotoUrl || userProfile?.photoUrl || userProfile?.photo_url) && (
+                <img 
+                  src={userProfile?.studentPhotoUrl || userProfile?.photoUrl || userProfile?.photo_url} 
+                  alt={userProfile?.name} 
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-white/60 shadow-xl flex-shrink-0 bg-white" 
+                />
+              )}
+              <div className="space-y-2 max-w-2xl">
+                <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                  <span className="px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                    Student Portal
+                  </span>
+                  <span className="px-3 py-1 bg-emerald-400/30 text-emerald-100 border border-emerald-400/40 rounded-full text-xs font-bold flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" /> Account Verified &amp; Active
+                  </span>
+                  <button
+                    onClick={handleOpenEditProfile}
+                    className="px-3 py-1 bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-full text-xs font-bold flex items-center gap-1.5 backdrop-blur-md cursor-pointer transition-all hover:scale-105"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" /> Edit Profile
+                  </button>
+                </div>
               
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
                 Hi, {userProfile?.name?.split(" ")[0]} 👋
@@ -169,6 +177,7 @@ export const StudentDashboard = () => {
                   DOB: {new Date(userProfile.dob).toLocaleDateString("en-IN")} • Email: {userProfile?.email}
                 </p>
               )}
+              </div>
             </div>
 
             {/* SUPER PROMINENT SCAN QR CODE & EXCEL DOWNLOAD BUTTONS */}

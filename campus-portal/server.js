@@ -31,23 +31,34 @@ app.use((req, res, next) => {
 });
 
 // -------------------------------------------------------------
-// 1. REDIRECT ALL OLD LOGIN PAGES TO DOORWAY (Files stay intact)
+// 1. MODULE ROUTING & DOORWAY ACCESS
 // -------------------------------------------------------------
 app.get('/attendance/login',           (req, res) => res.redirect('/'));
 app.get('/attendance/login/*',         (req, res) => res.redirect('/'));
 app.get('/reporting/login',            (req, res) => res.redirect('/reporting/pages/login.html'));
 app.get('/login',                      (req, res) => res.redirect('/'));
-app.get('/signup',                     (req, res) => res.redirect('/'));
+app.get('/library',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'library.html')));
+app.get('/library/admin',              (req, res) => res.sendFile(path.join(__dirname, 'public', 'library-admin.html')));
+app.get('/notices',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'notices.html')));
+app.get('/notices/admin',              (req, res) => res.sendFile(path.join(__dirname, 'public', 'notice-admin.html')));
 
 // -------------------------------------------------------------
 // 2. UNIFIED GATEWAY & MODULE C (REPORTING) API ROUTES
 // -------------------------------------------------------------
 const gatewayAuthRoutes = require('./server/authGateway');
 const gatewayReportingRoutes = require('./routes/gatewayReporting');
+const gatewayLibraryRoutes = require('./routes/gatewayLibrary');
+const gatewayStudentRoutes = require('./routes/gatewayStudent');
+const gatewayNoticesRoutes = require('./routes/gatewayNotices');
 
 // Central Gateway Endpoints
 app.use('/api/gateway', gatewayAuthRoutes);
 app.use('/api/auth', gatewayAuthRoutes);
+app.use('/api/library', gatewayLibraryRoutes);
+app.use('/api/student', gatewayStudentRoutes);
+app.use('/api/notices', gatewayNoticesRoutes);
+
+
 
 // Reporting System APIs
 app.use('/api/reporting', gatewayReportingRoutes);
@@ -132,11 +143,8 @@ const attendanceDist = fs.existsSync(path.join(__dirname, '../BEC-ATTENDANCCE-SY
 
 app.use('/attendance', express.static(attendanceDist));
 
-// SPA Fallback for Module A (blocks /login and /signup, redirects to doorway /)
+// SPA Fallback for Module A (Attendance System)
 app.get(['/attendance', '/attendance/*'], (req, res, next) => {
-  if (req.path.includes('/login') || req.path.includes('/signup')) {
-    return res.redirect('/');
-  }
   if (path.extname(req.path)) return next();
   res.sendFile(path.join(attendanceDist, 'index.html'));
 });

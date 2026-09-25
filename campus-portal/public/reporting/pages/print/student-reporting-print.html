@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Official Student Reporting Form - BEC</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 10mm 12mm;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #000000;
+            margin: 0 auto;
+            padding: 10mm 12mm;
+            width: 100%;
+            max-width: 794px;
+            box-sizing: border-box;
+            background: #ffffff;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2.5px solid #000000;
+            padding-bottom: 4px;
+            margin-bottom: 10px;
+        }
+        .header-table td {
+            vertical-align: middle;
+        }
+        .college-title {
+            font-size: 15pt;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            color: #000000;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .college-address {
+            font-size: 10.5pt;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            margin-top: 3px;
+        }
+
+        .top-info-table {
+            width: 100%;
+            margin-bottom: 8px;
+            font-size: 10pt;
+        }
+
+        .val-underline {
+            font-weight: bold;
+            border-bottom: 1px dotted #000000;
+            padding: 0 4px;
+        }
+
+        .course-info {
+            font-size: 10pt;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .fee-section {
+            font-size: 10pt;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .fee-row {
+            margin-bottom: 3px;
+        }
+
+        .student-details-list {
+            font-size: 10pt;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .detail-item {
+            margin-bottom: 4px;
+        }
+
+        .separator-line {
+            border-bottom: 1.5px dotted #000000;
+            margin: 12px 0;
+        }
+
+        .doc-declaration {
+            font-size: 10pt;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .doc-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            margin-bottom: 15px;
+        }
+        .doc-list-table td {
+            vertical-align: top;
+            padding: 2px 0;
+        }
+
+        .signature-block {
+            width: 100%;
+            margin-top: 25px;
+            text-align: right;
+            font-size: 10pt;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COLLEGE HEADER -->
+    <table class="header-table">
+        <tr>
+            <td style="width: 70px; text-align: left;">
+                <img src="../../assets/images/bec_logo.jpeg" alt="BEC Logo" style="width: 65px; height: 65px; object-fit: contain; display: block;">
+            </td>
+            <td style="text-align: center;">
+                <div class="college-title">BHUBANESWAR ENGINEERING COLLEGE (BEC)</div>
+                <div class="college-address">N.K.Nagar, Grama Diha, Gangapada, Bhubaneswar - 752054</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- TOP DATE / TIME -->
+    <table class="top-info-table">
+        <tr>
+            <td style="text-align: left;">Date:- <span class="val-underline" id="val-reportingDate">____________</span><span id="p-date" style="display:none;"></span></td>
+            <td style="text-align: right;">Time:- <span class="val-underline" id="val-reportingTime">____________</span><span id="p-time" style="display:none;"></span></td>
+        </tr>
+    </table>
+
+    <!-- COURSE ROW -->
+    <div class="course-info">
+        PROGRAM: <span class="val-underline" id="val-program">B.Tech</span><span id="p-program" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BRANCH: <span class="val-underline" id="val-branch">CSE</span><span id="p-branch" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Reg/LE: <span class="val-underline" id="val-admissionType">Regular</span><span id="p-entry" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AY:- <span class="val-underline" id="val-academicSession">2026-2030</span><span id="p-session" style="display:none;"></span>
+        <span id="p-regno" style="display:none;"></span>
+    </div>
+
+    <!-- FEE RECEIPT SECTION -->
+    <div class="fee-section">
+        <div style="font-weight: bold; margin-bottom: 4px;">Enclose Fee receipt paid</div>
+        <div class="fee-row">a) Tuition fee amount: <span class="val-underline" id="f-tuition-amt">............</span> date: <span class="val-underline" id="f-tuition-date">............</span> Receipt No- <span class="val-underline" id="f-tuition-no">....................</span></div>
+        <div class="fee-row">b) Hostel fee amount: <span class="val-underline" id="f-hostel-amt">............</span> date: <span class="val-underline" id="f-hostel-date">............</span> Receipt No- <span class="val-underline" id="f-hostel-no">....................</span></div>
+        <div class="fee-row">c) Transport fee amount: <span class="val-underline" id="f-transport-amt">............</span> date: <span class="val-underline" id="f-transport-date">............</span> Receipt No- <span class="val-underline" id="f-transport-no">....................</span></div>
+        <div class="fee-row">d) Onetime fee amount: <span class="val-underline" id="f-onetime-amt">............</span> date: <span class="val-underline" id="f-onetime-date">............</span> Receipt No- <span class="val-underline" id="f-onetime-no">....................</span></div>
+        <div class="fee-row">e) Counseling fee amount: <span class="val-underline" id="f-counseling-amt">............</span> date: <span class="val-underline" id="f-counseling-date">............</span> Receipt No- <span class="val-underline" id="f-counseling-no">....................</span></div>
+    </div>
+
+    <!-- STUDENT DETAILS (1-13) -->
+    <div class="student-details-list">
+        <div class="detail-item">1. Name of the student:- <span class="val-underline" id="val-studentFullName">________________________</span><span id="p-name" style="display:none;"></span><span id="p-dob" style="display:none;"></span><span id="p-gender" style="display:none;"></span></div>
+        <div class="detail-item">2. Father' Name:- <span class="val-underline" id="val-fatherName">________________________</span><span id="p-father" style="display:none;"></span></div>
+        <div class="detail-item">3. Mother's Name:- <span class="val-underline" id="val-motherName">________________________</span><span id="p-mother" style="display:none;"></span></div>
+        <div class="detail-item">4. Caste :- <span class="val-underline" id="val-category">________</span><span id="p-category" style="display:none;"></span><span id="p-bg" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OTR No (NSP): <span class="val-underline" id="val-otrNumber">____________</span><span id="p-otr" style="display:none;"></span></div>
+        <div class="detail-item">5. Aadhar number: <span class="val-underline" id="val-aadhaarNumber">____________</span><span id="p-aadhaar" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ABC ID number: <span class="val-underline" id="val-abcId">____________</span><span id="p-abc" style="display:none;"></span></div>
+        <div class="detail-item">6. Pan card No if any:- <span class="val-underline" id="val-panNumber">____________</span><span id="p-pan" style="display:none;"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ration Card No:- <span class="val-underline" id="val-rationCardNo">____________</span><span id="p-ration" style="display:none;"></span></div>
+        <div class="detail-item" id="cm-kisan-row" style="display:none;">CM Kisan Beneficiary: <span class="val-underline" id="val-hasCmKisan">Yes</span> &nbsp;&nbsp; (ID: <span class="val-underline" id="val-cmKisanBeneficiaryId">________</span>, Name: <span class="val-underline" id="val-cmKisanBeneficiaryName">________</span>, Aadhaar: <span class="val-underline" id="val-cmKisanBeneficiaryAadhaar">________</span>)</div>
+        <div class="detail-item">7. Student Mobile No/ Whatsapp Number:- <span class="val-underline" id="val-studentMobile">____________</span><span id="p-smobile" style="display:none;"></span></div>
+        <div class="detail-item">8. Father's Mobile No- <span class="val-underline" id="val-fatherMobile">____________</span><span id="p-fmobile" style="display:none;"></span></div>
+        <div class="detail-item">9. Mother' s mobile No <span class="val-underline" id="val-motherMobile">____________</span><span id="p-mmobile" style="display:none;"></span></div>
+        <div class="detail-item">10. Email ID of the student: <span class="val-underline" id="val-studentEmail">________________________</span><span id="p-email" style="display:none;"></span></div>
+        <div class="detail-item">11. Hostel accommodation Required?:- Yes/No <span class="val-underline" id="val-hostelRequired">No</span></div>
+        <div class="detail-item">12. Transport required?:- Yes/No <span class="val-underline" id="val-transportRequired">No</span></div>
+        <div class="detail-item">13. Permanent Address:- <span class="val-underline" id="val-permanentAddress">________________________________________________________</span><span id="p-address" style="display:none;"></span><span id="p-district" style="display:none;"></span><span id="p-state" style="display:none;"></span><span id="p-pincode" style="display:none;"></span></div>
+    </div>
+
+    <!-- Hidden elements for compatibility with PdfService letterhead helper -->
+    <div id="hostel-section" style="display:none;"><span id="h-medical"></span><span id="h-em-name"></span><span id="h-em-phone"></span><span id="h-roomno"></span></div>
+    <div id="transport-section" style="display:none;"><span id="t-stoppage"></span><span id="t-pickup"></span><span id="t-drop"></span><span id="t-passno"></span></div>
+
+    <div class="separator-line"></div>
+
+    <!-- DECLARATION & DOCUMENTS LIST -->
+    <div class="doc-declaration">
+        I am Reporting at the college with the following documents in original with one set of xerox documents for official use:
+    </div>
+
+    <table class="doc-list-table">
+        <tr>
+            <td style="width: 50%;">1. 10th original Certificates <span id="chk-certificate10th">[   ]</span></td>
+            <td style="width: 50%;">7. Admission allotment letter <span id="chk-admissionLetter">[   ]</span></td>
+        </tr>
+        <tr>
+            <td>2. 12th original certificates <span id="chk-certificate12th">[   ]</span></td>
+            <td>8. Residency certificate <span id="chk-residenceCertificate">[   ]</span></td>
+        </tr>
+        <tr>
+            <td>3. TC/CLC/Migration <span id="chk-tcMigration">[   ]</span></td>
+            <td>9. Caste certificate <span id="chk-casteCertificate">[   ]</span></td>
+        </tr>
+        <tr>
+            <td>4. Aadhar Card <span id="chk-aadhaar">[   ]</span></td>
+            <td>10. Income Certificate of Father <span id="chk-incomeCertificate">[   ]</span></td>
+        </tr>
+        <tr>
+            <td>5. Pan Card if any <span id="chk-pan">[   ]</span></td>
+            <td>11. Bank account number if applicable <span id="chk-bankDetails">[   ]</span></td>
+        </tr>
+        <tr>
+            <td>6. 4 Nos Passport size color photograph <span id="chk-passportPhotos">[   ]</span></td>
+            <td>12. Ration Card <span id="chk-rationCard">[   ]</span></td>
+        </tr>
+        <tr>
+            <td colspan="2">13. CM Kisan Beneficiary Document <span id="chk-cmKisanDoc">[   ]</span></td>
+        </tr>
+    </table>
+
+    <!-- SIGNATURE -->
+    <div class="signature-block">
+        <span id="p-subdate" style="display:none;"></span>
+        <div style="margin-top: 35px;">Signature of the student</div>
+    </div>
+
+</body>
+</html>

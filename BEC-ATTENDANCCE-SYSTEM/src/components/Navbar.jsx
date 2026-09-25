@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Shield, GraduationCap, School } from "lucide-react";
+import { LogOut, Shield, GraduationCap, School, Home } from "lucide-react";
 
 export const Navbar = () => {
   const { userProfile, role, logout } = useAuth();
@@ -48,7 +48,7 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & College Brand */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => { window.location.href = '/'; }} title="Return to Main Campus Portal">
             <img 
               src="/bec-logo.png" 
               alt="Bhubaneswar Engineering College Logo" 
@@ -66,12 +66,29 @@ export const Navbar = () => {
 
           {/* User Profile Pill & Actions */}
           {!isAuthPage && userProfile && (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <a
+                href="/"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 rounded-lg shadow-sm transition-all hover:scale-105 cursor-pointer"
+                title="Return to Main Campus Portal Doorway"
+              >
+                <Home className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Main Portal</span>
+              </a>
+
               {getRoleBadge()}
 
               <div className="hidden md:flex items-center space-x-3 bg-slate-50 py-1.5 px-3 rounded-full border border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-                  {userProfile.name?.charAt(0) || "U"}
+                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                  {(userProfile.studentPhotoUrl || userProfile.photoUrl || userProfile.photo_url) ? (
+                    <img 
+                      src={userProfile.studentPhotoUrl || userProfile.photoUrl || userProfile.photo_url} 
+                      alt={userProfile.name} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    userProfile.name?.charAt(0) || "U"
+                  )}
                 </div>
                 <div className="text-left text-xs leading-tight">
                   <span className="font-semibold text-slate-800 block truncate max-w-[120px]">

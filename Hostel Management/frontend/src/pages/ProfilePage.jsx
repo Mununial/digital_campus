@@ -66,8 +66,9 @@ const ProfilePage = () => {
         }
       }
       
-      if (userData?.photo_url) {
-        setPhotoPreview(userData.photo_url);
+      const realPhoto = userData?.photo_url || userData?.studentPhotoUrl || userData?.photoUrl;
+      if (realPhoto) {
+        setPhotoPreview(realPhoto);
       }
     } catch (err) {
       console.error('Failed to load profile:', err);

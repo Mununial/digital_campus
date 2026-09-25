@@ -7,7 +7,7 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || 'srv1334.hstgr.io',
   port: parseInt(process.env.DB_PORT, 10) || 3306,
   user: process.env.DB_USER || 'u847513759_ERP_COLLEGE',
-  password: process.env.DB_PASSWORD || 'ayusHtechnologies@2026',
+  password: process.env.DB_PASSWORD || 'Ayushtech@26',
   database: process.env.DB_NAME || 'u847513759_ERP_COLLEGE',
   waitForConnections: true,
   connectionLimit: 5,
@@ -18,11 +18,19 @@ const pool = mysql.createPool({
 router.get('/config', (req, res) => {
   res.json({
     databaseType: 'mysql',
-    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
-    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in').split(',').map(d => d.trim()).filter(Boolean),
+    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
+    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
     institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
     institutionCode: process.env.INSTITUTION_CODE || 'BEC',
-    apiBaseUrl: ''
+    apiBaseUrl: '',
+    firebase: {
+      apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+      authDomain: "genzuniversity.firebaseapp.com",
+      projectId: "genzuniversity",
+      storageBucket: "genzuniversity.firebasestorage.app",
+      messagingSenderId: "423748552299",
+      appId: "1:423748552299:web:8981f1300ad217afd7132e"
+    }
   });
 });
 
@@ -31,11 +39,19 @@ router.get('/config.js', (req, res) => {
   res.type('application/javascript');
   const config = {
     databaseType: 'mysql',
-    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
-    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in').split(',').map(d => d.trim()).filter(Boolean),
+    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
+    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
     institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
     institutionCode: process.env.INSTITUTION_CODE || 'BEC',
-    apiBaseUrl: ''
+    apiBaseUrl: '',
+    firebase: {
+      apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+      authDomain: "genzuniversity.firebaseapp.com",
+      projectId: "genzuniversity",
+      storageBucket: "genzuniversity.firebasestorage.app",
+      messagingSenderId: "423748552299",
+      appId: "1:423748552299:web:8981f1300ad217afd7132e"
+    }
   };
   res.send(`window.APP_CONFIG = ${JSON.stringify(config)};`);
 });
@@ -68,7 +84,23 @@ function getFallbackReportingStudents() {
           dob: s.dob || '',
           category: s.category || 'General',
           studentEmail: s.email,
-          studentMobile: s.phone || '9876543210'
+          personalEmail: s.personalEmail || s.email,
+          studentMobile: s.phone || s.studentMobile || '9876543210',
+          studentWhatsApp: s.studentWhatsApp || s.phone || '',
+          bloodGroup: s.bloodGroup || '',
+          aadhaarNumber: s.aadhaarNumber || ''
+        },
+        parents: {
+          fatherName: s.fatherName || '',
+          fatherMobile: s.fatherMobile || '',
+          motherName: s.motherName || '',
+          motherMobile: s.motherMobile || ''
+        },
+        address: {
+          permanentAddress: s.permanentAddress || '',
+          district: s.district || '',
+          state: s.state || 'Odisha',
+          pinCode: s.pinCode || ''
         },
         reporting: {
           branch: s.rawBranch || s.branch,
@@ -76,55 +108,31 @@ function getFallbackReportingStudents() {
           program: 'B.Tech'
         },
         facilities: {
-          hostelRequired: 'Yes'
+          hostelRequired: s.hostelRequired || 'No',
+          hostelNo: s.hostelNo || 'N/A',
+          roomNo: s.roomNo || 'N/A',
+          transportRequired: s.transportRequired || 'No',
+          pickupStoppage: s.pickupStoppage || 'N/A'
+        },
+        fees: {
+          tuitionFee: s.tuitionFee || '0',
+          tuitionReceiptNo: s.tuitionReceiptNo || '',
+          tuitionReceiptDate: s.tuitionReceiptDate || ''
+        },
+        documents: {
+          studentPhoto: s.studentPhotoUrl || '',
+          studentSignature: s.studentSignatureUrl || '',
+          admissionLetter: s.allotmentLetterUrl || '',
+          feeReceipt: s.feeReceiptUrl || '',
+          marksheet10th: s.marksheet10thUrl || '',
+          marksheet12th: s.marksheet12thUrl || '',
+          aadhaarCard: s.aadhaarDocumentUrl || ''
         },
         updatedAt: s.createdAt || new Date().toISOString()
       }));
     }
   } catch (e) {
     console.warn('[Reporting Fallback Notice]:', e.message);
-  }
-
-  // Also include seed students from Firestore script / mock
-  const extras = [
-    { id: '26CSE01', rollNumber: '26CSE01', name: 'Rahul Sharma', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'rahul.sharma@gmail.com' },
-    { id: '26CSE02', rollNumber: '26CSE02', name: 'Priya Dash', gender: 'Female', branch: 'Computer Science & Engineering', year: '1st Year', email: 'priya.dash@gmail.com' },
-    { id: '26CSE03', rollNumber: '26CSE03', name: 'Ankit Mohanty', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'ankit.mohanty@gmail.com' },
-    { id: '26CSE04', rollNumber: '26CSE04', name: 'Swati Behera', gender: 'Female', branch: 'Computer Science & Engineering', year: '1st Year', email: 'swati.behera@gmail.com' },
-    { id: '26CSE05', rollNumber: '26CSE05', name: 'Rohan Kumar Nayak', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'rohan.nayak@gmail.com' },
-    { id: 'STD2026001', rollNumber: 'CSE-2026-089', name: 'John Doe', gender: 'Male', branch: 'Computer Science', year: '3rd Year', email: 'student@hostel.com' },
-    { id: 'STD2026002', rollNumber: 'CSE-2026-090', name: 'Jane Smith', gender: 'Female', branch: 'Computer Science', year: '3rd Year', email: 'student2@hostel.com' }
-  ];
-
-  for (const extra of extras) {
-    if (!list.some(s => s.rollNumber === extra.rollNumber)) {
-      list.push({
-        id: extra.id,
-        registrationNumber: extra.id,
-        enrollmentNumber: extra.rollNumber,
-        rollNumber: extra.rollNumber,
-        section: 'A',
-        status: 'VERIFIED',
-        verified: true,
-        idCardGenerated: true,
-        remarks: 'Authentic student record from reporting master',
-        personal: {
-          studentFullName: extra.name,
-          gender: extra.gender,
-          studentEmail: extra.email,
-          studentMobile: '9876543210'
-        },
-        reporting: {
-          branch: extra.branch,
-          academicYear: extra.year,
-          program: 'B.Tech'
-        },
-        facilities: {
-          hostelRequired: 'Yes'
-        },
-        updatedAt: new Date().toISOString()
-      });
-    }
   }
 
   return list;

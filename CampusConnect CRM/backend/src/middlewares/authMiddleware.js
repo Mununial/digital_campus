@@ -18,8 +18,8 @@ const authMiddleware = (req, res, next) => {
   // Fallback for development / mock mode if no header is supplied
   req.user = {
     id: '123e4567-e89b-12d3-a456-426614174000',
-    fullName: 'System Admin',
-    email: 'admin@crm.com',
+    fullName: 'GenZ University Super Admin',
+    email: 'genzuniversity26@gmail.com',
     role: 'ADMIN'
   };
   next();

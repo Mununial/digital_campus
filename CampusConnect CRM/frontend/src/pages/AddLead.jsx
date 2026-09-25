@@ -126,7 +126,7 @@ const AddLead = () => {
               <Input 
                 label="Full Name" 
                 name="fullName"
-                placeholder="John Doe"
+                placeholder="Student Full Name"
                 value={formData.fullName}
                 onChange={handleChange}
                 error={errors.fullName}
@@ -136,7 +136,7 @@ const AddLead = () => {
                 label="Email Address" 
                 name="email"
                 type="email"
-                placeholder="john.doe@example.com"
+                placeholder="student@bec.ac.in"
                 value={formData.email}
                 onChange={handleChange}
                 error={errors.email}

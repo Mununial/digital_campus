@@ -7,6 +7,10 @@ router.use(requireAuth);
 
 // Student personal route
 router.get('/me', allocationController.getMyAllocation);
+router.get('/my', allocationController.getMyAllocation);
+
+// Super Admin auto-allotment route
+router.post('/auto-allot', requireRole(['SUPER_ADMIN']), allocationController.autoAllot);
 
 // Staff routes
 router.get('/available-beds', requireRole(['SUPER_ADMIN', 'SUPERINTENDENT']), allocationController.getAvailableBeds);

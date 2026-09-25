@@ -164,7 +164,7 @@ const getAllStudents = async (filters = {}, user) => {
     };
   });
 
-  // Also include any local student not in reportingMaster (e.g. John Doe, Jane Smith)
+  // Also include any registered student in local database
   localStudents.forEach(ls => {
     const cleanRoll = String(ls.roll_number || '').trim().toLowerCase();
     if (!mergedList.some(m => String(m.roll_number || '').trim().toLowerCase() === cleanRoll)) {

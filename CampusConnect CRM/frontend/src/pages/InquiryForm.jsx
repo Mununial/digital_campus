@@ -136,7 +136,7 @@ const InquiryForm = () => {
                 <input 
                   type="text" required name="fullName" value={formData.fullName} onChange={handleChange}
                   className="w-full px-5 py-4 bg-secondary/5 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/10 transition-all"
-                  placeholder="John Doe"
+                  placeholder="Full Name"
                 />
               </div>
               <div className="space-y-2">
@@ -155,7 +155,7 @@ const InquiryForm = () => {
                 <input 
                   type="email" required name="email" value={formData.email} onChange={handleChange}
                   className="w-full px-5 py-4 bg-secondary/5 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary/10 transition-all"
-                  placeholder="john@example.com"
+                  placeholder="student@bec.ac.in"
                 />
               </div>
               <div className="space-y-2">

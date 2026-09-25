@@ -6,6 +6,7 @@ const handleAllocationError = (res, err, defaultMsg) => {
   const message = (status < 500) ? err.message : defaultMsg;
   return res.status(status).json({
     success: false,
+    isDayScholar: !!err.isDayScholar,
     message
   });
 };
@@ -119,5 +120,17 @@ exports.checkoutStudent = async (req, res) => {
     return res.json({ success: true, message: 'Student checked out successfully.', data });
   } catch (err) {
     return handleAllocationError(res, err, 'Failed to checkout student.');
+  }
+};
+
+/**
+ * POST /api/allocations/auto-allot
+ */
+exports.autoAllot = async (req, res) => {
+  try {
+    const data = await allocationService.autoAllotFromReporting(req.user);
+    return res.json({ success: true, message: 'Hostel auto-allotment completed successfully.', data });
+  } catch (err) {
+    return handleAllocationError(res, err, 'Failed to run auto-allotment.');
   }
 };

@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central Library Administration Console - Bhubaneswar Engineering College</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f0f4f8;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border-color: #e2e8f0;
+      --accent-amber: #d97706;
+      --accent-amber-light: #fef3c7;
+      --accent-blue: #2563eb;
+      --accent-blue-light: #eff6ff;
+      --accent-emerald: #059669;
+      --accent-emerald-light: #ecfdf5;
+      --accent-rose: #e11d48;
+      --accent-rose-light: #ffe4e6;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    html, body {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    *::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+
+    body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Banner */
+    .admin-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+      border-bottom: 2px solid #2563eb;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      height: 46px;
+      width: 46px;
+      border-radius: 8px;
+      background: #fff;
+      padding: 3px;
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .brand-text p {
+      font-size: 0.76rem;
+      color: #fde68a;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-action {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    .btn-amber {
+      background: var(--accent-amber);
+      color: #ffffff;
+    }
+
+    .btn-amber:hover {
+      background: #b45309;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+    }
+
+    /* Main Container */
+    .app-main {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      width: 100%;
+    }
+
+    /* Header Bar */
+    .dashboard-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .node-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #059669;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #059669;
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(1.2);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Stat Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.08);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .stat-card.amber::after {
+      background: var(--accent-amber);
+    }
+
+    .stat-card.blue::after {
+      background: var(--accent-blue);
+    }
+
+    .stat-card.emerald::after {
+      background: var(--accent-emerald);
+    }
+
+    .stat-card.rose::after {
+      background: var(--accent-rose);
+    }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .stat-val {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0f172a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* Tab Controls */
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #0f172a;
+      background: #f1f5f9;
+    }
+
+    .tab-btn.active {
+      background: #1e3a8a;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.2);
+    }
+
+    /* Card Panels */
+    .panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .panel-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-title i {
+      color: var(--accent-amber);
+    }
+
+    /* Circulation Desk Grid */
+    .circ-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 960px) {
+      .circ-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .scanner-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #0f172a;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Student Badge Info */
+    .student-badge-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .student-badge-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .student-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border: 1px solid #bfdbfe;
+    }
+
+    .student-info h4 {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .student-info p {
+      font-size: 0.76rem;
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* Tables */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .data-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      color: #475569;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .data-table tr:hover td {
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-active {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-overdue {
+      background: #ffe4e6;
+      color: #e11d48;
+      border: 1px solid #fecdd3;
+    }
+
+    .badge-returned {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+    }
+
+    .badge-dept {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-sm-green {
+      background: #059669;
+      color: #fff;
+    }
+
+    .btn-sm-green:hover {
+      background: #047857;
+    }
+
+    .btn-sm-blue {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-sm-blue:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-sm-rose {
+      background: #e11d48;
+      color: #fff;
+    }
+
+    .btn-sm-rose:hover {
+      background: #be123c;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 580px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-head h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: #0f172a;
+    }
+
+    /* Clearance Certificate Layout */
+    .cert-frame {
+      background: #ffffff;
+      color: #0f172a;
+      border: 6px double #0f172a;
+      padding: 36px 40px;
+      border-radius: 8px;
+      position: relative;
+      margin: 20px 0;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .cert-header {
+      text-align: center;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+
+    .cert-header h2 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.02em;
+    }
+
+    .cert-header h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .cert-stamp {
+      position: absolute;
+      right: 40px;
+      top: 140px;
+      border: 3px dashed #16a34a;
+      color: #16a34a;
+      padding: 8px 16px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      transform: rotate(-12deg);
+      border-radius: 8px;
+      background: #f0fdf4;
+    }
+
+    .cert-body {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #1e293b;
+      margin-bottom: 30px;
+    }
+
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #cbd5e1;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #clearance-cert-printable,
+      #clearance-cert-printable * {
+        visibility: visible;
+      }
+
+      #clearance-cert-printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+        border: 4px double #000;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Banner -->
+  <header class="admin-banner">
+    <div class="brand-group">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="brand-logo">
+      <div class="brand-text">
+        <h1>BHUBANESWAR ENGINEERING COLLEGE</h1>
+        <p><i class="fa-solid fa-book-bookmark"></i> Central Library & Learning Resource Center • Admin Console</p>
+      </div>
+    </div>
+    <div class="banner-actions">
+      <a href="/admin" class="btn-action btn-outline">
+        <i class="fa-solid fa-grid-horizontal"></i> Admin Hub
+      </a>
+      <a href="/library" class="btn-action btn-outline" target="_blank">
+        <i class="fa-solid fa-eye"></i> Student View
+      </a>
+      <button onclick="loadAdminData()" class="btn-action btn-amber">
+        <i class="fa-solid fa-rotate"></i> Sync Stacks
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Content -->
+  <main class="app-main">
+
+    <!-- Header Box -->
+    <div class="dashboard-header">
+      <div>
+        <div class="node-pill">
+          <div class="pulse-dot"></div>
+          Librarian Console Node Active • Port 5002
+        </div>
+        <h2 style="font-size: 1.45rem; font-weight: 800; color: #0f172a;">LRC Circulation & Stack Management</h2>
+        <p style="font-size: 0.86rem; color: var(--text-muted); margin-top: 4px;">Automated 14-day loan policies,
+          student digital pass barcode verification, and BPUT repository archive.</p>
+      </div>
+      <div style="text-align: right;">
+        <span
+          style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block;">Authorized
+          Chief Librarian</span>
+        <strong style="color: #d97706; font-size: 0.95rem;"><i class="fa-solid fa-user-shield"></i> Dr. P. K. Mohapatra
+          (Desk-1)</strong>
+      </div>
+    </div>
+
+    <!-- Stat KPI Cards -->
+    <div class="stats-grid">
+      <div class="stat-card amber">
+        <div class="stat-head">
+          <span class="stat-label">Total Titles / Stacks</span>
+          <div class="stat-icon" style="background: var(--accent-amber-light); color: var(--accent-amber);">
+            <i class="fa-solid fa-books"></i>
+          </div>
+        </div>
+        <div class="stat-val" id="stat-total-titles">--</div>
+        <div class="stat-sub" id="stat-total-copies">Loading stack volumes...</div>
+      </div>
+
+      <div class="stat-card blue">
+        <div class="stat-head">
+          <span class="stat-label">Active Circulating Loans</span>
+          <div class="stat-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">
+            <i class="fa-solid fa-book-open-reader"></i>
+          </div>
+        </div>
+        <div class="stat-val" id="stat-active-loans">--</div>
+        <div class="stat-sub" id="stat-available-copies">In circulation</div>
+      </div>
+
+      <div class="stat-card rose">
+        <div class="stat-head">
+          <span class="stat-label">Overdue & Outstanding</span>
+          <div class="stat-icon" style="background: var(--accent-rose-light); color: var(--accent-rose);">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+        <div class="stat-val" id="stat-overdue-loans">--</div>
+        <div class="stat-sub" id="stat-fine-pending">₹0 Pending fine ledger</div>
+      </div>
+
+      <div class="stat-card emerald">
+        <div class="stat-head">
+          <span class="stat-label">Digital Resources & Notes</span>
+          <div class="stat-icon" style="background: var(--accent-emerald-light); color: var(--accent-emerald);">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+        </div>
+        <div class="stat-val" id="stat-digital-notes">--</div>
+        <div class="stat-sub">BPUT PYQs & Lecture Modules</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('tab-circulation')">
+        <i class="fa-solid fa-hand-holding-box"></i> Circulation Desk (Issue / Return)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-catalog')">
+        <i class="fa-solid fa-books"></i> Book Catalog & Inventory
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-loans')">
+        <i class="fa-solid fa-list-check"></i> Master Loans & Overdue Registry
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-notes')">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Digital Notes & PYQs
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-clearance')">
+        <i class="fa-solid fa-certificate"></i> No-Dues Clearance Certificate
+      </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: CIRCULATION DESK (ISSUE / RETURN)   -->
+    <!-- ========================================== -->
+    <div id="tab-circulation" class="panel active">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-hand-holding-box"></i> Live Student Circulation Desk
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+          Scan QR Pass or Enter Student Roll / Registration No
+        </div>
+      </div>
+
+      <div class="circ-grid">
+        <!-- Left: Student Lookup & Issue Box -->
+        <div>
+          <div class="scanner-box">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 14px;">
+              <i class="fa-solid fa-qrcode" style="color: var(--accent-amber); margin-right: 6px;"></i> Student Pass
+              Lookup
+            </h4>
+            <div class="input-group">
+              <label class="input-label">Student Roll No / Pass ID</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="circ-roll-input" class="input-field" placeholder="e.g. BEC26002 or 2101211045"
+                  value="BEC26002">
+                <button onclick="lookupStudent()" class="btn-action btn-amber" style="padding: 0 16px;">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Student Profile Badge -->
+            <div id="student-badge-container">
+              <div class="student-badge-card">
+                <div class="student-badge-head">
+                  <div class="student-avatar" id="stud-avatar">RJ</div>
+                  <div class="student-info">
+                    <h4 id="stud-name">Rahul Jamana</h4>
+                    <p id="stud-dept">Computer Science & Engg • 6th Sem</p>
+                    <p style="font-size: 0.74rem; color: #64748b;" id="stud-reg">Reg: 2101211042</p>
+                  </div>
+                </div>
+                <div
+                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.76rem; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+                  <div>
+                    <span style="color: #64748b;">Quota:</span>
+                    <strong style="color: #0f172a;" id="stud-quota">2 / 3 Issued</strong>
+                  </div>
+                  <div>
+                    <span style="color: #64748b;">Dues:</span>
+                    <strong style="color: #059669;" id="stud-fine">₹0 (Clear)</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issue New Book Sub-form -->
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+              <h4 style="font-size: 0.9rem; font-weight: 800; color: #d97706; margin-bottom: 12px;">
+                <i class="fa-solid fa-plus-circle"></i> Issue New Book Stack
+              </h4>
+              <div class="input-group">
+                <label class="input-label">Select Available Book Title</label>
+                <select id="issue-book-select" class="input-field" style="cursor: pointer;">
+                  <option value="">-- Choose Book from Stacks --</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Loan Duration</label>
+                <select id="issue-duration-select" class="input-field">
+                  <option value="14">Standard 14 Days (General Stacks)</option>
+                  <option value="7">Short-term 7 Days (High-Demand Stacks)</option>
+                  <option value="28">Extended 28 Days (Book-Bank Scheme)</option>
+                </select>
+              </div>
+              <button onclick="processIssueBook()" class="btn-action btn-amber"
+                style="width: 100%; justify-content: center; padding: 12px; font-weight: 800;">
+                <i class="fa-solid fa-check"></i> Authorize & Issue Book
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Active Borrowings of Student with Quick Return -->
+        <div>
+          <div
+            style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; height: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">
+                <i class="fa-solid fa-books" style="color: #2563eb; margin-right: 6px;"></i> Currently Borrowed Books
+                (<span id="held-count">2</span>)
+              </h4>
+              <span style="font-size: 0.74rem; color: #64748b; font-weight: 600;">Max Borrow Quota: 3 Books</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table"
+                style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0;">
+                <thead>
+                  <tr>
+                    <th>Book Details</th>
+                    <th>Dept & Rack</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Fine</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="student-loans-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div id="no-loans-msg" style="display: none; text-align: center; padding: 40px; color: #64748b;">
+              <i class="fa-solid fa-circle-check"
+                style="font-size: 2.5rem; color: #059669; margin-bottom: 10px; display: block;"></i>
+              No active books currently held by this student. Student is eligible to issue up to 3 books.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: BOOK CATALOG & INVENTORY            -->
+    <!-- ========================================== -->
+    <div id="tab-catalog" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-books"></i> Central Library Catalog & Stack Inventory
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="openAddBookModal()" class="btn-action btn-amber">
+            <i class="fa-solid fa-plus"></i> Add New Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+        <input type="text" id="catalog-search" oninput="filterCatalog()" class="input-field"
+          placeholder="Search by title, author, ISBN or category..." style="max-width: 380px;">
+        <select id="catalog-dept-filter" onchange="filterCatalog()" class="input-field" style="max-width: 200px;">
+          <option value="ALL">All Departments</option>
+          <option value="CSE">Computer Science (CSE)</option>
+          <option value="MECH">Mechanical (MECH)</option>
+          <option value="CIVIL">Civil (CIVIL)</option>
+          <option value="EEE">Electrical (EEE)</option>
+          <option value="ECE">Electronics (ECE)</option>
+          <option value="BASIC SCIENCE">Basic Sciences</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table" style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+          <thead>
+            <tr>
+              <th>Accession ID</th>
+              <th>Book Title & Author</th>
+              <th>ISBN</th>
+              <th>Department</th>
+              <th>Rack / Shelf</th>
+              <th>Available / Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="catalog-tbody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: MASTER LOANS & OVERDUE REGISTRY     -->
+    <!-- ========================================== -->
+    <div id="tab-loans" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-list-check"></i> Master Circulation & Overdue Loans Registry
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="exportLoansCSV()" class="btn-action"
+            style="background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+        <input type="text" id="loan-search" oninput="filterLoansTable()" class="input-field"
+          placeholder="Search by student name, roll number, or book title..." style="max-width: 360px;">
+        <select id="loan-status-filter" onchange="filterLoansTable()" class="input-field" style="max-width: 180px;">
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">Active Loans</option>
+          <option value="OVERDUE">Overdue Only</option>
+          <option value="RETURNED">Returned History</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table" style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+          <thead>
+            <tr>
+              <th>Loan ID</th>
+              <th>Student Details</th>
+              <th>Book Title</th>
+              <th>Issue Date</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Fine</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="loans-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: DIGITAL NOTES & PYQs                -->
+    <!-- ========================================== -->
+    <div id="tab-notes" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Digital Library & BPUT Question Paper Archive
+        </div>
+        <button onclick="openAddNoteModal()" class="btn-action btn-amber">
+          <i class="fa-solid fa-plus"></i> Upload New Material
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table" style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+          <thead>
+            <tr>
+              <th>Resource ID</th>
+              <th>Resource Title</th>
+              <th>Subject & Code</th>
+              <th>Dept & Semester</th>
+              <th>Academic Year</th>
+              <th>Downloads</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="notes-tbody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: NO-DUES CLEARANCE CERTIFICATE       -->
+    <!-- ========================================== -->
+    <div id="tab-clearance" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <i class="fa-solid fa-certificate"></i> Student Library Clearance & No-Dues Generator
+        </div>
+        <button onclick="window.print()" class="btn-action btn-amber">
+          <i class="fa-solid fa-print"></i> Print Official Certificate
+        </button>
+      </div>
+
+      <div style="max-width: 500px; margin-bottom: 24px;">
+        <label class="input-label">Enter Student Roll Number</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="clearance-roll-input" class="input-field" placeholder="e.g. BEC26002" value="BEC26002">
+          <button onclick="checkClearance()" class="btn-action btn-amber" style="padding: 0 18px;">
+            Verify Dues
+          </button>
+        </div>
+      </div>
+
+      <!-- Certificate Display Container -->
+      <div id="clearance-result-container">
+        <!-- Printable Certificate Box -->
+        <div id="clearance-cert-printable" class="cert-frame">
+          <div class="cert-stamp">NO DUES CLEARED</div>
+          <div class="cert-header">
+            <img src="/assets/bec logo.jpeg" alt="Logo" style="height: 50px; margin-bottom: 8px;">
+            <h2>BHUBANESWAR ENGINEERING COLLEGE</h2>
+            <h3>CENTRAL LIBRARY & LEARNING RESOURCE CENTER</h3>
+            <p style="font-size: 0.78rem; color: #64748b; margin-top: 4px;">At: Pitapally, PO: Mahidharapara,
+              Bhubaneswar, Odisha - 752054</p>
+          </div>
+
+          <div class="cert-body">
+            <p
+              style="text-align: center; font-weight: 800; font-size: 1.1rem; text-decoration: underline; margin-bottom: 20px;">
+              LIBRARY NO-DUES CLEARANCE CERTIFICATE
+            </p>
+            <p>
+              This is to certify that <strong><span id="cert-student-name">Rahul Jamana</span></strong>, bearing Roll /
+              Registration No: <strong><span id="cert-student-roll">BEC26002</span></strong>, Department of
+              <strong><span id="cert-student-dept">Computer Science & Engineering</span></strong>, has returned all
+              issued library volumes and has <strong>NO OUTSTANDING DUES OR PENALTY</strong> with the BEC Central
+              Library.
+            </p>
+            <br>
+            <div
+              style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 18px; border-radius: 6px; font-size: 0.84rem;">
+              <strong>Verification Details:</strong><br>
+              • Certificate ID: <span id="cert-id"
+                style="font-family: monospace; font-weight: 700;">BEC/LIB/CLR/2026-BEC26002</span><br>
+              • Verification Status: <span style="color: #16a34a; font-weight: 800;">VERIFIED (0 Books Pending, ₹0
+                Fine)</span><br>
+              • Issue Date: <span id="cert-date">25 Sep 2026</span>
+            </div>
+          </div>
+
+          <div class="cert-footer">
+            <div>
+              <p style="font-size: 0.75rem; color: #64748b;">Digitally signed & verified by Central ERP Gateway</p>
+              <p style="font-size: 0.75rem; font-weight: 700; color: #0f172a;">Valid for Semester Registration & Degree
+                Clearance</p>
+            </div>
+            <div style="text-align: right;">
+              <div
+                style="font-family: 'Brush Script MT', cursive; font-size: 1.4rem; color: #0f172a; margin-bottom: 4px;">
+                P.K. Mohapatra</div>
+              <p style="font-weight: 800; font-size: 0.85rem; border-top: 1px solid #0f172a; padding-top: 4px;">
+                Chief Librarian / In-Charge<br>
+                <span style="font-size: 0.75rem; color: #475569; font-weight: 600;">BEC Central Library</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD NEW BOOK                        -->
+  <!-- ========================================== -->
+  <div id="modal-add-book" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-book" style="color: var(--accent-amber); margin-right: 8px;"></i> Add Book to Library
+          Stacks</h3>
+        <button onclick="closeModal('modal-add-book')" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-add-book" onsubmit="submitAddBook(event)">
+        <div class="input-group">
+          <label class="input-label">Book Title *</label>
+          <input type="text" id="add-book-title" class="input-field"
+            placeholder="e.g. Artificial Intelligence: A Modern Approach" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Author(s) *</label>
+            <input type="text" id="add-book-author" class="input-field" placeholder="e.g. Stuart Russell" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label">ISBN Number *</label>
+            <input type="text" id="add-book-isbn" class="input-field" placeholder="978-0136042594" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Department *</label>
+            <select id="add-book-dept" class="input-field">
+              <option value="CSE">Computer Science (CSE)</option>
+              <option value="MECH">Mechanical (MECH)</option>
+              <option value="CIVIL">Civil (CIVIL)</option>
+              <option value="EEE">Electrical (EEE)</option>
+              <option value="ECE">Electronics (ECE)</option>
+              <option value="BASIC SCIENCE">Basic Sciences</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Total Copies *</label>
+            <input type="number" id="add-book-total" class="input-field" value="5" min="1" max="100" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Category / Stream</label>
+            <input type="text" id="add-book-category" class="input-field" placeholder="e.g. Core Engineering">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Shelf / Rack Location</label>
+            <input type="text" id="add-book-shelf" class="input-field" placeholder="e.g. Rack B-04">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;">
+          <button type="button" onclick="closeModal('modal-add-book')" class="btn-action"
+            style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">Cancel</button>
+          <button type="submit" class="btn-action btn-amber">Save to Catalog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD DIGITAL NOTES / PYQ             -->
+  <!-- ========================================== -->
+  <div id="modal-add-note" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3><i class="fa-solid fa-file-pdf" style="color: var(--accent-amber); margin-right: 8px;"></i> Publish Digital
+          Study Material</h3>
+        <button onclick="closeModal('modal-add-note')" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-add-note" onsubmit="submitAddNote(event)">
+        <div class="input-group">
+          <label class="input-label">Material / Paper Title *</label>
+          <input type="text" id="add-note-title" class="input-field"
+            placeholder="e.g. Compiler Design Unit 1-5 Lecture Notes" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Subject Name *</label>
+            <input type="text" id="add-note-subject" class="input-field" placeholder="e.g. Compiler Design" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Subject Code</label>
+            <input type="text" id="add-note-code" class="input-field" placeholder="e.g. RCS6C001">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Department *</label>
+            <select id="add-note-dept" class="input-field">
+              <option value="CSE">CSE</option>
+              <option value="MECH">MECH</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="EEE">EEE</option>
+              <option value="ECE">ECE</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Semester</label>
+            <select id="add-note-sem" class="input-field">
+              <option value="1st Sem">1st Sem</option>
+              <option value="2nd Sem">2nd Sem</option>
+              <option value="3rd Sem">3rd Sem</option>
+              <option value="4th Sem">4th Sem</option>
+              <option value="5th Sem">5th Sem</option>
+              <option value="6th Sem">6th Sem</option>
+              <option value="7th Sem">7th Sem</option>
+              <option value="8th Sem">8th Sem</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Resource Cloud Link / URL</label>
+          <input type="text" id="add-note-link" class="input-field" placeholder="https://drive.google.com/..."
+            value="#">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;">
+          <button type="button" onclick="closeModal('modal-add-note')" class="btn-action"
+            style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">Cancel</button>
+          <button type="submit" class="btn-action btn-amber">Publish Resource</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Javascript Logic -->
+  <script>
+    let globalCatalog = [];
+    let globalLoans = [];
+    let globalNotes = [];
+    let currentStudentProfile = null;
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
+      event.currentTarget.classList.add('active');
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+    }
+
+    // Modal helpers
+    function openAddBookModal() { document.getElementById('modal-add-book').classList.add('open'); }
+    function openAddNoteModal() { document.getElementById('modal-add-note').classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // Initial Data Fetch
+    async function loadAdminData() {
+      try {
+        // Fetch Stats
+        const statsRes = await fetch('/api/library/admin/stats');
+        const statsData = await statsRes.json();
+        if (statsData.success) {
+          document.getElementById('stat-total-titles').textContent = statsData.data.totalTitles;
+          document.getElementById('stat-total-copies').textContent = `${statsData.data.totalCopies} Total physical volumes`;
+          document.getElementById('stat-active-loans').textContent = statsData.data.activeLoans;
+          document.getElementById('stat-available-copies').textContent = `${statsData.data.availableCopies} Copies on shelf`;
+          document.getElementById('stat-overdue-loans').textContent = statsData.data.overdueLoans;
+          document.getElementById('stat-fine-pending').textContent = `₹${statsData.data.totalFinePending} Overdue penalty balance`;
+          document.getElementById('stat-digital-notes').textContent = statsData.data.totalNotes;
+        }
+
+        // Fetch Catalog
+        const catRes = await fetch('/api/library/search');
+        const catData = await catRes.json();
+        if (catData.success) {
+          globalCatalog = catData.data;
+          renderCatalog(globalCatalog);
+          populateIssueDropdown(globalCatalog);
+        }
+
+        // Fetch Loans
+        const loansRes = await fetch('/api/library/admin/loans');
+        const loansData = await loansRes.json();
+        if (loansData.success) {
+          globalLoans = loansData.data;
+          renderLoans(globalLoans);
+        }
+
+        // Fetch Notes
+        const notesRes = await fetch('/api/library/notes');
+        const notesData = await notesRes.json();
+        if (notesData.success) {
+          globalNotes = notesData.data;
+          renderNotes(globalNotes);
+        }
+
+        // Initial Student Lookup
+        lookupStudent();
+
+      } catch (err) {
+        console.error('Failed to load library admin data:', err);
+      }
+    }
+
+    // Populate Issue Book Select Box
+    function populateIssueDropdown(catalog) {
+      const sel = document.getElementById('issue-book-select');
+      sel.innerHTML = '<option value="">-- Choose Book from Stacks --</option>';
+      catalog.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.title} [${b.dept}] - (${b.available} available / Shelf: ${b.shelf})`;
+        opt.disabled = b.available <= 0;
+        sel.appendChild(opt);
+      });
+    }
+
+    // Render Catalog Table
+    function renderCatalog(list) {
+      const tbody = document.getElementById('catalog-tbody');
+      tbody.innerHTML = '';
+      list.forEach(b => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color:#d97706;">${b.id}</strong></td>
+          <td>
+            <div style="font-weight:700; color:#0f172a;">${b.title}</div>
+            <div style="font-size:0.75rem; color:#64748b;">${b.author}</div>
+          </td>
+          <td style="font-family:monospace; font-size:0.78rem; font-weight:600;">${b.isbn}</td>
+          <td><span class="badge badge-dept">${b.dept}</span></td>
+          <td style="color:#2563eb; font-weight:600;"><i class="fa-solid fa-location-dot"></i> ${b.shelf}</td>
+          <td>
+            <strong style="color:${b.available > 0 ? '#059669' : '#e11d48'}; font-size:0.95rem;">${b.available}</strong> / ${b.total}
+          </td>
+          <td>
+            ${b.available > 0
+            ? '<span class="badge badge-active"><i class="fa-solid fa-check"></i> Available</span>'
+            : '<span class="badge badge-overdue"><i class="fa-solid fa-ban"></i> Out of Stock</span>'}
+          </td>
+          <td>
+            <button onclick="deleteBook('${b.id}')" class="btn-sm btn-sm-rose" title="Remove Book">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterCatalog() {
+      const q = document.getElementById('catalog-search').value.toLowerCase();
+      const dept = document.getElementById('catalog-dept-filter').value;
+      let filtered = globalCatalog;
+      if (dept !== 'ALL') {
+        filtered = filtered.filter(b => b.dept === dept);
+      }
+      if (q) {
+        filtered = filtered.filter(b =>
+          b.title.toLowerCase().includes(q) ||
+          b.author.toLowerCase().includes(q) ||
+          b.isbn.includes(q)
+        );
+      }
+      renderCatalog(filtered);
+    }
+
+    // Render Master Loans
+    function renderLoans(list) {
+      const tbody = document.getElementById('loans-tbody');
+      tbody.innerHTML = '';
+      list.forEach(l => {
+        const isOverdue = l.status === 'OVERDUE';
+        const isReturned = l.status === 'RETURNED';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color:#2563eb;">${l.id}</strong></td>
+          <td>
+            <div style="font-weight:700; color:#0f172a;">${l.studentName}</div>
+            <div style="font-size:0.75rem; color:#64748b;">${l.rollNo} • ${l.dept}</div>
+          </td>
+          <td style="font-weight:600; color:#1e293b;">${l.bookTitle}</td>
+          <td style="font-size:0.8rem; color:#64748b;">${l.issueDate}</td>
+          <td style="font-size:0.8rem; color:${isOverdue ? '#e11d48' : '#0f172a'}; font-weight:700;">${l.dueDate}</td>
+          <td>
+            ${isReturned
+            ? '<span class="badge badge-returned">Returned</span>'
+            : (isOverdue ? '<span class="badge badge-overdue"><i class="fa-solid fa-clock"></i> Overdue</span>' : '<span class="badge badge-active">Active</span>')}
+          </td>
+          <td>
+            <strong style="color:${l.fineAmount > 0 ? '#e11d48' : '#059669'};">₹${l.fineAmount || 0}</strong>
+          </td>
+          <td>
+            ${!isReturned ? `
+              <div style="display:flex; gap:6px;">
+                <button onclick="processReturnLoan('${l.id}')" class="btn-sm btn-sm-green" title="Mark Returned">
+                  <i class="fa-solid fa-arrow-turn-down-left"></i> Return
+                </button>
+                <button onclick="processRenewLoan('${l.id}')" class="btn-sm btn-sm-blue" title="Renew +14 Days">
+                  <i class="fa-solid fa-rotate-right"></i>
+                </button>
+              </div>
+            ` : '<span style="font-size:0.75rem; color:#94a3b8;">Archived</span>'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterLoansTable() {
+      const q = document.getElementById('loan-search').value.toLowerCase();
+      const st = document.getElementById('loan-status-filter').value;
+      let filtered = globalLoans;
+      if (st !== 'ALL') {
+        filtered = filtered.filter(l => l.status === st);
+      }
+      if (q) {
+        filtered = filtered.filter(l =>
+          l.studentName.toLowerCase().includes(q) ||
+          l.rollNo.toLowerCase().includes(q) ||
+          l.bookTitle.toLowerCase().includes(q)
+        );
+      }
+      renderLoans(filtered);
+    }
+
+    // Render Digital Notes
+    function renderNotes(list) {
+      const tbody = document.getElementById('notes-tbody');
+      tbody.innerHTML = '';
+      list.forEach(n => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color:#7c3aed;">${n.id}</strong></td>
+          <td><strong style="color:#0f172a;">${n.title}</strong></td>
+          <td>${n.subject} <span style="color:#64748b; font-size:0.75rem;">(${n.code})</span></td>
+          <td><span class="badge badge-dept">${n.dept}</span> • ${n.sem}</td>
+          <td>${n.year}</td>
+          <td style="color:#059669; font-weight:700;"><i class="fa-solid fa-download"></i> ${n.downloads || 0}</td>
+          <td>
+            <a href="${n.link}" target="_blank" class="btn-sm btn-sm-blue" style="text-decoration:none; display:inline-block;">
+              <i class="fa-solid fa-eye"></i> View
+            </a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Lookup Student at Circulation Desk
+    async function lookupStudent() {
+      const roll = document.getElementById('circ-roll-input').value.trim();
+      if (!roll) return;
+
+      try {
+        const res = await fetch(`/api/library/admin/student/${roll}`);
+        const data = await res.json();
+        if (data.success) {
+          const p = data.data.profile;
+          currentStudentProfile = p;
+
+          // Update profile card
+          document.getElementById('stud-avatar').textContent = p.name.split(' ').map(n => n[0]).join('');
+          document.getElementById('stud-name').textContent = p.name;
+          document.getElementById('stud-dept').textContent = `${p.dept} • ${p.sem}`;
+          document.getElementById('stud-reg').textContent = `Reg/Roll: ${p.regNo}`;
+          document.getElementById('stud-quota').textContent = `${data.data.currentHeld} / ${data.data.borrowLimit} Issued`;
+          document.getElementById('stud-fine').innerHTML = data.data.finePending > 0
+            ? `<span style="color:#e11d48;">₹${data.data.finePending} (Overdue)</span>`
+            : `<span style="color:#059669;">₹0 (Clear)</span>`;
+
+          document.getElementById('held-count').textContent = data.data.currentHeld;
+
+          // Render active borrowings table for this student
+          const tbody = document.getElementById('student-loans-tbody');
+          tbody.innerHTML = '';
+          const activeLoans = data.data.activeLoans;
+
+          if (activeLoans.length === 0) {
+            document.getElementById('no-loans-msg').style.display = 'block';
+          } else {
+            document.getElementById('no-loans-msg').style.display = 'none';
+            activeLoans.forEach(l => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>
+                  <strong style="color:#0f172a;">${l.bookTitle}</strong>
+                  <div style="font-size:0.75rem; color:#64748b;">${l.author} • ISBN: ${l.isbn}</div>
+                </td>
+                <td><span class="badge badge-dept">${l.dept}</span></td>
+                <td>${l.issueDate}</td>
+                <td style="color:${l.status === 'OVERDUE' ? '#e11d48' : '#0f172a'}; font-weight:700;">${l.dueDate}</td>
+                <td style="color:${l.fineAmount > 0 ? '#e11d48' : '#059669'}; font-weight:700;">₹${l.fineAmount || 0}</td>
+                <td>
+                  <div style="display:flex; gap:6px;">
+                    <button onclick="processReturnLoan('${l.id}')" class="btn-sm btn-sm-green">
+                      <i class="fa-solid fa-arrow-turn-down-left"></i> Return
+                    </button>
+                    <button onclick="processRenewLoan('${l.id}')" class="btn-sm btn-sm-blue" title="Renew 14 Days">
+                      <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                  </div>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+
+        }
+      } catch (err) {
+        console.error('Error looking up student:', err);
+      }
+    }
+
+    // Process Book Issue
+    async function processIssueBook() {
+      const roll = document.getElementById('circ-roll-input').value.trim();
+      const bookId = document.getElementById('issue-book-select').value;
+      const dueDays = document.getElementById('issue-duration-select').value;
+
+      if (!bookId) {
+        alert('Please select a book from the catalog.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/library/admin/issue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rollNo: roll,
+            studentName: currentStudentProfile ? currentStudentProfile.name : `Student (${roll})`,
+            bookId,
+            dueDays
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert(`Success: ${data.message}`);
+          loadAdminData();
+        } else {
+          alert(`Failed: ${data.message}`);
+        }
+      } catch (err) {
+        console.error('Issue error:', err);
+        alert('Error connecting to gateway.');
+      }
+    }
+
+    // Process Return
+    async function processReturnLoan(loanId) {
+      if (!confirm('Confirm return of this book to library stacks?')) return;
+      try {
+        const res = await fetch('/api/library/admin/return', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loanId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`Returned successfully. ${data.message}`);
+          loadAdminData();
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (err) {
+        console.error('Return error:', err);
+      }
+    }
+
+    // Process Renew
+    async function processRenewLoan(loanId) {
+      try {
+        const res = await fetch(`/api/library/renew/${loanId}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          loadAdminData();
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        console.error('Renew error:', err);
+      }
+    }
+
+    // Add Book Submission
+    async function submitAddBook(e) {
+      e.preventDefault();
+      const title = document.getElementById('add-book-title').value.trim();
+      const author = document.getElementById('add-book-author').value.trim();
+      const isbn = document.getElementById('add-book-isbn').value.trim();
+      const dept = document.getElementById('add-book-dept').value;
+      const total = document.getElementById('add-book-total').value;
+      const category = document.getElementById('add-book-category').value.trim();
+      const shelf = document.getElementById('add-book-shelf').value.trim();
+
+      try {
+        const res = await fetch('/api/library/admin/add-book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, author, isbn, dept, total, category, shelf })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          closeModal('modal-add-book');
+          document.getElementById('form-add-book').reset();
+          loadAdminData();
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        console.error('Add book error:', err);
+      }
+    }
+
+    // Delete Book
+    async function deleteBook(id) {
+      if (!confirm('Are you sure you want to remove this book from catalog?')) return;
+      try {
+        const res = await fetch(`/api/library/admin/book/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          loadAdminData();
+        }
+      } catch (err) {
+        console.error('Delete book error:', err);
+      }
+    }
+
+    // Add Digital Note Submission
+    async function submitAddNote(e) {
+      e.preventDefault();
+      const title = document.getElementById('add-note-title').value.trim();
+      const subject = document.getElementById('add-note-subject').value.trim();
+      const code = document.getElementById('add-note-code').value.trim();
+      const dept = document.getElementById('add-note-dept').value;
+      const sem = document.getElementById('add-note-sem').value;
+      const link = document.getElementById('add-note-link').value.trim();
+
+      try {
+        const res = await fetch('/api/library/admin/notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, subject, code, dept, sem, link })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          closeModal('modal-add-note');
+          document.getElementById('form-add-note').reset();
+          loadAdminData();
+        }
+      } catch (err) {
+        console.error('Add note error:', err);
+      }
+    }
+
+    // Check Clearance
+    async function checkClearance() {
+      const roll = document.getElementById('clearance-roll-input').value.trim().toUpperCase();
+      if (!roll) return;
+
+      try {
+        const res = await fetch(`/api/library/admin/clearance/${roll}`);
+        const data = await res.json();
+        if (data.success) {
+          const c = data.data;
+          document.getElementById('cert-student-roll').textContent = roll;
+          document.getElementById('cert-id').textContent = c.certificateId || `BEC/LIB/CLR/PENDING-${roll}`;
+          document.getElementById('cert-date').textContent = c.clearanceDate || new Date().toDateString();
+
+          const stamp = document.querySelector('.cert-stamp');
+          if (c.isCleared) {
+            stamp.textContent = 'NO DUES CLEARED';
+            stamp.style.borderColor = '#16a34a';
+            stamp.style.color = '#16a34a';
+            stamp.style.background = '#f0fdf4';
+          } else {
+            stamp.textContent = 'DUES PENDING';
+            stamp.style.borderColor = '#dc2626';
+            stamp.style.color = '#dc2626';
+            stamp.style.background = '#fef2f2';
+            alert(`Student has ${c.pendingBooksCount} unreturned book(s) and ₹${c.pendingFine} pending fine.`);
+          }
+        }
+      } catch (err) {
+        console.error('Clearance check error:', err);
+      }
+    }
+
+    // Export Loans CSV
+    function exportLoansCSV() {
+      let csv = 'Loan ID,Student Name,Roll No,Department,Book Title,Issue Date,Due Date,Status,Fine Amount\n';
+      globalLoans.forEach(l => {
+        csv += `"${l.id}","${l.studentName}","${l.rollNo}","${l.dept}","${l.bookTitle}","${l.issueDate}","${l.dueDate}","${l.status}","${l.fineAmount}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BEC_Library_Loans_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
+
+    // Init on page load
+    window.addEventListener('DOMContentLoaded', loadAdminData);
+  </script>
+</body>
+
+</html>

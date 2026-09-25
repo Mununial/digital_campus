@@ -23,7 +23,8 @@ import {
   CreditCard,
   DoorOpen,
   FileText,
-  LogOut
+  LogOut,
+  Home
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -146,6 +147,26 @@ const Sidebar = ({ isOpen, onClose }) => {
         
         <nav className="sidebar-nav">
           <ul className="sidebar-menu-list">
+            {/* Direct Link to Main Doorway Portal */}
+            <li className="sidebar-menu-item" style={{ marginBottom: '10px' }}>
+              <a 
+                href="/" 
+                className="sidebar-menu-link"
+                style={{ 
+                  background: 'linear-gradient(135deg, rgba(37,99,235,0.12) 0%, rgba(30,58,138,0.18) 100%)', 
+                  color: '#1d4ed8', 
+                  fontWeight: '700',
+                  border: '1px solid rgba(37,99,235,0.3)',
+                  borderRadius: '10px'
+                }}
+              >
+                <span className="sidebar-menu-icon" style={{ display: 'inline-flex', alignItems: 'center', color: '#1d4ed8' }}>
+                  <Home size={18} />
+                </span>
+                <span className="sidebar-menu-label">Main Campus Portal</span>
+              </a>
+            </li>
+
             {navItems.map((item, idx) => {
               const active = isItemActive(item);
               return (
@@ -179,10 +200,18 @@ const Sidebar = ({ isOpen, onClose }) => {
         
         <div className="sidebar-footer">
           <div className="sidebar-user-badge">
-            <div className="avatar-mini">
-              {user?.full_name 
-                ? user.full_name.substring(0, 2).toUpperCase() 
-                : (user?.username ? user.username.substring(0, 2).toUpperCase() : 'AD')}
+            <div className="avatar-mini" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {(user?.photo_url || user?.studentPhotoUrl || user?.photoUrl) ? (
+                <img 
+                  src={user.photo_url || user.studentPhotoUrl || user.photoUrl} 
+                  alt={user.full_name || user.username} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                />
+              ) : (
+                user?.full_name 
+                  ? user.full_name.substring(0, 2).toUpperCase() 
+                  : (user?.username ? user.username.substring(0, 2).toUpperCase() : 'AD')
+              )}
             </div>
             <div className="badge-meta">
               <span className="badge-name" title={user?.full_name || user?.email || user?.username || 'User'}>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice & Circular Administration Console - Bhubaneswar Engineering College</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="stylesheet" href="/shell/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f0f4f8;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --accent-blue: #2563eb;
+      --accent-amber: #d97706;
+      --accent-emerald: #059669;
+      --accent-rose: #e11d48;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    html, body {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    *::-webkit-scrollbar, ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+
+    body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Banner */
+    .admin-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
+      border-bottom: none;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-logo {
+      height: 46px;
+      width: 46px;
+      border-radius: 8px;
+      background: #fff;
+      padding: 3px;
+    }
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .brand-text p {
+      font-size: 0.76rem;
+      color: #fde68a;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-action {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .btn-amber {
+      background: var(--accent-amber);
+      color: #ffffff;
+    }
+    .btn-amber:hover {
+      background: #b45309;
+    }
+
+    /* Main Container */
+    .app-main {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      width: 100%;
+    }
+
+    /* Header Bar */
+    .dashboard-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .node-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #059669;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #059669;
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Stat Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 22px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .stat-card.amber::after { background: var(--accent-amber); }
+    .stat-card.blue::after { background: var(--accent-blue); }
+    .stat-card.emerald::after { background: var(--accent-emerald); }
+    .stat-card.rose::after { background: var(--accent-rose); }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .stat-val {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0f172a;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Panel Card */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* Tables */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .data-table th {
+      background: #f8fafc;
+      padding: 12px 16px;
+      color: #475569;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-emergency { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
+    .badge-urgent { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-normal { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+    .badge-pinned { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+
+    .btn-sm {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-sm-blue { background: #2563eb; color: #fff; }
+    .btn-sm-amber { background: #d97706; color: #fff; }
+    .btn-sm-rose { background: #e11d48; color: #fff; }
+
+    /* Modal Form */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 640px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .input-group { margin-bottom: 14px; }
+    .input-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .input-field {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #0f172a;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .input-field:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <header class="admin-banner">
+    <div class="brand-group">
+      <img src="/assets/bec logo.jpeg" alt="BEC Logo" class="brand-logo">
+      <div class="brand-text">
+        <h1>BHUBANESWAR ENGINEERING COLLEGE</h1>
+        <p><i class="fa-solid fa-bullhorn"></i> Notice & Circular Broadcast Admin Console</p>
+      </div>
+    </div>
+    <div class="banner-actions">
+      <a href="/admin" class="btn-action btn-outline">
+        <i class="fa-solid fa-grid-horizontal"></i> Admin Hub
+      </a>
+      <a href="/notices" class="btn-action btn-outline" target="_blank">
+        <i class="fa-solid fa-eye"></i> Student View
+      </a>
+      <button onclick="openComposeModal()" class="btn-action btn-amber">
+        <i class="fa-solid fa-plus"></i> Compose Notice
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-main">
+
+    <!-- Header Box -->
+    <div class="dashboard-header">
+      <div>
+        <div class="node-pill">
+          <div class="pulse-dot"></div>
+          Notice Control Node Active • Authorized Admin Desk
+        </div>
+        <h2 style="font-size: 1.45rem; font-weight: 800; color: #0f172a;">Official Notice & Circular Broadcast Desk</h2>
+        <p style="font-size: 0.86rem; color: var(--text-muted); margin-top: 4px;">Publish verified circulars, emergency exam alerts, and placement broadcasts to campus doorway.</p>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block;">Authorized Notice Administrator</span>
+        <strong style="color: #d97706; font-size: 0.95rem;"><i class="fa-solid fa-user-shield"></i> notice@bec.ac.in (Desk-1)</strong>
+      </div>
+    </div>
+
+    <!-- Stat KPI Cards -->
+    <div class="stats-grid">
+      <div class="stat-card amber">
+        <div class="stat-head">
+          <span class="stat-label">Total Circulars</span>
+          <i class="fa-solid fa-bullhorn" style="color:#d97706;"></i>
+        </div>
+        <div class="stat-val" id="stat-total">--</div>
+        <div class="stat-sub">Published to bulletin board</div>
+      </div>
+
+      <div class="stat-card rose">
+        <div class="stat-head">
+          <span class="stat-label">Emergency Alerts</span>
+          <i class="fa-solid fa-triangle-exclamation" style="color:#e11d48;"></i>
+        </div>
+        <div class="stat-val" id="stat-emergency">--</div>
+        <div class="stat-sub">High-priority circulars</div>
+      </div>
+
+      <div class="stat-card blue">
+        <div class="stat-head">
+          <span class="stat-label">Student Views / Reach</span>
+          <i class="fa-solid fa-eye" style="color:#2563eb;"></i>
+        </div>
+        <div class="stat-val" id="stat-views">--</div>
+        <div class="stat-sub">Total verified read receipts</div>
+      </div>
+
+      <div class="stat-card emerald">
+        <div class="stat-head">
+          <span class="stat-label">Pinned Bulletins</span>
+          <i class="fa-solid fa-thumbtack" style="color:#059669;"></i>
+        </div>
+        <div class="stat-val" id="stat-pinned">--</div>
+        <div class="stat-sub">Highlighted on student portal</div>
+      </div>
+    </div>
+
+    <!-- Inventory Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">
+          <i class="fa-solid fa-list-check" style="color: #d97706; margin-right: 8px;"></i> Broadcasted Circular Inventory
+        </h3>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="admin-search" oninput="filterAdminTable()" class="input-field" placeholder="Search circulars..." style="width: 240px;">
+          <button onclick="openComposeModal()" class="btn-action btn-amber">
+            <i class="fa-solid fa-plus"></i> Publish New
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Notice ID</th>
+              <th>Notice Title & Issuing Authority</th>
+              <th>Channel & Category</th>
+              <th>Target Scope</th>
+              <th>Priority</th>
+              <th>Views</th>
+              <th>Published Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-notices-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: COMPOSE NOTICE -->
+  <div id="modal-compose" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">
+          <i class="fa-solid fa-bullhorn" style="color: #d97706; margin-right: 8px;"></i> Compose Official Campus Notice
+        </h3>
+        <button onclick="closeComposeModal()" style="background: none; border: none; font-size: 1.3rem; color: #64748b; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="form-compose-notice" onsubmit="submitPublishNotice(event)">
+        <div class="input-group">
+          <label class="input-label">Notice Title *</label>
+          <input type="text" id="comp-title" class="input-field" placeholder="e.g. BPUT Semester Examination Admit Card Notice" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Issuing Authority *</label>
+            <select id="comp-publisher" class="input-field">
+              <option value="Principal Office">Principal Office</option>
+              <option value="Exam Cell Controller">Exam Cell Controller</option>
+              <option value="Training & Placement Cell">Training & Placement Cell (T&P)</option>
+              <option value="Chief Warden">Chief Warden (Hostels)</option>
+              <option value="HOD Computer Science">HOD Computer Science (CSE)</option>
+              <option value="HOD Mechanical">HOD Mechanical (MECH)</option>
+              <option value="HOD Civil">HOD Civil (CIVIL)</option>
+              <option value="HOD EEE/ECE">HOD EEE & ECE</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Notice Category *</label>
+            <select id="comp-category" class="input-field">
+              <option value="EXAM_CELL">Exam Cell & BPUT</option>
+              <option value="PLACEMENT">Training & Placement (T&P)</option>
+              <option value="ACADEMIC">Academic Circular</option>
+              <option value="HOSTEL">Hostel & Rules</option>
+              <option value="EVENTS">Events & Activities</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">Target Department</label>
+            <select id="comp-dept" class="input-field">
+              <option value="ALL">All Departments (Campus-wide)</option>
+              <option value="CSE">Computer Science (CSE)</option>
+              <option value="MECH">Mechanical (MECH)</option>
+              <option value="CIVIL">Civil (CIVIL)</option>
+              <option value="EEE">Electrical (EEE)</option>
+              <option value="ECE">Electronics (ECE)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Priority Level</label>
+            <select id="comp-priority" class="input-field">
+              <option value="NORMAL">Normal Priority</option>
+              <option value="URGENT">Urgent Priority</option>
+              <option value="EMERGENCY">Emergency Critical Alert</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Pin to Top Bulletin</label>
+          <select id="comp-pinned" class="input-field">
+            <option value="false">No (Standard Feed)</option>
+            <option value="true">Yes (Pin to Top & Ticker)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Notice Content Body *</label>
+          <textarea id="comp-content" class="input-field" rows="5" placeholder="Enter complete notice text and guidelines..." required></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-group">
+            <label class="input-label">PDF Attachment File Name</label>
+            <input type="text" id="comp-attach-name" class="input-field" placeholder="e.g. BPUT_Timetable_2026.pdf" value="Official_Notice.pdf">
+          </div>
+          <div class="input-group">
+            <label class="input-label">PDF Attachment URL</label>
+            <input type="text" id="comp-attach-url" class="input-field" placeholder="https://drive.google.com/..." value="#">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+          <button type="button" onclick="closeComposeModal()" class="btn-action" style="background:#f1f5f9; color:#475569;">Cancel</button>
+          <button type="submit" class="btn-action btn-amber">Broadcast Notice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let adminNotices = [];
+
+    function openComposeModal() { document.getElementById('modal-compose').classList.add('open'); }
+    function closeComposeModal() { document.getElementById('modal-compose').classList.remove('open'); }
+
+    async function loadAdminData() {
+      try {
+        const statsRes = await fetch('/api/notices/admin/stats');
+        const statsData = await statsRes.json();
+        if (statsData.success) {
+          document.getElementById('stat-total').textContent = statsData.data.totalNotices;
+          document.getElementById('stat-emergency').textContent = statsData.data.emergencyCount;
+          document.getElementById('stat-views').textContent = statsData.data.totalViews;
+          document.getElementById('stat-pinned').textContent = statsData.data.pinnedCount;
+        }
+
+        const noticesRes = await fetch('/api/notices');
+        const noticesData = await noticesRes.json();
+        if (noticesData.success) {
+          adminNotices = noticesData.data.notices;
+          renderAdminTable(adminNotices);
+        }
+      } catch (err) {
+        console.error('Error loading notice admin data:', err);
+      }
+    }
+
+    function renderAdminTable(list) {
+      const tbody = document.getElementById('admin-notices-tbody');
+      tbody.innerHTML = '';
+
+      list.forEach(n => {
+        const tr = document.createElement('tr');
+        const prioBadge = n.priority === 'EMERGENCY' 
+          ? '<span class="badge badge-emergency">Emergency</span>'
+          : (n.priority === 'URGENT' ? '<span class="badge badge-urgent">Urgent</span>' : '<span class="badge badge-normal">Normal</span>');
+
+        tr.innerHTML = `
+          <td><strong style="color:#d97706;">${n.id}</strong></td>
+          <td>
+            <div style="font-weight:800; color:#0f172a;">${n.title}</div>
+            <div style="font-size:0.75rem; color:#64748b;">Issued by: ${n.publisher}</div>
+          </td>
+          <td><span class="badge badge-normal">${n.category}</span></td>
+          <td><span style="font-weight:700; color:#2563eb;">${n.deptScope}</span></td>
+          <td>${prioBadge} ${n.isPinned ? '<span class="badge badge-pinned"><i class="fa-solid fa-thumbtack"></i> Pinned</span>' : ''}</td>
+          <td><strong style="color:#059669;"><i class="fa-solid fa-eye"></i> ${n.viewsCount || 0}</strong></td>
+          <td style="font-size:0.78rem; color:#64748b;">${n.formattedDate}</td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button onclick="togglePin('${n.id}', ${!n.isPinned})" class="btn-sm ${n.isPinned ? 'btn-sm-amber' : 'btn-sm-blue'}" title="Toggle Pin">
+                <i class="fa-solid fa-thumbtack"></i>
+              </button>
+              <button onclick="deleteNotice('${n.id}')" class="btn-sm btn-sm-rose" title="Delete Notice">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterAdminTable() {
+      const q = document.getElementById('admin-search').value.toLowerCase();
+      let filtered = adminNotices;
+      if (q) {
+        filtered = filtered.filter(n => 
+          n.title.toLowerCase().includes(q) || 
+          n.publisher.toLowerCase().includes(q) || 
+          n.id.toLowerCase().includes(q)
+        );
+      }
+      renderAdminTable(filtered);
+    }
+
+    async function togglePin(id, isPinned) {
+      try {
+        const res = await fetch(`/api/notices/admin/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isPinned })
+        });
+        const data = await res.json();
+        if (data.success) {
+          loadAdminData();
+        }
+      } catch (err) {
+        console.error('Toggle pin error:', err);
+      }
+    }
+
+    async function deleteNotice(id) {
+      if (!confirm('Are you sure you want to archive/delete this notice circular?')) return;
+      try {
+        const res = await fetch(`/api/notices/admin/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          loadAdminData();
+        }
+      } catch (err) {
+        console.error('Delete notice error:', err);
+      }
+    }
+
+    async function submitPublishNotice(e) {
+      e.preventDefault();
+      const title = document.getElementById('comp-title').value.trim();
+      const publisher = document.getElementById('comp-publisher').value;
+      const category = document.getElementById('comp-category').value;
+      const deptScope = document.getElementById('comp-dept').value;
+      const priority = document.getElementById('comp-priority').value;
+      const isPinned = document.getElementById('comp-pinned').value === 'true';
+      const content = document.getElementById('comp-content').value.trim();
+      const attachmentName = document.getElementById('comp-attach-name').value.trim();
+      const attachmentUrl = document.getElementById('comp-attach-url').value.trim();
+
+      try {
+        const res = await fetch('/api/notices/admin/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title, publisher, category, deptScope, priority, isPinned, content, attachmentName, attachmentUrl
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          closeComposeModal();
+          document.getElementById('form-compose-notice').reset();
+          loadAdminData();
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        console.error('Publish error:', err);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadAdminData);
+  </script>
+</body>
+</html>

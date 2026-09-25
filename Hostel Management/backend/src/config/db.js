@@ -1,6 +1,7 @@
 const mysql = require('mysql2/promise');
 const env = require('./env');
 
+<<<<<<< HEAD
 // Seed Dataset for Mock fallback
 const MOCK_ROLES = [
   { id: 1, name: 'SUPER_ADMIN' },
@@ -406,19 +407,23 @@ let MOCK_STUDENT_ALLOCATIONS = [
 let isOffline = false;
 
 // Initialize the actual MySQL connection pool
+=======
+// Real Production MySQL Connection Pool
+>>>>>>> f6e79b6e4666fe462a5b8ae6d77961839e140b1f
 const realPool = mysql.createPool({
   host: env.DB.host,
-  port: env.DB.port,
+  port: env.DB.port || 3306,
   user: env.DB.user,
   password: env.DB.password,
   database: env.DB.name,
   waitForConnections: true,
-  connectionLimit: 5,
+  connectionLimit: 10,
   queueLimit: 0,
   enableKeepAlive: true,
-  keepAliveInitialDelay: 0
+  keepAliveInitialDelay: 10000
 });
 
+<<<<<<< HEAD
 // A lightweight Mock Query Parser simulating SQL database operations
 const mockQuery = async (sql, params = []) => {
   const queryLower = sql.toLowerCase();
@@ -2807,48 +2812,43 @@ const mockQuery = async (sql, params = []) => {
 };
 
 // Unified Pool wrapper delegating to live MySQL or Mock fallback
+=======
+// Strict Real DB Pool Wrapper (ZERO MOCK / ZERO FALLBACK)
+>>>>>>> f6e79b6e4666fe462a5b8ae6d77961839e140b1f
 const pool = {
   query: async (sql, params) => {
-    if (isOffline) {
-      return mockQuery(sql, params);
-    }
     try {
       return await realPool.query(sql, params);
     } catch (error) {
-      if (error.code === 'ECONNREFUSED' || error.code === 'ER_ACCESS_DENIED_ERROR' || error.message.includes('denied')) {
-        isOffline = true;
-        console.warn('\x1b[33m%s\x1b[0m', 'Database offline. Mock database engine activated.');
-        return mockQuery(sql, params);
+      console.error('[MySQL Query Error]:', error.message);
+      if (
+        error.code === 'ECONNREFUSED' ||
+        error.code === 'ETIMEDOUT' ||
+        error.code === 'ENOTFOUND' ||
+        error.code === 'ER_ACCESS_DENIED_ERROR'
+      ) {
+        const dbErr = new Error('Database unavailable. Please try later.');
+        dbErr.status = 503;
+        dbErr.code = 'DATABASE_UNAVAILABLE';
+        throw dbErr;
       }
       throw error;
     }
   },
+
   getConnection: async () => {
-    if (isOffline) {
-      return {
-        beginTransaction: async () => {},
-        commit: async () => {},
-        rollback: async () => {},
-        query: async (sql, params) => mockQuery(sql, params),
-        release: () => {}
-      };
-    }
     try {
       return await realPool.getConnection();
     } catch (error) {
-      isOffline = true;
-      console.warn('\x1b[33m%s\x1b[0m', 'Database offline. Mock database engine activated.');
-      return {
-        beginTransaction: async () => {},
-        commit: async () => {},
-        rollback: async () => {},
-        query: async (sql, params) => mockQuery(sql, params),
-        release: () => {}
-      };
+      console.error('[MySQL Connection Error]:', error.message);
+      const dbErr = new Error('Database unavailable. Please try later.');
+      dbErr.status = 503;
+      dbErr.code = 'DATABASE_UNAVAILABLE';
+      throw dbErr;
     }
   },
+
   end: async () => {
-    if (isOffline) return;
     return realPool.end();
   }
 };
@@ -2856,14 +2856,11 @@ const pool = {
 const testConnection = async () => {
   try {
     const connection = await realPool.getConnection();
-    console.log('\x1b[32m%s\x1b[0m', 'MySQL Database connected successfully.');
+    console.log('\x1b[32m%s\x1b[0m', 'MySQL Database connected successfully to ' + env.DB.host);
     connection.release();
     return true;
   } catch (error) {
-    isOffline = true;
-    console.error('\x1b[31m%s\x1b[0m', 'MySQL Database connection failed:');
-    console.error(error.message);
-    console.warn('\x1b[33m%s\x1b[0m', 'Development Fallback: Mock database engine activated.');
+    console.error('\x1b[31m%s\x1b[0m', 'MySQL Database connection failed: ' + error.message);
     return false;
   }
 };

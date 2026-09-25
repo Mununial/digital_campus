@@ -3,6 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
+const fs = require('fs');
+const path = require('path');
 
 const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
 
@@ -11,7 +13,7 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || 'srv1334.hstgr.io',
   port: parseInt(process.env.DB_PORT, 10) || 3306,
   user: process.env.DB_USER || 'u847513759_ERP_COLLEGE',
-  password: process.env.DB_PASSWORD || 'ayusHtechnologies@2026',
+  password: process.env.DB_PASSWORD || 'Ayushtech@26',
   database: process.env.DB_NAME || 'u847513759_ERP_COLLEGE',
   waitForConnections: true,
   connectionLimit: 5,
@@ -54,8 +56,8 @@ router.post('/login', async (req, res) => {
     // 1. Try Module C Database (u847513759_ERP_COLLEGE)
     try {
       const [rows] = await pool.query(
-        'SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR id = ? OR LOWER(display_name) = LOWER(?) LIMIT 1',
-        [cleanId, cleanId, cleanId]
+        'SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR LOWER(username) = LOWER(?) OR id = ? OR LOWER(display_name) = LOWER(?) LIMIT 1',
+        [cleanId, cleanId, cleanId, cleanId]
       );
       if (rows && rows.length > 0) {
         const u = rows[0];
@@ -110,16 +112,16 @@ router.post('/login', async (req, res) => {
 
     // 3. Fallback for Institutional Administrator when remote DB IP is restricted
     if (!authenticatedUser) {
-      const officialAdmins = (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,superadmin@bec.ac.in').toLowerCase().split(',').map(s => s.trim());
-      const isOfficialAdmin = officialAdmins.includes(cleanId.toLowerCase()) || cleanId.toLowerCase() === 'admin' || cleanId.toLowerCase() === 'superadmin';
+      const officialAdmins = (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com,superadmin@bec.ac.in').toLowerCase().split(',').map(s => s.trim());
+      const isOfficialAdmin = officialAdmins.includes(cleanId.toLowerCase()) || cleanId.toLowerCase() === 'admin' || cleanId.toLowerCase() === 'superadmin' || cleanId.toLowerCase() === 'genzadmin';
 
-      if (isOfficialAdmin && (cleanPass === 'admin123' || cleanPass === 'ayusHtechnologies@2026' || cleanPass === 'password123' || cleanPass.length >= 6)) {
+      if (isOfficialAdmin && (cleanPass === 'Ayushtech@26' || cleanPass === 'admin123' || cleanPass.length >= 6)) {
         authenticatedUser = {
           id: 'ADM_MASTER',
           uid: 'ADM_MASTER',
-          email: cleanId.includes('@') ? cleanId : 'admin@college.ac.in',
-          name: 'College Administrator',
-          fullName: 'BEC Institutional Administrator',
+          email: cleanId.includes('@') ? cleanId : 'genzuniversity26@gmail.com',
+          name: 'Super Admin',
+          fullName: 'GenZ University Super Admin',
           role: 'ADMIN',
           isAdmin: true
         };
@@ -127,22 +129,37 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    // 4. Fallback for College Students entering with Roll Number
+    // 4. Fallback for College Students entering with Roll Number or Email
     if (!authenticatedUser) {
-      const isStudentRoll = /^[0-9]{2}[A-Za-z]{2,5}[0-9]{2,4}$/i.test(cleanId) || cleanId.toLowerCase().startsWith('std') || cleanId.toLowerCase().includes('student');
-      if (isStudentRoll && cleanPass.length >= 4) {
-        authenticatedUser = {
-          id: 'STD_' + cleanId.toUpperCase(),
-          uid: 'STD_' + cleanId.toUpperCase(),
-          email: cleanId.includes('@') ? cleanId : `${cleanId.toLowerCase()}@becbbsr.ac.in`,
-          name: `Student (${cleanId.toUpperCase()})`,
-          fullName: `Student ${cleanId.toUpperCase()}`,
-          rollNo: cleanId.toUpperCase(),
-          rollNumber: cleanId.toUpperCase(),
-          role: 'STUDENT',
-          isAdmin: false
-        };
-        authSource = 'student_gateway';
+      try {
+        const studentFilePath = path.join(__dirname, '../../BEC-ATTENDANCCE-SYSTEM/src/data/students1stYear.js');
+        if (fs.existsSync(studentFilePath)) {
+          const raw = fs.readFileSync(studentFilePath, 'utf8');
+          const jsonStr = raw.replace(/^export const FIRST_YEAR_STUDENTS =\s*/, '').replace(/;\s*$/, '');
+          const realStudents = JSON.parse(jsonStr);
+          const sMatch = realStudents.find(s => 
+            s.rollNo?.toLowerCase() === cleanId.toLowerCase() || 
+            s.email?.toLowerCase() === cleanId.toLowerCase()
+          );
+          if (sMatch) {
+            authenticatedUser = {
+              id: sMatch.rollNo,
+              uid: sMatch.rollNo,
+              email: sMatch.email,
+              name: sMatch.name,
+              fullName: sMatch.name,
+              rollNo: sMatch.rollNo,
+              rollNumber: sMatch.rollNo,
+              branch: sMatch.rawBranch || sMatch.branch,
+              role: 'STUDENT',
+              photoUrl: sMatch.studentPhotoUrl || '',
+              isAdmin: false
+            };
+            authSource = 'student_master_catalog';
+          }
+        }
+      } catch (err) {
+        console.warn('[Student Auth Catalog Check]:', err.message);
       }
     }
 
