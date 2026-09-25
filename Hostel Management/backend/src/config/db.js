@@ -1,7 +1,5 @@
 const mysql = require('mysql2/promise');
 const env = require('./env');
-
-<<<<<<< HEAD
 // Seed Dataset for Mock fallback
 const MOCK_ROLES = [
   { id: 1, name: 'SUPER_ADMIN' },
@@ -422,8 +420,6 @@ const realPool = mysql.createPool({
   enableKeepAlive: true,
   keepAliveInitialDelay: 10000
 });
-
-<<<<<<< HEAD
 // A lightweight Mock Query Parser simulating SQL database operations
 const mockQuery = async (sql, params = []) => {
   const queryLower = sql.toLowerCase();

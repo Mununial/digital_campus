@@ -537,11 +537,8 @@ router.post('/login', async (req, res) => {
         fullName: authResult.fullName,
         email: authResult.email,
         role: authResult.role,
-<<<<<<< HEAD
         userRole: authResult.role,
-=======
         gender: studentGender,
->>>>>>> f6e79b6e4666fe462a5b8ae6d77961839e140b1f
         isAdmin: authResult.role === 'Admin',
         rollNo: authResult.rollNo || '',
         hostel_required: studentHostelStatus,
