@@ -35,13 +35,37 @@ const Navbar = ({ onToggleSidebar }) => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
         </button>
-        <div className="navbar-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        <div className="navbar-brand" onClick={() => { window.location.href = '/'; }} style={{ cursor: 'pointer' }} title="Return to Main Campus Portal">
           <img src={becLogo} alt="BEC Logo" className="navbar-brand-logo" />
           <span className="navbar-logo-text">BEC Portal</span>
         </div>
       </div>
       
-      <div className="navbar-right">
+      <div className="navbar-right" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <a 
+          href="/" 
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '7px 14px',
+            borderRadius: '9px',
+            background: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
+            color: '#ffffff',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            textDecoration: 'none',
+            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+            cursor: 'pointer'
+          }}
+          title="Return to Main Campus Portal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Main Portal</span>
+        </a>
         {user && (
           <div 
             className="user-badge" 
