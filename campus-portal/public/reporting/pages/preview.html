@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview & Review - BEC SRMS</title>
+    <link rel="icon" type="image/png" href="../assets/images/bec_logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <style>
+        .progress-header {
+            background-color: white;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: var(--space-4);
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        .form-section {
+            margin-bottom: var(--space-4);
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .summary-item {
+            padding: var(--space-2) 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .summary-item label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 2px;
+        }
+        .summary-item span {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--space-3) var(--space-4);
+            background-color: #FAFAFA;
+        }
+        .card-header-flex h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+        }
+        .edit-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edit-btn:hover {
+            background-color: var(--border-color);
+        }
+        .card-body {
+            padding: var(--space-4);
+        }
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-4) 0;
+            margin-top: var(--space-5);
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+    <script src="../js/utils/errorHandler.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header id="header-container"></header>
+        
+        <div class="progress-header">
+            <div class="container">
+                Step 6 of 6: Preview & Review
+            </div>
+        </div>
+        
+        <main id="main-content" class="container">
+            <div style="margin-bottom: var(--space-4); text-align: center;">
+                <h2 style="color: var(--primary-blue);">Review Your Application</h2>
+                <p style="color: var(--text-muted);">Please verify all details carefully before final submission.</p>
+            </div>
+
+            <!-- Sections Container -->
+            <div id="preview-sections"></div>
+
+            <div class="actions-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" style="border: 1px solid var(--border-color);" onclick="window.history.back()">Back</button>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-secondary" id="download-preview-pdf-btn" style="background: #2563eb; color: white; border: none; font-weight: 600; padding: 10px 18px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: var(--radius-sm);">
+                        📄 Download Application Preview (PDF)
+                    </button>
+                    <button type="button" class="btn btn-primary" id="final-submit-btn" style="padding: 10px 22px; font-weight: 600;">Final Submit</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer id="footer-container"></footer>
+    </div>
+
+    <script type="module" src="../js/main.js?v=1.0.5"></script>
+    <script type="module" src="../js/preview.js?v=1.0.5"></script>
+</body>
+</html>

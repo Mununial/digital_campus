@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Official Student ID Card - BEC</title>
+    <style>
+        @page { 
+            size: A4 portrait; 
+            margin: 15mm 10mm; 
+        }
+        * { 
+            box-sizing: border-box; 
+        }
+        html, body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background: #ffffff; 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+            color-adjust: exact !important;
+        }
+        
+        .id-card-container { 
+            display: flex; 
+            flex-direction: row;
+            gap: 25px; 
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px 0;
+            flex-wrap: nowrap;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        
+        .id-card {
+            width: 310px;
+            height: 485px;
+            border: 1.5px solid #002b66;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-color: #ffffff;
+            position: relative;
+            box-sizing: border-box;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            flex-shrink: 0;
+        }
+
+        /* FRONT SIDE OVERLAY STYLES */
+        .front-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
+        }
+
+        .front-photo-box {
+            position: absolute;
+            top: 178px;
+            left: 20px;
+            width: 107px;
+            height: 148px;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #f1f5f9;
+            z-index: 2;
+        }
+
+        .front-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .front-details-box {
+            position: absolute;
+            top: 176px;
+            left: 135px;
+            right: 14px;
+            z-index: 2;
+        }
+
+        .student-name-box {
+            border-bottom: 2px solid #002b66;
+            padding-bottom: 2px;
+            margin-bottom: 5px;
+        }
+
+        .student-name-text {
+            font-size: 13px;
+            font-weight: 900;
+            color: #002b66;
+            text-transform: uppercase;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+
+        .info-table {
+            width: 100%;
+            font-size: 9.5px;
+            line-height: 1.45;
+            border-collapse: collapse;
+        }
+
+        .info-table td {
+            padding: 1px 0;
+            vertical-align: top;
+        }
+
+        .info-table .lbl {
+            font-weight: 800;
+            color: #002b66;
+            width: 62px;
+        }
+
+        .info-table .val {
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        @media print {
+            html, body { 
+                width: 210mm;
+                height: 297mm;
+                margin: 0 !important; 
+                padding: 15mm 0 0 0 !important; 
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                color-adjust: exact !important;
+            }
+            .id-card-container { 
+                gap: 25px !important; 
+                padding: 0 !important;
+                flex-wrap: nowrap !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .id-card { 
+                box-shadow: none !important; 
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="id-card-container">
+        <!-- FRONT SIDE MATCHING EXACT PHYSICAL TEMPLATE -->
+        <div class="id-card">
+            <!-- Exact Front Template Background -->
+            <img src="../../assets/images/id_card_front_bg.jpeg" class="front-bg-img" alt="ID Card Front Template">
+            
+            <!-- Student Photo Overlay -->
+            <div class="front-photo-box">
+                <img id="val-photo" src="../../assets/images/bec_logo.jpeg" alt="Student Photo">
+            </div>
+
+            <!-- Student Dynamic Details Overlay -->
+            <div class="front-details-box">
+                <div class="student-name-box">
+                    <span class="student-name-text" id="val-studentFullName">STUDENT NAME</span>
+                </div>
+                <table class="info-table">
+                    <tr>
+                        <td class="lbl">Regd. No.</td>
+                        <td>: <span class="val" id="val-registrationNumber">PENDING</span></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">Course</td>
+                        <td>: <span class="val" id="val-program">B.Tech</span></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">Branch</td>
+                        <td>: <span class="val" id="val-branch">CSE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">D.O.B.</td>
+                        <td>: <span class="val" id="val-dob">-</span></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">Contact No.</td>
+                        <td>: <span class="val" id="val-studentMobile">-</span></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl">Valid Upto</td>
+                        <td>: <span class="val" id="val-validUpto">July 2030</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- BACK SIDE MATCHING PHYSICAL ID CARD -->
+        <div class="id-card" style="padding: 0; overflow: hidden;">
+            <img src="../../assets/images/id card back side.jpeg" style="width: 100%; height: 100%; object-fit: fill; border-radius: 12px; display: block;" alt="ID Card Back Side">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const raw = sessionStorage.getItem('print_idcard_student');
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    const p = data.personal || {};
+                    const a = data.admin || {};
+                    const r = data.academic || data.reporting || {};
+                    const docs = data.documents || {};
+
+                    const setTxt = (id, val, fallback = '-') => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = (val !== null && val !== undefined && val !== '') ? val : fallback;
+                    };
+
+                    setTxt('val-studentFullName', p.studentFullName || data.studentFullName || 'STUDENT NAME');
+                    setTxt('val-registrationNumber', a.registrationNumber || data.registrationNumber || 'PENDING');
+                    setTxt('val-program', r.program || r.course || data.program || 'B.Tech');
+                    setTxt('val-branch', r.branch || data.branch || 'CSE');
+                    setTxt('val-dob', p.dob || data.dob || '-');
+                    setTxt('val-studentMobile', p.studentMobile || data.studentMobile || '-');
+                    setTxt('val-validUpto', data.validUpto || 'July 2030');
+
+                    const photoUrl = data.photoUrl || docs.studentPhoto?.url || docs.photo?.url;
+                    const photoEl = document.getElementById('val-photo');
+                    if (photoEl && photoUrl) {
+                        photoEl.src = photoUrl;
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading student print data:', e);
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('autoprint') === '1') {
+                const images = Array.from(document.images);
+                Promise.all(images.map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(resolve => {
+                        img.onload = img.onerror = resolve;
+                    });
+                })).then(() => {
+                    setTimeout(() => {
+                        window.print();
+                    }, 400);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

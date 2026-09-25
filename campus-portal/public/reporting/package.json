@@ -1,0 +1,9 @@
+{
+  "name": "bec-reporting-client",
+  "version": "1.0.0",
+  "description": "BEC Client Static Assets",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Client static build ready'"
+  }
+}
