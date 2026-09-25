@@ -9,7 +9,7 @@ const path = require('path');
 
 const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
 const HOSTEL_JWT_SECRET = process.env.HOSTEL_JWT_SECRET || 'super_secret_genz_university_jwt_key_2026';
-const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyC8-xW8PG4xDf-UI9pBH0jMwrWIIfk2mUQ';
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg';
 
 // Database pool for Module C (u847513759_ERP_COLLEGE)
 const moduleCPool = mysql.createPool({
@@ -81,6 +81,14 @@ const MODULE_A_STAFF = [
     email: "admin@bec.ac.in",
     username: "admin",
     name: "BEC System Administrator",
+    role: "Admin",
+    password: "demo123"
+  },
+  {
+    uid: "admin_genz",
+    email: "genzuniversity26@gmail.com",
+    username: "genzuniversity26",
+    name: "GenZ University Super Admin",
     role: "Admin",
     password: "demo123"
   },

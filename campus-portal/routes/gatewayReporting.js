@@ -18,11 +18,19 @@ const pool = mysql.createPool({
 router.get('/config', (req, res) => {
   res.json({
     databaseType: 'mysql',
-    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
-    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in').split(',').map(d => d.trim()).filter(Boolean),
+    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
+    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
     institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
     institutionCode: process.env.INSTITUTION_CODE || 'BEC',
-    apiBaseUrl: ''
+    apiBaseUrl: '',
+    firebase: {
+      apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+      authDomain: "genzuniversity.firebaseapp.com",
+      projectId: "genzuniversity",
+      storageBucket: "genzuniversity.firebasestorage.app",
+      messagingSenderId: "423748552299",
+      appId: "1:423748552299:web:8981f1300ad217afd7132e"
+    }
   });
 });
 
@@ -31,11 +39,19 @@ router.get('/config.js', (req, res) => {
   res.type('application/javascript');
   const config = {
     databaseType: 'mysql',
-    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
-    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in').split(',').map(d => d.trim()).filter(Boolean),
+    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
+    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
     institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
     institutionCode: process.env.INSTITUTION_CODE || 'BEC',
-    apiBaseUrl: ''
+    apiBaseUrl: '',
+    firebase: {
+      apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+      authDomain: "genzuniversity.firebaseapp.com",
+      projectId: "genzuniversity",
+      storageBucket: "genzuniversity.firebasestorage.app",
+      messagingSenderId: "423748552299",
+      appId: "1:423748552299:web:8981f1300ad217afd7132e"
+    }
   };
   res.send(`window.APP_CONFIG = ${JSON.stringify(config)};`);
 });

@@ -8,12 +8,12 @@ const appConfigFirebase = (typeof window !== 'undefined' && window.APP_CONFIG &&
     : {};
 
 const firebaseConfig = {
-    apiKey: appConfigFirebase.apiKey || "",
-    authDomain: appConfigFirebase.authDomain || "",
-    projectId: appConfigFirebase.projectId || "",
-    storageBucket: appConfigFirebase.storageBucket || "",
-    messagingSenderId: appConfigFirebase.messagingSenderId || "",
-    appId: appConfigFirebase.appId || ""
+    apiKey: appConfigFirebase.apiKey || "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+    authDomain: appConfigFirebase.authDomain || "genzuniversity.firebaseapp.com",
+    projectId: appConfigFirebase.projectId || "genzuniversity",
+    storageBucket: appConfigFirebase.storageBucket || "genzuniversity.firebasestorage.app",
+    messagingSenderId: appConfigFirebase.messagingSenderId || "423748552299",
+    appId: appConfigFirebase.appId || "1:423748552299:web:8981f1300ad217afd7132e"
 };
 
 // Initialize Firebase with fast persistent local cache

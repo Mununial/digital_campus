@@ -1,0 +1,39 @@
+{
+  "hosting": {
+    "public": "campus-portal/public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/hostel/**",
+        "destination": "/modules/hostel/index.html"
+      },
+      {
+        "source": "/attendance/**",
+        "destination": "/modules/attendance/index.html"
+      },
+      {
+        "source": "/reporting/**",
+        "destination": "/modules/reporting/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
+          }
+        ]
+      }
+    ]
+  }
+}

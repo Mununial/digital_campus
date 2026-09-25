@@ -3,18 +3,25 @@ import { getFirestore, doc, setDoc, getDocs, collection } from "firebase/firesto
 import { FIRST_YEAR_STUDENTS } from "../src/data/students1stYear.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC8-xW8PG4xDf-UI9pBH0jMwrWIIfk2mUQ",
-  authDomain: "bec-at-system.firebaseapp.com",
-  projectId: "bec-at-system",
-  storageBucket: "bec-at-system.firebasestorage.app",
-  messagingSenderId: "5275309105",
-  appId: "1:5275309105:web:051261270458c3695bb110"
+  apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+  authDomain: "genzuniversity.firebaseapp.com",
+  projectId: "genzuniversity",
+  storageBucket: "genzuniversity.firebasestorage.app",
+  messagingSenderId: "423748552299",
+  appId: "1:423748552299:web:8981f1300ad217afd7132e"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const DEFAULT_ADMIN_USERS = [
+  {
+    uid: "admin_genz",
+    email: "genzuniversity26@gmail.com",
+    name: "GenZ University Admin",
+    role: "admin",
+    status: "approved"
+  },
   {
     uid: "admin_01",
     email: "admin@bec.ac.in",
