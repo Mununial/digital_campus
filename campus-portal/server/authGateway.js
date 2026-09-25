@@ -82,7 +82,7 @@ const MODULE_A_STAFF = [
     username: "admin",
     name: "BEC System Administrator",
     role: "Admin",
-    password: "demo123"
+    password: "Ayushtech@26"
   },
   {
     uid: "admin_genz",
@@ -90,7 +90,7 @@ const MODULE_A_STAFF = [
     username: "genzuniversity26",
     name: "GenZ University Super Admin",
     role: "Admin",
-    password: "demo123"
+    password: "Ayushtech@26"
   },
   {
     uid: "teacher_01",
@@ -98,7 +98,7 @@ const MODULE_A_STAFF = [
     username: "teacher",
     name: "Dr. Rajesh Sharma",
     role: "Faculty",
-    password: "demo123"
+    password: "Ayushtech@26"
   }
 ];
 

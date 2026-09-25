@@ -17,11 +17,13 @@ const MOCK_HOSTELS = [
   { id: 6, name: 'Barmunda Girls Hostel', code: 'BMGH', gender: 'FEMALE', location: 'Barmunda Sub-campus', status: 'ACTIVE' }
 ];
 
+const fs = require('fs');
+const path = require('path');
+
 let MOCK_USERS = [
-  { id: 1, role_id: 1, role: 'SUPER_ADMIN', username: 'superadmin', email: 'admin@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
-  { id: 2, role_id: 2, role: 'SUPERINTENDENT', username: 'warden', email: 'warden@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
-  { id: 3, role_id: 3, role: 'STUDENT', username: 'student', email: 'student@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
-  { id: 4, role_id: 3, role: 'STUDENT', username: 'student2', email: 'student2@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'FEMALE', must_change_password: 0, last_login_at: null }
+  { id: 1, role_id: 1, role: 'SUPER_ADMIN', username: 'genzadmin', email: 'genzuniversity26@gmail.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
+  { id: 2, role_id: 1, role: 'SUPER_ADMIN', username: 'admin', email: 'admin@bec.ac.in', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
+  { id: 3, role_id: 2, role: 'SUPERINTENDENT', username: 'warden', email: 'warden@bec.ac.in', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null }
 ];
 
 let MOCK_SECURITY_AUDIT_LOG = [];
@@ -50,52 +52,60 @@ let MOCK_BEDS = [
 ];
 
 const MOCK_SUPER_HOSTELS = [
-  { id: 1, user_id: 2, hostel_id: 1 },
-  { id: 2, user_id: 2, hostel_id: 3 }
+  { id: 1, user_id: 3, hostel_id: 1 },
+  { id: 2, user_id: 3, hostel_id: 2 }
 ];
 
-let MOCK_STUDENTS = [
-  {
-    id: 1,
-    user_id: 3,
-    hostel_id: 1,
-    student_id: 'STD2026001',
-    roll_number: 'CSE-2026-089',
-    full_name: 'John Doe',
-    phone: '9876543210',
-    email: 'student@hostel.com',
-    branch: 'Computer Science',
-    course: 'B.Tech',
-    year: 3,
-    semester: 5,
-    bed_id: 1,
-    hostel_name: 'BEC Boys Hostel 1',
-    room_number: '101',
-    bed_number: 'A-1',
-    admission_date: '2024-07-15T00:00:00.000Z',
-    status: 'ACTIVE'
-  },
-  {
-    id: 2,
-    user_id: 4,
-    hostel_id: 1,
-    student_id: 'STD2026002',
-    roll_number: 'CSE-2026-090',
-    full_name: 'Jane Smith',
-    phone: '9876543211',
-    email: 'student2@hostel.com',
-    branch: 'Computer Science',
-    course: 'B.Tech',
-    year: 3,
-    semester: 5,
-    bed_id: 2,
-    hostel_name: 'BEC Boys Hostel 1',
-    room_number: '102',
-    bed_number: 'A-2',
-    admission_date: '2024-07-15T00:00:00.000Z',
-    status: 'ACTIVE'
+let MOCK_STUDENTS = [];
+
+// Populate real students from admission master data
+try {
+  const studentsPath = path.join(__dirname, '../../../../BEC-ATTENDANCCE-SYSTEM/src/data/students1stYear.js');
+  if (fs.existsSync(studentsPath)) {
+    const raw = fs.readFileSync(studentsPath, 'utf8');
+    const jsonStr = raw.replace(/^export const FIRST_YEAR_STUDENTS =\s*/, '').replace(/;\s*$/, '');
+    const realList = JSON.parse(jsonStr);
+    realList.forEach((s, idx) => {
+      const uId = idx + 10;
+      MOCK_USERS.push({
+        id: uId,
+        role_id: 3,
+        role: 'STUDENT',
+        username: s.rollNo,
+        email: s.email,
+        full_name: s.name,
+        password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe',
+        status: 'ACTIVE',
+        gender: (s.gender || 'MALE').toUpperCase(),
+        must_change_password: 0,
+        last_login_at: null
+      });
+
+      MOCK_STUDENTS.push({
+        id: idx + 1,
+        user_id: uId,
+        hostel_id: (s.gender || '').toLowerCase() === 'female' ? 2 : 1,
+        student_id: s.rollNo,
+        roll_number: s.rollNo,
+        full_name: s.name,
+        phone: s.phone || s.studentMobile || '9876543210',
+        email: s.email,
+        branch: s.rawBranch || s.branch || 'B.Tech',
+        course: 'B.Tech',
+        year: 1,
+        semester: 1,
+        bed_id: idx < 2 ? idx + 1 : null,
+        hostel_name: (s.gender || '').toLowerCase() === 'female' ? 'BEC Girls Hostel 1' : 'BEC Boys Hostel 1',
+        room_number: idx < 2 ? (idx === 0 ? '101' : '102') : null,
+        bed_number: idx < 2 ? (idx === 0 ? 'A-1' : 'A-2') : null,
+        admission_date: s.createdAt || '2026-08-28T16:46:48.086Z',
+        status: 'ACTIVE'
+      });
+    });
   }
-];
+} catch (e) {
+  console.warn('Notice: loading real students for fallback:', e.message);
+}
 
 let MOCK_NOTICES = [
   {
@@ -1044,7 +1054,7 @@ const mockQuery = async (sql, params = []) => {
       const u = c.assigned_to ? MOCK_USERS.find(user => user.id === c.assigned_to) : null;
       return {
         ...c,
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         hostel_name: h ? h.name : 'BEC Boys Hostel 1',
         room_number: st ? st.room_number : '101',
@@ -1228,7 +1238,7 @@ const mockQuery = async (sql, params = []) => {
 
       return {
         ...v,
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         student_phone: st ? st.phone : '9876543210',
         student_branch: st ? st.branch : 'CSE',
@@ -1405,7 +1415,7 @@ const mockQuery = async (sql, params = []) => {
       const menu = MOCK_MESS_MENUS.find(m => (m.hostel_id === ma.hostel_id || m.hostel_id === null) && m.menu_date === ma.meal_date && m.meal_type === ma.meal_type);
       return {
         ...ma,
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         room_number: st ? st.room_number : '101',
         meal_name: menu ? menu.meal_name : 'Standard Meal',
@@ -1574,7 +1584,7 @@ const mockQuery = async (sql, params = []) => {
       return {
         ...sf,
         remaining_amount: Math.max(0, parseFloat(sf.amount) - parseFloat(sf.paid_amount)),
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         room_number: st ? st.room_number : '101',
         branch: st ? st.branch : 'CSE',
@@ -1664,7 +1674,7 @@ const mockQuery = async (sql, params = []) => {
       const u = MOCK_USERS.find(u => u.id === fp.received_by);
       return {
         ...fp,
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         room_number: st ? st.room_number : '101',
         hostel_name: h ? h.name : 'BEC Boys Hostel 1',
@@ -1821,7 +1831,7 @@ const mockQuery = async (sql, params = []) => {
       const u = MOCK_USERS.find(u => u.id === sa.allocated_by);
       return {
         ...sa,
-        student_name: st ? st.full_name : 'John Doe',
+        student_name: st ? st.full_name : 'Student',
         student_code: st ? st.student_id : 'STD2026001',
         roll_number: st ? st.roll_number : 'CSE-2026-089',
         student_status: st ? st.status : 'ACTIVE',
@@ -2287,7 +2297,7 @@ const mockQuery = async (sql, params = []) => {
         floor_number: '1st Floor',
         room_number: '101',
         bed_number: 'A-1',
-        student_name: s ? s.full_name : 'John Doe',
+        student_name: s ? s.full_name : 'Student',
         student_code: s ? s.student_id : 'STD2026001',
         reporter_name: uRep ? uRep.username : 'student',
         reporter_email: uRep ? uRep.email : 'student@hostel.com',

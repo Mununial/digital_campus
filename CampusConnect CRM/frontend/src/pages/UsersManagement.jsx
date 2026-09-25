@@ -43,8 +43,8 @@ const UsersManagement = () => {
       // Realistically we need a userController for this.
       // I'll create the backend logic for this next.
       setUsers([
-        { id: 1, full_name: 'Admin User', email: 'admin@crm.com', role: 'ADMIN', is_active: true },
-        { id: 2, full_name: 'Jane Counselor', email: 'jane@crm.com', role: 'COUNSELOR', is_active: true }
+        { id: 1, full_name: 'GenZ University Super Admin', email: 'genzuniversity26@gmail.com', role: 'ADMIN', is_active: true },
+        { id: 2, full_name: 'BEC Administrator', email: 'admin@bec.ac.in', role: 'ADMIN', is_active: true }
       ]);
     } catch (error) {
       toast.error('Failed to load users');

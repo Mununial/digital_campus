@@ -135,48 +135,6 @@ function getFallbackReportingStudents() {
     console.warn('[Reporting Fallback Notice]:', e.message);
   }
 
-  // Also include seed students from Firestore script / mock
-  const extras = [
-    { id: '26CSE01', rollNumber: '26CSE01', name: 'Rahul Sharma', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'rahul.sharma@gmail.com' },
-    { id: '26CSE02', rollNumber: '26CSE02', name: 'Priya Dash', gender: 'Female', branch: 'Computer Science & Engineering', year: '1st Year', email: 'priya.dash@gmail.com' },
-    { id: '26CSE03', rollNumber: '26CSE03', name: 'Ankit Mohanty', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'ankit.mohanty@gmail.com' },
-    { id: '26CSE04', rollNumber: '26CSE04', name: 'Swati Behera', gender: 'Female', branch: 'Computer Science & Engineering', year: '1st Year', email: 'swati.behera@gmail.com' },
-    { id: '26CSE05', rollNumber: '26CSE05', name: 'Rohan Kumar Nayak', gender: 'Male', branch: 'Computer Science & Engineering', year: '1st Year', email: 'rohan.nayak@gmail.com' },
-    { id: 'STD2026001', rollNumber: 'CSE-2026-089', name: 'John Doe', gender: 'Male', branch: 'Computer Science', year: '3rd Year', email: 'student@hostel.com' },
-    { id: 'STD2026002', rollNumber: 'CSE-2026-090', name: 'Jane Smith', gender: 'Female', branch: 'Computer Science', year: '3rd Year', email: 'student2@hostel.com' }
-  ];
-
-  for (const extra of extras) {
-    if (!list.some(s => s.rollNumber === extra.rollNumber)) {
-      list.push({
-        id: extra.id,
-        registrationNumber: extra.id,
-        enrollmentNumber: extra.rollNumber,
-        rollNumber: extra.rollNumber,
-        section: 'A',
-        status: 'VERIFIED',
-        verified: true,
-        idCardGenerated: true,
-        remarks: 'Authentic student record from reporting master',
-        personal: {
-          studentFullName: extra.name,
-          gender: extra.gender,
-          studentEmail: extra.email,
-          studentMobile: '9876543210'
-        },
-        reporting: {
-          branch: extra.branch,
-          academicYear: extra.year,
-          program: 'B.Tech'
-        },
-        facilities: {
-          hostelRequired: 'Yes'
-        },
-        updatedAt: new Date().toISOString()
-      });
-    }
-  }
-
   return list;
 }
 

@@ -55,38 +55,6 @@ function getReportingMasterList() {
     console.warn('[ReportingIntegrationService Warning]: Failed reading students1stYear:', err.message);
   }
 
-  // 2. Reporting Core Seed Students (Rahul, Priya, Swati, Rohan, Ankit)
-  const coreSeeds = [
-    { roll_number: '26CSE01', full_name: 'Rahul Sharma', gender: 'Male', branch: 'Computer Science & Engineering', year: 1, email: 'rahul.sharma@gmail.com', phone: '9876543210' },
-    { roll_number: '26CSE02', full_name: 'Priya Dash', gender: 'Female', branch: 'Computer Science & Engineering', year: 1, email: 'priya.dash@gmail.com', phone: '9876543211' },
-    { roll_number: '26CSE03', full_name: 'Ankit Mohanty', gender: 'Male', branch: 'Computer Science & Engineering', year: 1, email: 'ankit.mohanty@gmail.com', phone: '9876543212' },
-    { roll_number: '26CSE04', full_name: 'Swati Behera', gender: 'Female', branch: 'Computer Science & Engineering', year: 1, email: 'swati.behera@gmail.com', phone: '9876543213' },
-    { roll_number: '26CSE05', full_name: 'Rohan Kumar Nayak', gender: 'Male', branch: 'Computer Science & Engineering', year: 1, email: 'rohan.nayak@gmail.com', phone: '9876543214' },
-    { roll_number: 'CSE-2026-089', full_name: 'John Doe', gender: 'Male', branch: 'Computer Science', year: 3, email: 'student@hostel.com', phone: '9876543210' },
-    { roll_number: 'CSE-2026-090', full_name: 'Jane Smith', gender: 'Female', branch: 'Computer Science', year: 3, email: 'student2@hostel.com', phone: '9876543211' }
-  ];
-
-  coreSeeds.forEach(seed => {
-    const existing = masterList.find(s => s.roll_number.toLowerCase() === seed.roll_number.toLowerCase());
-    if (!existing) {
-      masterList.push({
-        id: seed.roll_number,
-        student_id: seed.roll_number,
-        roll_number: seed.roll_number,
-        full_name: seed.full_name,
-        gender: seed.gender,
-        normalized_gender: normalizeGender(seed.gender),
-        branch: seed.branch,
-        course: 'B.Tech',
-        year: seed.year,
-        semester: seed.year * 2 - 1,
-        email: seed.email,
-        phone: seed.phone,
-        status: 'ACTIVE'
-      });
-    }
-  });
-
   return masterList;
 }
 

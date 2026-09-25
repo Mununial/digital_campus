@@ -47,10 +47,12 @@ app.get('/signup',                     (req, res) => res.redirect('/'));
 // -------------------------------------------------------------
 const gatewayAuthRoutes = require('./server/authGateway');
 const gatewayReportingRoutes = require('./routes/gatewayReporting');
+const gatewayStudentRoutes = require('./routes/gatewayStudent');
 
 // Central Gateway Endpoints
 app.use('/api/gateway', gatewayAuthRoutes);
 app.use('/api/auth', gatewayAuthRoutes);
+app.use('/api/student', gatewayStudentRoutes);
 
 // Reporting System APIs
 app.use('/api/reporting', gatewayReportingRoutes);
