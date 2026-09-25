@@ -80,6 +80,241 @@
     .role-student { background: #dbeafe; color: #1e40af; }
     .role-faculty { background: #fef3c7; color: #92400e; }
     .role-admin { background: #fee2e2; color: #991b1b; }
+
+    /* ============================================================= */
+    /* DIGITAL LIVE NOTICE TICKER BANNER                             */
+    /* ============================================================= */
+    .digital-ticker-bar {
+      background: linear-gradient(135deg, #091224 0%, #152238 50%, #0c1a30 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      padding: 7px 14px;
+      overflow: hidden;
+      position: relative;
+      gap: 12px;
+    }
+    .ticker-live-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(220, 38, 38, 0.45);
+      flex-shrink: 0;
+      z-index: 2;
+    }
+    .ticker-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+      animation: pulseLiveDot 1.4s infinite ease-in-out;
+    }
+    @keyframes pulseLiveDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.4; }
+    }
+    .ticker-track-wrapper {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 15px, black calc(100% - 15px), transparent);
+      height: 34px;
+      display: flex;
+      align-items: center;
+    }
+    .ticker-track {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: tickerScroll 38s linear infinite;
+      gap: 28px;
+    }
+    .ticker-track:hover {
+      animation-play-state: paused;
+    }
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #e2e8f0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .ticker-item:hover {
+      background: rgba(59, 130, 246, 0.18);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      transform: translateY(-1px);
+    }
+    .ticker-pill-urgent {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+    .ticker-pill-exam {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde047;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+    .ticker-pill-placement {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+    .ticker-pill-general {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+    }
+    .ticker-time-badge {
+      background: rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ticker-time-badge.recent {
+      background: rgba(34, 197, 94, 0.2);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .ticker-btn-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+    .ticker-btn-all:hover {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    /* Notice Detail Modal */
+    .notice-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+    .notice-modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 540px;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e2e8f0;
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .notice-modal-header {
+      background: linear-gradient(135deg, #091224 0%, #152238 100%);
+      color: #ffffff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .notice-modal-close-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .notice-modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.85);
+      border-color: #ef4444;
+      transform: scale(1.05);
+    }
+    .notice-modal-body {
+      padding: 22px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .notice-modal-footer {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -169,6 +404,24 @@
       <!-- VIEW 2: UNIFIED DASHBOARD (Minimal doorway dashboard)         -->
       <!-- ============================================================= -->
       <section id="view-dashboard" class="portal-screen" style="display: none;">
+
+        <!-- Live Digital Notice Marquee Ticker Banner -->
+        <div class="digital-ticker-bar" id="digital-notice-ticker">
+          <div class="ticker-live-tag">
+            <span class="ticker-pulse-dot"></span>
+            <i class="fa-solid fa-bullhorn" style="font-size: 0.72rem;"></i>
+            <span>LIVE NOTICE</span>
+          </div>
+          <div class="ticker-track-wrapper">
+            <div class="ticker-track" id="ticker-track">
+              <div class="ticker-item"><i class="fa-solid fa-spinner fa-spin" style="margin-right: 6px;"></i> Connecting to Campus Broadcast Notice Board...</div>
+            </div>
+          </div>
+          <a href="/notices" class="ticker-btn-all" title="View All Official Notices">
+            <span>View All</span>
+            <i class="fa-solid fa-arrow-right" style="font-size: 0.68rem;"></i>
+          </a>
+        </div>
 
         <!-- Authenticated Header Banner -->
         <div style="background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); color: #fff; padding: 24px 28px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
@@ -418,6 +671,7 @@
 
         loginView.style.display = 'none';
         dashView.style.display = 'block';
+        loadDigitalNoticeTicker();
 
         const nameEl = document.getElementById('dash-user-name');
         const roleEl = document.getElementById('dash-user-role');
@@ -865,6 +1119,186 @@
         document.body.style.overflow = 'auto';
       }
     }
+
+    /* ============================================================
+       DIGITAL NOTICE TICKER & POPUP MODAL CONTROLLER
+       ============================================================ */
+    let portalNoticesList = [];
+
+    function formatNoticeTimeAgo(isoString) {
+      if (!isoString) return 'Recent';
+      try {
+        const noticeDate = new Date(isoString);
+        if (isNaN(noticeDate.getTime())) return 'Recent';
+        const now = new Date();
+        const diffMs = now.getTime() - noticeDate.getTime();
+        
+        // If client device clock is slightly behind or very close
+        if (diffMs < 0 || diffMs < 10 * 60 * 1000) {
+          return 'Just now';
+        }
+        
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) {
+          if (diffHours < 1) {
+            return `${Math.max(1, diffMinutes)}m ago`;
+          }
+          return `Today • ${diffHours}h ago`;
+        } else if (diffDays === 1) {
+          return '1 day ago';
+        } else if (diffDays <= 7) {
+          return `${diffDays} days ago`;
+        } else if (diffDays <= 30) {
+          return `${Math.floor(diffDays / 7)}w ago`;
+        } else {
+          return noticeDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+        }
+      } catch (e) {
+        return 'Recent';
+      }
+    }
+
+    function getNoticeBadgeHtml(priority, category) {
+      const p = (priority || '').toUpperCase();
+      const c = (category || '').toUpperCase();
+      if (p === 'EMERGENCY' || p === 'URGENT') {
+        return `<span class="ticker-pill-urgent"><i class="fa-solid fa-triangle-exclamation"></i> URGENT</span>`;
+      }
+      if (c === 'EXAM_CELL' || c === 'EXAM') {
+        return `<span class="ticker-pill-exam"><i class="fa-solid fa-graduation-cap"></i> EXAM</span>`;
+      }
+      if (c === 'PLACEMENT') {
+        return `<span class="ticker-pill-placement"><i class="fa-solid fa-briefcase"></i> PLACEMENT</span>`;
+      }
+      return `<span class="ticker-pill-general"><i class="fa-solid fa-bell"></i> NOTICE</span>`;
+    }
+
+    async function loadDigitalNoticeTicker() {
+      const track = document.getElementById('ticker-track');
+      if (!track) return;
+
+      try {
+        let fetchedList = [];
+        // 1. Try Live Notice Gateway API
+        try {
+          const res = await fetch('/api/notices');
+          if (res.ok) {
+            const json = await res.json();
+            if (json && json.data && Array.isArray(json.data.notices)) {
+              fetchedList = json.data.notices;
+            }
+          }
+        } catch (apiErr) {
+          console.warn('API Notice Gateway offline, falling back to static notices catalog');
+        }
+
+        // 2. Fallback to static JSON file (Firebase Hosting / CDN)
+        if (!fetchedList || fetchedList.length === 0) {
+          try {
+            const staticRes = await fetch('/data/noticesMaster.json');
+            if (staticRes.ok) {
+              fetchedList = await staticRes.json();
+            }
+          } catch (stErr) {
+            console.error('Static notice fallback error:', stErr);
+          }
+        }
+
+        if (fetchedList && fetchedList.length > 0) {
+          portalNoticesList = fetchedList;
+          renderNoticeTicker(fetchedList);
+        } else {
+          track.innerHTML = `<div class="ticker-item"><i class="fa-solid fa-circle-info"></i> No new circulars published today. Check back soon.</div>`;
+        }
+      } catch (err) {
+        console.error('loadDigitalNoticeTicker error:', err);
+      }
+    }
+
+    function renderNoticeTicker(notices) {
+      const track = document.getElementById('ticker-track');
+      if (!track || !notices || notices.length === 0) return;
+
+      const itemsHtml = notices.map((n, idx) => {
+        const timeAgo = formatNoticeTimeAgo(n.publishedAt);
+        const isRecent = timeAgo.includes('Just now') || timeAgo.includes('Today') || timeAgo.includes('1 day');
+        const badge = getNoticeBadgeHtml(n.priority, n.category);
+        const titleSafe = (n.title || '').replace(/"/g, '&quot;');
+
+        return `
+          <div class="ticker-item" onclick="openNoticeModalByIndex(${idx})" role="button" tabindex="0" title="Click to view details">
+            ${badge}
+            <span class="ticker-time-badge ${isRecent ? 'recent' : ''}">
+              <i class="fa-regular fa-clock"></i> ${timeAgo}
+            </span>
+            <span>${titleSafe}</span>
+            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.65rem; opacity: 0.7; margin-left: 2px;"></i>
+          </div>
+        `;
+      }).join('');
+
+      // Duplicate sequence to achieve an infinite seamless continuous marquee loop
+      track.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    function openNoticeModalByIndex(index) {
+      const notice = portalNoticesList[index];
+      if (!notice) return;
+
+      const modal = document.getElementById('notice-detail-modal');
+      const titleEl = document.getElementById('modal-notice-title');
+      const tagEl = document.getElementById('modal-notice-tag');
+      const timeEl = document.getElementById('modal-notice-time');
+      const deptEl = document.getElementById('modal-notice-dept');
+      const idEl = document.getElementById('modal-notice-id');
+      const descEl = document.getElementById('modal-notice-desc');
+      const linkBox = document.getElementById('modal-notice-link-box');
+      const linkBtn = document.getElementById('modal-notice-action-link');
+
+      if (!modal) return;
+
+      if (titleEl) titleEl.textContent = notice.title || 'Campus Circular';
+      if (tagEl) {
+        tagEl.innerHTML = getNoticeBadgeHtml(notice.priority, notice.category);
+      }
+      if (timeEl) {
+        const timeAgo = formatNoticeTimeAgo(notice.publishedAt);
+        timeEl.innerHTML = `<i class="fa-regular fa-clock" style="margin-right: 4px;"></i>${timeAgo} (${notice.formattedDate || ''})`;
+      }
+      if (deptEl) deptEl.textContent = notice.publisherRole || notice.publisher || 'Academic Cell';
+      if (idEl) idEl.textContent = notice.id || 'BEC/2026';
+      if (descEl) descEl.textContent = notice.content || notice.description || 'No additional details provided.';
+
+      if (linkBox && linkBtn) {
+        if (notice.attachmentUrl && notice.attachmentUrl !== '#') {
+          linkBox.style.display = 'block';
+          linkBtn.href = notice.attachmentUrl;
+          linkBtn.textContent = `Open Official Document (${notice.attachmentName || 'Attachment'})`;
+        } else {
+          linkBox.style.display = 'none';
+        }
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeNoticeModal() {
+      const modal = document.getElementById('notice-detail-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    function handleNoticeBackdropClick(event) {
+      if (event.target && event.target.id === 'notice-detail-modal') {
+        closeNoticeModal();
+      }
+    }
   </script>
 
   <!-- ============================================================ -->
@@ -1058,6 +1492,43 @@
         </button>
       </div>
 
+    </div>
+  <!-- ============================================================ -->
+  <!-- MODAL 3: NOTICE DETAIL POPUP MODAL                           -->
+  <!-- ============================================================ -->
+  <div id="notice-detail-modal" class="notice-modal-backdrop" onclick="handleNoticeBackdropClick(event)">
+    <div class="notice-modal-card" role="dialog" aria-modal="true">
+      <div class="notice-modal-header">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <div id="modal-notice-tag"></div>
+          <span id="modal-notice-time" class="ticker-time-badge recent"></span>
+        </div>
+        <button onclick="closeNoticeModal()" class="notice-modal-close-btn" aria-label="Close Notice Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="notice-modal-body">
+        <h3 id="modal-notice-title" style="font-size: 1.12rem; font-weight: 800; color: #0f172a; margin-bottom: 12px; line-height: 1.45;"></h3>
+        <div style="display: flex; gap: 16px; font-size: 0.78rem; color: #64748b; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap;">
+          <span><i class="fa-solid fa-building-columns" style="color: #2563eb; margin-right: 5px;"></i> <strong id="modal-notice-dept">Examination Dept</strong></span>
+          <span><i class="fa-solid fa-hashtag" style="color: #94a3b8; margin-right: 3px;"></i> Ref: <code id="modal-notice-id" style="font-size: 0.75rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #334155;"></code></span>
+        </div>
+        <div id="modal-notice-desc" style="font-size: 0.88rem; color: #334155; line-height: 1.65; white-space: pre-line; margin-bottom: 18px;"></div>
+        <div id="modal-notice-link-box" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px;">
+          <a id="modal-notice-action-link" href="#" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; color: #1d4ed8; text-decoration: none;">
+            <i class="fa-solid fa-file-pdf" style="font-size: 1.1rem; color: #dc2626;"></i>
+            <span>Open Official Document</span>
+          </a>
+        </div>
+      </div>
+      <div class="notice-modal-footer">
+        <a href="/notices" style="font-size: 0.8rem; font-weight: 700; color: #2563eb; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-bullhorn"></i> View All Circulars
+        </a>
+        <button onclick="closeNoticeModal()" style="background: #e2e8f0; color: #1e293b; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer;">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 
