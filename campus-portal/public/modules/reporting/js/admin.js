@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!user || !isAdmin) {
         alert("Access Denied: Only authorized administrators can access the Admin Panel.");
-        window.location.href = '../index.html';
+        window.location.href = 'login.html';
         return;
     }
 

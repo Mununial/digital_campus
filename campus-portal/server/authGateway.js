@@ -444,12 +444,14 @@ router.post('/login', async (req, res) => {
       success: true,
       message: 'Authentication successful',
       source: sourceModule,
+      token: masterToken,
       user: {
         id: authResult.id,
         name: authResult.name,
         fullName: authResult.fullName,
         email: authResult.email,
         role: authResult.role,
+        userRole: authResult.role,
         isAdmin: authResult.role === 'Admin',
         rollNo: authResult.rollNo || ''
       },

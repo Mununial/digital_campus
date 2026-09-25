@@ -35,8 +35,7 @@ app.use((req, res, next) => {
 // -------------------------------------------------------------
 app.get('/attendance/login',           (req, res) => res.redirect('/'));
 app.get('/attendance/login/*',         (req, res) => res.redirect('/'));
-app.get('/reporting/pages/login.html', (req, res) => res.redirect('/'));
-app.get('/reporting/login',            (req, res) => res.redirect('/'));
+app.get('/reporting/login',            (req, res) => res.redirect('/reporting/pages/login.html'));
 app.get('/login',                      (req, res) => res.redirect('/'));
 app.get('/signup',                     (req, res) => res.redirect('/'));
 

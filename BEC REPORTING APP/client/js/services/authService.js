@@ -41,7 +41,7 @@ export const AuthService = {
     },
 
     async waitForAuth() {
-        const token = localStorage.getItem('college_erp_token');
+        const token = localStorage.getItem('college_erp_token') || localStorage.getItem('portalToken') || localStorage.getItem('authToken');
         if (!token) {
             notifyAuthSubscribers(null);
             return null;
@@ -52,12 +52,22 @@ export const AuthService = {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
-                const user = await res.json();
+                const data = await res.json();
+                const user = data.user || data;
                 localStorage.setItem('college_erp_user', JSON.stringify(user));
                 notifyAuthSubscribers(user);
                 return user;
             }
         } catch (e) {}
+
+        const cachedUser = this.getCurrentUser() || (() => {
+            try { return JSON.parse(localStorage.getItem('bec_portal_user')); } catch (e) { return null; }
+        })();
+
+        if (cachedUser) {
+            notifyAuthSubscribers(cachedUser);
+            return cachedUser;
+        }
 
         localStorage.removeItem('college_erp_token');
         localStorage.removeItem('college_erp_user');
@@ -74,22 +84,25 @@ export const AuthService = {
 
         const data = await res.json();
         if (!res.ok) {
-            throw new Error(data.error || 'Failed to login');
+            throw new Error(data.error || data.message || 'Failed to login');
         }
 
-        localStorage.setItem('college_erp_token', data.token);
-        localStorage.setItem('college_erp_user', JSON.stringify(data.user));
+        const user = data.user || data;
+        const authToken = data.token || data.tokens?.gateway || data.tokens?.reporting || data.tokens?.hostel;
+
+        localStorage.setItem('college_erp_token', authToken);
+        localStorage.setItem('college_erp_user', JSON.stringify(user));
         
         Store.clear();
-        Store.data.id = data.user.id;
-        Store.data.email = data.user.email;
-        Store.data.role = data.user.role;
-        Store.data.userRole = data.user.role;
-        Store.data.isAdmin = data.user.isAdmin;
+        Store.data.id = user.id;
+        Store.data.email = user.email;
+        Store.data.role = user.role;
+        Store.data.userRole = user.role;
+        Store.data.isAdmin = user.isAdmin || String(user.role).toUpperCase().includes('ADMIN');
         Store.saveLocally();
 
-        notifyAuthSubscribers(data.user);
-        return { user: data.user, isAdmin: data.user.isAdmin };
+        notifyAuthSubscribers(user);
+        return { user, isAdmin: Store.data.isAdmin };
     },
 
     async register(email, password, fullName) {
@@ -101,22 +114,25 @@ export const AuthService = {
 
         const data = await res.json();
         if (!res.ok) {
-            throw new Error(data.error || 'Failed to register account');
+            throw new Error(data.error || data.message || 'Failed to register account');
         }
 
-        localStorage.setItem('college_erp_token', data.token);
-        localStorage.setItem('college_erp_user', JSON.stringify(data.user));
+        const user = data.user || data;
+        const authToken = data.token || data.tokens?.gateway || data.tokens?.reporting || data.tokens?.hostel;
+
+        localStorage.setItem('college_erp_token', authToken);
+        localStorage.setItem('college_erp_user', JSON.stringify(user));
 
         Store.clear();
-        Store.data.id = data.user.id;
-        Store.data.email = data.user.email;
-        Store.data.role = data.user.role;
-        Store.data.userRole = data.user.role;
-        Store.data.isAdmin = data.user.isAdmin;
+        Store.data.id = user.id;
+        Store.data.email = user.email;
+        Store.data.role = user.role;
+        Store.data.userRole = user.role;
+        Store.data.isAdmin = user.isAdmin || String(user.role).toUpperCase().includes('ADMIN');
         Store.saveLocally();
 
-        notifyAuthSubscribers(data.user);
-        return { user: data.user, isAdmin: data.user.isAdmin };
+        notifyAuthSubscribers(user);
+        return { user, isAdmin: Store.data.isAdmin };
     },
 
     async logout() {
@@ -129,5 +145,16 @@ export const AuthService = {
 
 export async function isUserAdmin(user) {
     if (!user) return false;
-    return user.isAdmin === true || user.role === 'admin' || user.userRole === 'admin';
+    const r = String(user.role || user.userRole || '').toUpperCase();
+    return user.isAdmin === true || r.includes('ADMIN');
+}
+
+export const OFFICIAL_ADMIN_EMAILS = [
+    'superadmin@bec.ac.in',
+    'admin@bec.ac.in',
+    'ayush@bec.ac.in'
+];
+
+export async function createAdminAccount(email, password, fullName) {
+    return AuthService.register(email, password, fullName);
 }
