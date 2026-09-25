@@ -63,7 +63,7 @@ const HomeRedirect = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/attendance">
         <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
           <Navbar />
           <main className="flex-1">

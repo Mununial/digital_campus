@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BEC Central Library - Library Portal & Knowledge Hub</title>
+  <link rel="icon" type="image/png" href="/assets/bec circle logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    html, body {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    *::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Header */
+    .top-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff;
+      padding: 1px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-dashboard {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-dashboard:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .role-badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 4px 12px 4px 4px;
+      border-radius: 20px;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .user-name-text {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #1e293b;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-logout {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Hub Banner Card */
+    .hub-banner-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hub-title-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .btn-back-arrow {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .btn-back-arrow:hover {
+      background: #eff6ff;
+      color: #2563eb;
+      border-color: #93c5fd;
+    }
+
+    .library-pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #2563eb;
+      padding: 3px 10px;
+      border-radius: 16px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hub-heading {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .hub-subtext {
+      font-size: 0.84rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .btn-refresh {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-refresh:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    /* Tabs Bar */
+    .library-tabs-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .lib-tab-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .lib-tab-btn:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .lib-tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+    }
+
+    /* Content Area */
+    .tab-content-pane {
+      display: none;
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    .tab-content-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Filter & Search Bar */
+    .catalog-search-bar {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .search-input-wrapper i {
+      position: absolute;
+      left: 14px;
+      top: 13px;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .search-input-field {
+      width: 100%;
+      padding: 10px 14px 10px 42px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.85rem;
+      outline: none;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .search-input-field:focus {
+      border-color: #3b82f6;
+      background: #ffffff;
+    }
+
+    .filter-dropdowns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-select {
+      padding: 9px 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Book Cards Grid */
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+    }
+
+    .book-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.2s ease;
+    }
+    .book-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border-color: #cbd5e1;
+    }
+
+    .book-top-badges {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .dept-badge {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .avail-badge {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .book-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #2563eb;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .book-author {
+      font-size: 0.78rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+
+    .book-info-list {
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 0.75rem;
+    }
+
+    .book-info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      color: #475569;
+    }
+    .book-info-row span:first-child {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .book-info-row span:last-child {
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .book-borrow-note {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      text-align: center;
+      padding-top: 6px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    /* Clearance Alert Banner (Tab 2) */
+    .clearance-banner {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .clearance-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .clearance-tag {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    /* Digital Notes Resource Cards (Tab 3) */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
+    }
+
+    .note-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+    .note-card:hover {
+      border-color: #93c5fd;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37,99,235,0.08);
+    }
+
+    .note-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .note-tag {
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .note-size {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .note-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .note-subject {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .note-download-btn {
+      color: #2563eb;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      padding-top: 10px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .note-download-btn:hover {
+      color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    /* Library Digital Pass Card (Tab 4) */
+    .digital-pass-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0 30px 0;
+    }
+
+    .pass-card {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 24px;
+      padding: 26px 24px;
+      color: #ffffff;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.25);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pass-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(37,99,235,0.25) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+    }
+
+    .pass-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .pass-college-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .pass-sub {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pass-active-pill {
+      background: #10b981;
+      color: #ffffff;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .pass-student-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .pass-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .pass-meta-item .meta-label {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .pass-meta-item .meta-val {
+      font-size: 0.88rem;
+      color: #ffffff;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .pass-qr-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .pass-qr-code {
+      width: 170px;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pass-qr-roll {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.08em;
+      margin-top: 10px;
+    }
+
+    .pass-qr-instruction {
+      font-size: 0.72rem;
+      color: #64748b;
+      margin-top: 2px;
+      text-align: center;
+    }
+
+    /* Footer */
+    .portal-footer {
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-navbar">
+    <a href="/" class="brand-section">
+      <img src="/assets/bec circle logo.png" alt="BEC Logo" class="brand-logo">
+      <div class="brand-text">
+        <h1>BEC CAMPUS</h1>
+        <p>Bhubaneswar Engineering College</p>
+      </div>
+    </a>
+
+    <div class="user-actions">
+      <a href="/" class="btn-dashboard">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+      </a>
+
+      <div class="role-badge">
+        <i class="fa-solid fa-graduation-cap"></i> Student
+      </div>
+
+      <div class="user-pill">
+        <div id="nav-user-avatar" class="user-avatar">B</div>
+        <span id="nav-user-name" class="user-name-text">Barsha Priyadarshini</span>
+      </div>
+
+      <button onclick="handleLogout()" class="btn-logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+
+    <!-- Hub Header Banner Card -->
+    <div class="hub-banner-card">
+      <div class="hub-title-group">
+        <a href="/" class="btn-back-arrow" title="Back to Dashboard">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <div class="library-pill-tag">
+            <i class="fa-solid fa-bars-staggered"></i> BEC Central Library
+          </div>
+          <h2 class="hub-heading">Library Portal & Knowledge Hub</h2>
+          <p class="hub-subtext">Explore books, check loan status, and access digital study materials.</p>
+        </div>
+      </div>
+
+      <button onclick="refreshLibraryData()" class="btn-refresh">
+        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+      </button>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="library-tabs-bar">
+      <button id="tab-btn-catalog" class="lib-tab-btn active" onclick="switchLibraryTab('catalog')">
+        <i class="fa-solid fa-book-open"></i> Browse Catalog
+      </button>
+      <button id="tab-btn-issued" class="lib-tab-btn" onclick="switchLibraryTab('issued')">
+        <i class="fa-solid fa-bookmark"></i> My Issued Books
+      </button>
+      <button id="tab-btn-notes" class="lib-tab-btn" onclick="switchLibraryTab('notes')">
+        <i class="fa-regular fa-file-lines"></i> Notes & Question Papers
+      </button>
+      <button id="tab-btn-pass" class="lib-tab-btn" onclick="switchLibraryTab('pass')">
+        <i class="fa-solid fa-qrcode"></i> Library Digital Pass
+      </button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: BROWSE CATALOG                                        -->
+    <!-- ============================================================ -->
+    <section id="tab-view-catalog" class="tab-content-pane active">
+      
+      <!-- Search & Filter Header -->
+      <div class="catalog-search-bar">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="catalog-search-input" onkeyup="filterBooksCatalog()" type="text" placeholder="Search by Title, Author, or ISBN..." class="search-input-field">
+        </div>
+        
+        <div class="filter-dropdowns">
+          <select id="filter-dept" onchange="filterBooksCatalog()" class="filter-select">
+            <option value="ALL">All Departments</option>
+            <option value="CSE">Computer Science (CSE)</option>
+            <option value="ECE">Electronics (ECE)</option>
+            <option value="EEE">Electrical (EEE)</option>
+            <option value="MECH">Mechanical (MECH)</option>
+            <option value="CIVIL">Civil (CIVIL)</option>
+          </select>
+
+          <select id="filter-cat" onchange="filterBooksCatalog()" class="filter-select">
+            <option value="ALL">All Categories</option>
+            <option value="Core Engineering">Core Engineering</option>
+            <option value="Basic Sciences">Basic Sciences</option>
+            <option value="Mathematics">Mathematics</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Books Grid Container -->
+      <div id="books-catalog-grid" class="books-grid"></div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: MY ISSUED BOOKS & CLEARANCE                          -->
+    <!-- ============================================================ -->
+    <section id="tab-view-issued" class="tab-content-pane">
+      
+      <!-- Clearance Banner -->
+      <div class="clearance-banner">
+        <div class="clearance-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center;">
+            <strong style="font-size: 0.88rem; color: #166534; text-transform: uppercase;">Library Clearance Status</strong>
+            <span class="clearance-tag">No Dues Clear</span>
+          </div>
+          <p style="font-size: 0.78rem; color: #15803d; margin-top: 2px;">
+            All library books returned and no pending late fines. Eligible for semester & exam clearance.
+          </p>
+        </div>
+      </div>
+
+      <!-- Borrowed Books History Card -->
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+        <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a;">My Borrowed Books History</h3>
+        <p style="font-size: 0.78rem; color: #64748b; margin-top: 2px; margin-bottom: 24px;">Track your active and returned library books.</p>
+        
+        <div id="borrowed-books-list">
+          <div style="text-align: center; padding: 48px 20px; color: #94a3b8;">
+            <div style="width: 60px; height: 60px; border-radius: 14px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1.8rem; color: #94a3b8;">
+              <i class="fa-regular fa-bookmark"></i>
+            </div>
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: #334155;">No books currently borrowed</h4>
+            <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px;">You don't have any active or past library loan records.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: NOTES, SYLLABUS & PYQs                               -->
+    <!-- ============================================================ -->
+    <section id="tab-view-notes" class="tab-content-pane">
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+        <h3 style="font-size: 1.05rem; font-weight: 800; color: #0f172a;">Digital Notes, Syllabus & PYQs</h3>
+        <p style="font-size: 0.78rem; color: #64748b; margin-top: 2px; margin-bottom: 22px;">Download official lecture notes, previous year question papers, and lab manuals.</p>
+
+        <div class="notes-grid">
+          
+          <!-- Note Card 1 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">Common (1st Year) • Sem 1</span>
+                <span class="note-size">4.2 MB</span>
+              </div>
+              <h4 class="note-title">Mathematics-I Complete Unit-Wise Lecture Notes</h4>
+              <p class="note-subject">Subject: Mathematics-I (MA101)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Mathematics-I Complete Unit-Wise Lecture Notes')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+          <!-- Note Card 2 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">Common (1st Year) • Sem 1</span>
+                <span class="note-size">2.8 MB</span>
+              </div>
+              <h4 class="note-title">Programming in C & Data Structures Lab Manual</h4>
+              <p class="note-subject">Subject: Programming Lab (CS191)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Programming in C & Data Structures Lab Manual')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+          <!-- Note Card 3 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">CSE • Sem 5</span>
+                <span class="note-size">6.1 MB</span>
+              </div>
+              <h4 class="note-title">Operating Systems 5-Year Solved BPUT Question Papers</h4>
+              <p class="note-subject">Subject: Operating Systems (CS301)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Operating Systems 5-Year Solved BPUT Question Papers')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+          <!-- Note Card 4 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">CSE • Sem 3</span>
+                <span class="note-size">3.4 MB</span>
+              </div>
+              <h4 class="note-title">Data Structures & Algorithms Comprehensive Formula Sheet</h4>
+              <p class="note-subject">Subject: DSA (CS201)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Data Structures & Algorithms Formula Sheet')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+          <!-- Note Card 5 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">ECE • Sem 4</span>
+                <span class="note-size">5.3 MB</span>
+              </div>
+              <h4 class="note-title">Analog & Digital Communications BPUT Syllabus & Solutions</h4>
+              <p class="note-subject">Subject: ADC (EC204)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Analog & Digital Communications Syllabus & Solutions')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+          <!-- Note Card 6 -->
+          <div class="note-card">
+            <div>
+              <div class="note-top">
+                <span class="note-tag">Common (1st Year) • Sem 2</span>
+                <span class="note-size">5.0 MB</span>
+              </div>
+              <h4 class="note-title">Basic Electrical & Electronics Solved Question Bank</h4>
+              <p class="note-subject">Subject: Basic EE (EE101)</p>
+            </div>
+            <a href="javascript:void(0)" onclick="downloadStudyResource('Basic Electrical & Electronics Solved Question Bank')" class="note-download-btn">
+              <i class="fa-solid fa-download"></i> Download / View
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: LIBRARY DIGITAL PASS (QR Code)                       -->
+    <!-- ============================================================ -->
+    <section id="tab-view-pass" class="tab-content-pane">
+      
+      <div class="digital-pass-wrapper">
+        <div class="pass-card">
+          
+          <div class="pass-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="/assets/bec circle logo.png" alt="BEC" style="width: 28px; height: 28px; border-radius: 50%; background: #fff; padding: 1px;">
+              <div>
+                <div class="pass-college-title">BHUBANESWAR ENGG. COLLEGE</div>
+                <div class="pass-sub">Digital Library Pass</div>
+              </div>
+            </div>
+            <span class="pass-active-pill">Active</span>
+          </div>
+
+          <div style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">
+            Member Name
+          </div>
+          <div id="pass-student-name" class="pass-student-name">
+            Barsha Priyadarshini Sahoo
+          </div>
+
+          <div class="pass-meta-grid">
+            <div class="pass-meta-item">
+              <div class="meta-label">Roll / Reg No</div>
+              <div id="pass-student-roll" class="meta-val">BEC26002</div>
+            </div>
+            <div class="pass-meta-item">
+              <div class="meta-label">Department</div>
+              <div id="pass-student-dept" class="meta-val">CSE (1st Yr)</div>
+            </div>
+          </div>
+
+          <!-- QR Code Container Box -->
+          <div class="pass-qr-box">
+            <div id="pass-qr-element" class="pass-qr-code"></div>
+            <div id="pass-qr-text" class="pass-qr-roll">BEC26002</div>
+            <div class="pass-qr-instruction">Scan this QR at the library counter to issue/return books</div>
+          </div>
+
+          <p style="text-align: center; font-size: 0.72rem; color: #94a3b8; margin-top: 14px;">
+            Show this digital pass to the librarian for instant camera scanning.
+          </p>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="portal-footer">
+    <div>
+      © 2026 Bhubaneswar Engineering College (BEC). All rights reserved.
+    </div>
+    <div>
+      Designed & Developed by <strong style="color: #2563eb;">✨ Ayush Technologies</strong>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/shell/auth.js"></script>
+  <script>
+    // Master Books Catalog Database
+    const masterBooks = [
+      {
+        id: "BK-01",
+        title: "Introduction to Algorithms (CLRS)",
+        author: "Thomas H. Cormen, Charles E. Leiserson",
+        isbn: "978-0262033848",
+        location: "Rack 3, Shelf A",
+        category: "Core Engineering",
+        dept: "CSE",
+        available: 6
+      },
+      {
+        id: "BK-02",
+        title: "Operating System Concepts",
+        author: "Abraham Silberschatz, Peter B. Galvin",
+        isbn: "978-1118063330",
+        location: "Rack 3, Shelf B",
+        category: "Core Engineering",
+        dept: "CSE",
+        available: 8
+      },
+      {
+        id: "BK-03",
+        title: "Computer Networks",
+        author: "Andrew S. Tanenbaum, Nick Feamster",
+        isbn: "978-0133594140",
+        location: "Rack 3, Shelf C",
+        category: "Core Engineering",
+        dept: "CSE",
+        available: 5
+      },
+      {
+        id: "BK-04",
+        title: "Database System Concepts",
+        author: "Silberschatz, Korth, Sudarshan",
+        isbn: "978-0073523323",
+        location: "Rack 2, Shelf A",
+        category: "Core Engineering",
+        dept: "CSE",
+        available: 7
+      },
+      {
+        id: "BK-05",
+        title: "Electronic Devices and Circuit Theory",
+        author: "Robert L. Boylestad, Louis Nashelsky",
+        isbn: "978-0132622264",
+        location: "Rack 4, Shelf A",
+        category: "Core Engineering",
+        dept: "ECE",
+        available: 6
+      },
+      {
+        id: "BK-06",
+        title: "Basic Electrical Engineering",
+        author: "D. C. Kulshreshtha",
+        isbn: "978-0070147003",
+        location: "Rack 4, Shelf B",
+        category: "Core Engineering",
+        dept: "EEE",
+        available: 8
+      },
+      {
+        id: "BK-07",
+        title: "Higher Engineering Mathematics",
+        author: "B. S. Grewal",
+        isbn: "978-8174091955",
+        location: "Rack 1, Shelf A",
+        category: "Mathematics",
+        dept: "CSE",
+        available: 12
+      },
+      {
+        id: "BK-08",
+        title: "Engineering Physics",
+        author: "H. K. Malik, A. K. Singh",
+        isbn: "978-0070671539",
+        location: "Rack 1, Shelf B",
+        category: "Basic Sciences",
+        dept: "MECH",
+        available: 9
+      },
+      {
+        id: "BK-09",
+        title: "Strength of Materials",
+        author: "R. K. Bansal",
+        isbn: "978-8131808146",
+        location: "Rack 5, Shelf A",
+        category: "Core Engineering",
+        dept: "CIVIL",
+        available: 7
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initUserProfile();
+      renderCatalog(masterBooks);
+      generateLibraryQRCode();
+    });
+
+    function initUserProfile() {
+      const user = (typeof PortalAuth !== 'undefined' && PortalAuth.getCurrentUser) ? PortalAuth.getCurrentUser() : null;
+      const defaultName = "Barsha Priyadarshini Sahoo";
+      const defaultRoll = "BEC26002";
+      const defaultDept = "CSE (1st Yr)";
+
+      const studentName = (user && (user.fullName || user.displayName || user.name)) || defaultName;
+      const studentRoll = (user && (user.rollNo || user.rollNumber || user.email)) || defaultRoll;
+
+      const navNameEl = document.getElementById('nav-user-name');
+      const navAvatarEl = document.getElementById('nav-user-avatar');
+      const passNameEl = document.getElementById('pass-student-name');
+      const passRollEl = document.getElementById('pass-student-roll');
+      const passDeptEl = document.getElementById('pass-student-dept');
+      const passQrText = document.getElementById('pass-qr-text');
+
+      if (navNameEl) navNameEl.textContent = studentName;
+      if (navAvatarEl) navAvatarEl.textContent = studentName.charAt(0).toUpperCase();
+      if (passNameEl) passNameEl.textContent = studentName;
+      if (passRollEl) passRollEl.textContent = studentRoll;
+      if (passDeptEl) passDeptEl.textContent = (user && user.branch) ? `${user.branch}` : defaultDept;
+      if (passQrText) passQrText.textContent = studentRoll;
+    }
+
+    function switchLibraryTab(tabKey) {
+      const tabs = ['catalog', 'issued', 'notes', 'pass'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const view = document.getElementById(`tab-view-${t}`);
+        if (btn) {
+          if (t === tabKey) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+        if (view) {
+          if (t === tabKey) view.classList.add('active');
+          else view.classList.remove('active');
+        }
+      });
+      if (tabKey === 'pass') {
+        generateLibraryQRCode();
+      }
+    }
+
+    function renderCatalog(books) {
+      const container = document.getElementById('books-catalog-grid');
+      if (!container) return;
+
+      if (!books || books.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">No matching books found in the library stack.</div>';
+        return;
+      }
+
+      container.innerHTML = books.map(book => `
+        <div class="book-card">
+          <div>
+            <div class="book-top-badges">
+              <span class="dept-badge">${book.dept}</span>
+              <span class="avail-badge">${book.available} Available</span>
+            </div>
+            <h4 class="book-title">${book.title}</h4>
+            <p class="book-author">By ${book.author}</p>
+            
+            <div class="book-info-list">
+              <div class="book-info-row">
+                <span>ISBN / Code:</span>
+                <span>${book.isbn}</span>
+              </div>
+              <div class="book-info-row">
+                <span>Location:</span>
+                <span>📍 ${book.location}</span>
+              </div>
+              <div class="book-info-row">
+                <span>Category:</span>
+                <span>${book.category}</span>
+              </div>
+            </div>
+          </div>
+          <div class="book-borrow-note">
+            Visit Central Library counter with your Roll No to borrow.
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterBooksCatalog() {
+      const query = (document.getElementById('catalog-search-input')?.value || '').toLowerCase().trim();
+      const deptFilter = document.getElementById('filter-dept')?.value || 'ALL';
+      const catFilter = document.getElementById('filter-cat')?.value || 'ALL';
+
+      const filtered = masterBooks.filter(book => {
+        const matchesQuery = !query || 
+          book.title.toLowerCase().includes(query) || 
+          book.author.toLowerCase().includes(query) || 
+          book.isbn.toLowerCase().includes(query);
+        
+        const matchesDept = (deptFilter === 'ALL') || (book.dept === deptFilter);
+        const matchesCat = (catFilter === 'ALL') || (book.category === catFilter);
+
+        return matchesQuery && matchesDept && matchesCat;
+      });
+
+      renderCatalog(filtered);
+    }
+
+    function generateLibraryQRCode() {
+      const qrBox = document.getElementById('pass-qr-element');
+      if (!qrBox) return;
+      qrBox.innerHTML = '';
+
+      const user = (typeof PortalAuth !== 'undefined' && PortalAuth.getCurrentUser) ? PortalAuth.getCurrentUser() : null;
+      const roll = (user && (user.rollNo || user.rollNumber || user.email)) || "BEC26002";
+
+      try {
+        new QRCode(qrBox, {
+          text: `BEC-LIB-PASS:${roll}`,
+          width: 170,
+          height: 170,
+          colorDark: "#0f172a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      } catch (e) {
+        qrBox.innerHTML = `<i class="fa-solid fa-qrcode" style="font-size: 8rem; color: #0f172a;"></i>`;
+      }
+    }
+
+    function refreshLibraryData() {
+      const btn = document.querySelector('.btn-refresh');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...';
+      setTimeout(() => {
+        filterBooksCatalog();
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Refresh';
+      }, 350);
+    }
+
+    function downloadStudyResource(title) {
+      alert(`Opening official BEC digital study material:\n"${title}"\n\nStarting PDF download...`);
+    }
+
+    function handleLogout() {
+      if (typeof PortalAuth !== 'undefined' && PortalAuth.logout) {
+        PortalAuth.logout();
+      } else {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/';
+      }
+    }
+  </script>
+</body>
+</html>

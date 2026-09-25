@@ -8,28 +8,39 @@
   <link rel="stylesheet" href="/shell/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
+    html, body {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    *::-webkit-scrollbar,
+    ::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
     body {
-      background: #0f172a;
+      background: #f0f4f8;
       align-items: stretch;
       justify-content: flex-start;
       overflow-y: auto;
       font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      color: #0f172a;
     }
     .admin-container {
-      max-width: 1100px;
-      margin: 40px auto;
+      max-width: 1140px;
+      margin: 36px auto;
       padding: 0 20px;
     }
     .admin-header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid #334155;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 24px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 28px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     .launcher-grid {
       display: grid;
@@ -38,20 +49,20 @@
       margin-bottom: 32px;
     }
     .launcher-card {
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 26px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
     }
     .launcher-card:hover {
       transform: translateY(-4px);
       border-color: #3b82f6;
-      box-shadow: 0 12px 30px rgba(59,130,246,0.15);
+      box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
     }
     .launcher-icon {
       width: 56px;
@@ -66,13 +77,13 @@
     .launcher-title {
       font-size: 1.2rem;
       font-weight: 800;
-      color: #f8fafc;
+      color: #0f172a;
       margin-bottom: 8px;
     }
     .launcher-desc {
-      font-size: 0.84rem;
-      color: #94a3b8;
-      line-height: 1.5;
+      font-size: 0.86rem;
+      color: #64748b;
+      line-height: 1.55;
       margin-bottom: 22px;
       flex: 1;
     }
@@ -90,11 +101,11 @@
       cursor: pointer;
     }
     .status-panel {
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 20px 26px;
-      color: #cbd5e1;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
     }
   </style>
 </head>
@@ -122,26 +133,26 @@
     <div class="admin-header">
       <div>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
-          <span style="font-size: 0.78rem; font-weight: 700; color: #86efac; text-transform: uppercase; letter-spacing: 0.05em;">Administrative Node Active</span>
+          <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #16a34a;"></span>
+          <span style="font-size: 0.78rem; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.05em;">Administrative Node Active</span>
         </div>
-        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin: 0;">Institutional Management Hub</h2>
-        <p style="font-size: 0.84rem; color: #94a3b8; margin-top: 4px;">Launch original module administrative interfaces with full native controls</p>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0;">Institutional Management Hub</h2>
+        <p style="font-size: 0.86rem; color: #64748b; margin-top: 4px;">Launch original module administrative interfaces with full native controls</p>
       </div>
       <div>
-        <button onclick="PortalAuth.clearSession(); location.href='/';" style="background: rgba(239,68,68,0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+        <button onclick="PortalAuth.clearSession(); location.href='/';" style="background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Admin Hub
         </button>
       </div>
     </div>
 
-    <!-- Launcher 3-Grid Cards -->
+    <!-- Launcher 4-Grid Cards -->
     <div class="launcher-grid">
 
       <!-- CARD 1: ATTENDANCE ADMIN CONSOLE -->
       <div class="launcher-card">
         <div>
-          <div class="launcher-icon" style="background: rgba(16,185,129,0.15); color: #34d399;">
+          <div class="launcher-icon" style="background: #ecfdf5; color: #059669;">
             <i class="fa-solid fa-clipboard-user"></i>
           </div>
           <div class="launcher-title">Attendance Administration</div>
@@ -149,15 +160,20 @@
             Direct access to Module A's faculty & administrative console. Manage daily roll calls, QR sessions, live photo verification stream, branch attendance sheets, and export official BPUT reports.
           </div>
         </div>
-        <a href="/attendance/admin" class="launcher-btn" style="background: #059669; color: #fff;">
-          Launch Attendance Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="/attendance/admin" class="launcher-btn" style="background: #059669; color: #fff; flex: 1;">
+            Launch Attendance Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+          <a href="/attendance/ayush" class="launcher-btn" style="background: #047857; color: #a7f3d0; border: 1px solid #059669;" title="Ayush Master Portal">
+            <i class="fa-solid fa-crown"></i> Ayush Portal
+          </a>
+        </div>
       </div>
 
       <!-- CARD 2: HOSTEL ADMIN CONSOLE -->
       <div class="launcher-card">
         <div>
-          <div class="launcher-icon" style="background: rgba(59,130,246,0.15); color: #60a5fa;">
+          <div class="launcher-icon" style="background: #eff6ff; color: #2563eb;">
             <i class="fa-solid fa-hotel"></i>
           </div>
           <div class="launcher-title">Hostel & Chief Warden</div>
@@ -173,7 +189,7 @@
       <!-- CARD 3: REPORTING & SRMS CONSOLE -->
       <div class="launcher-card">
         <div>
-          <div class="launcher-icon" style="background: rgba(168,85,247,0.15); color: #c084fc;">
+          <div class="launcher-icon" style="background: #f5f3ff; color: #7c3aed;">
             <i class="fa-solid fa-file-signature"></i>
           </div>
           <div class="launcher-title">Academic Reporting & SRMS</div>
@@ -186,31 +202,57 @@
         </a>
       </div>
 
+      <!-- CARD 4: CENTRAL LIBRARY ADMINISTRATION CONSOLE -->
+      <div class="launcher-card" style="border-color: #fde68a;">
+        <div>
+          <div class="launcher-icon" style="background: #fffbeb; color: #d97706;">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </div>
+          <div class="launcher-title">Central Library & Learning Resources</div>
+          <div class="launcher-desc">
+            Direct access to Central Library Administration. Manage book stack catalogs, issue/return circulation desk with student QR pass lookup, active loans roster, overdue fines ledger, digital notes/PYQs, and No-Dues Clearance certificates.
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="/library/admin" class="launcher-btn" style="background: #d97706; color: #fff; flex: 1;">
+            Launch Library Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+          <a href="/library" class="launcher-btn" style="background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;" title="Student View">
+            <i class="fa-solid fa-book-open"></i> Student View
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <!-- Live System Telemetry Status -->
     <div class="status-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-        <h4 style="font-size: 0.95rem; font-weight: 800; color: #f8fafc; margin: 0;">
-          <i class="fa-solid fa-server" style="margin-right: 8px; color: #38bdf8;"></i> Unified Gateway Telemetry
+        <h4 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0;">
+          <i class="fa-solid fa-server" style="margin-right: 8px; color: #0284c7;"></i> Unified Gateway Telemetry
         </h4>
-        <span id="gateway-status-pill" style="font-size: 0.75rem; background: #064e3b; color: #6ee7b7; padding: 4px 10px; border-radius: 6px; font-weight: 700;">Checking...</span>
+        <span id="gateway-status-pill" style="font-size: 0.75rem; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 6px; font-weight: 700; border: 1px solid #bbf7d0;">Checking...</span>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 0.8rem;">
-        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
-          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module A Mount</div>
-          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/attendance/*</div>
-          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">Cloud Firestore & React</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 0.8rem;">
+        <div style="background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+          <div style="color: #64748b; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module A Mount</div>
+          <div style="color: #0f172a; font-weight: 700; margin-top: 4px;">/attendance/*</div>
+          <div style="color: #16a34a; font-size: 0.72rem; margin-top: 2px; font-weight: 600;">Cloud Firestore & React</div>
         </div>
-        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
-          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module B Mount</div>
-          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/hostel/*</div>
-          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">Hostel MySQL & Express</div>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+          <div style="color: #64748b; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module B Mount</div>
+          <div style="color: #0f172a; font-weight: 700; margin-top: 4px;">/hostel/*</div>
+          <div style="color: #16a34a; font-size: 0.72rem; margin-top: 2px; font-weight: 600;">Hostel MySQL & Express</div>
         </div>
-        <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; border: 1px solid #334155;">
-          <div style="color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module C Mount</div>
-          <div style="color: #fff; font-weight: 700; margin-top: 4px;">/reporting/*</div>
-          <div style="color: #22c55e; font-size: 0.72rem; margin-top: 2px;">SRMS MySQL & PDF Engine</div>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+          <div style="color: #64748b; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Module C Mount</div>
+          <div style="color: #0f172a; font-weight: 700; margin-top: 4px;">/reporting/*</div>
+          <div style="color: #16a34a; font-size: 0.72rem; margin-top: 2px; font-weight: 600;">SRMS MySQL & PDF Engine</div>
+        </div>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+          <div style="color: #64748b; font-size: 0.72rem; text-transform: uppercase; font-weight: 700;">Library & LRC Mount</div>
+          <div style="color: #0f172a; font-weight: 700; margin-top: 4px;">/library/*</div>
+          <div style="color: #16a34a; font-size: 0.72rem; margin-top: 2px; font-weight: 600;">Circulation, Stacks & Passes</div>
         </div>
       </div>
     </div>
@@ -233,9 +275,11 @@
       .catch(err => {
         const pill = document.getElementById('gateway-status-pill');
         pill.textContent = 'OFFLINE / UNREACHABLE';
-        pill.style.background = '#7f1d1d';
-        pill.style.color = '#fca5a5';
+        pill.style.background = '#fee2e2';
+        pill.style.color = '#b91c1c';
+        pill.style.borderColor = '#fca5a5';
       });
   </script>
 </body>
 </html>
+
