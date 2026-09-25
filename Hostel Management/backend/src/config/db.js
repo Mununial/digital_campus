@@ -3,11 +3,11 @@ const env = require('./env');
 
 // Pure Hostinger MySQL Connection Pool (Zero Mock Engine)
 const realPool = mysql.createPool({
-  host: env.DB.host,
-  port: env.DB.port,
-  user: env.DB.user,
-  password: env.DB.password,
-  database: env.DB.database,
+  host: env.DB.host || 'srv1334.hstgr.io',
+  port: env.DB.port || 3306,
+  user: env.DB.user || 'u847513759_ERP_COLLEGE',
+  password: env.DB.password || 'Ayushtech@26',
+  database: env.DB.name || env.DB.database || process.env.DB_NAME || 'u847513759_ERP_COLLEGE',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

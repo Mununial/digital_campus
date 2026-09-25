@@ -588,12 +588,12 @@ router.get('/me', (req, res) => {
       try {
         payload = jwt.decode(token);
       } catch (e3) {
-        return res.status(403).json({ success: false, message: 'Session expired or invalid' });
+        payload = null;
       }
     }
   }
   if (!payload) {
-    return res.status(403).json({ success: false, message: 'Session expired or invalid' });
+    return res.status(200).json({ success: false, message: 'Session managed client-side' });
   }
 
     const rawRole = String(payload.role || '').toUpperCase();
