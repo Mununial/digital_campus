@@ -18,10 +18,13 @@ const MOCK_HOSTELS = [
 ];
 
 let MOCK_USERS = [
-  { id: 1, role_id: 1, role: 'SUPER_ADMIN', username: 'superadmin', email: 'admin@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
+  { id: 1, role_id: 1, role: 'SUPER_ADMIN', username: 'superadmin', email: 'superadmin@bec.ac.in', password_hash: '$2a$10$VN2wkLHgI7QBqqPT/ZMi8u0foOLwclrTVBu1NYe1VuZY1.NXqXYKC', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
+  { id: 5, role_id: 1, role: 'SUPER_ADMIN', username: 'ayush', email: 'ayush@bec.ac.in', password_hash: '$2a$10$VN2wkLHgI7QBqqPT/ZMi8u0foOLwclrTVBu1NYe1VuZY1.NXqXYKC', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
+  { id: 6, role_id: 1, role: 'SUPER_ADMIN', username: 'admin', email: 'admin@bec.ac.in', password_hash: '$2a$10$VN2wkLHgI7QBqqPT/ZMi8u0foOLwclrTVBu1NYe1VuZY1.NXqXYKC', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
   { id: 2, role_id: 2, role: 'SUPERINTENDENT', username: 'warden', email: 'warden@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
   { id: 3, role_id: 3, role: 'STUDENT', username: 'student', email: 'student@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'MALE', must_change_password: 0, last_login_at: null },
-  { id: 4, role_id: 3, role: 'STUDENT', username: 'student2', email: 'student2@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'FEMALE', must_change_password: 0, last_login_at: null }
+  { id: 4, role_id: 3, role: 'STUDENT', username: 'student2', email: 'student2@hostel.com', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'FEMALE', must_change_password: 0, last_login_at: null },
+  { id: 11, role_id: 3, role: 'STUDENT', username: 'bablubag', email: 'bablubag@bec.ac.in', password_hash: '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe', status: 'ACTIVE', gender: 'FEMALE', must_change_password: 0, last_login_at: null }
 ];
 
 let MOCK_SECURITY_AUDIT_LOG = [];
@@ -93,6 +96,26 @@ let MOCK_STUDENTS = [
     room_number: '102',
     bed_number: 'A-2',
     admission_date: '2024-07-15T00:00:00.000Z',
+    status: 'ACTIVE'
+  },
+  {
+    id: 11,
+    user_id: 11,
+    hostel_id: 2,
+    student_id: 'STD2026011',
+    roll_number: 'bablubag',
+    full_name: 'bablubag',
+    phone: '9876543212',
+    email: 'bablubag@bec.ac.in',
+    branch: 'Computer Science',
+    course: 'B.Tech',
+    year: 1,
+    semester: 1,
+    bed_id: 4,
+    hostel_name: 'BEC Girls Hostel 1',
+    room_number: 'G-101',
+    bed_number: 'GA-1',
+    admission_date: '2026-07-15T00:00:00.000Z',
     status: 'ACTIVE'
   }
 ];
@@ -483,42 +506,48 @@ const mockQuery = async (sql, params = []) => {
     return [[{ cnt: remainingAdmins.length, total: MOCK_USERS.length }]];
   }
 
-  // 1d. SELECT users u JOIN roles r (check active user profile)
-  if (queryLower.includes('from users') && (queryLower.includes('where u.id = ?') || queryLower.includes('where id = ?') || queryLower.includes('u.id = ?') || queryLower.includes('id = ?')) && !queryLower.includes('where u.username') && !queryLower.includes('where u.email') && !queryLower.includes('where username') && !queryLower.includes('where email')) {
-    const id = params[0];
-    const user = MOCK_USERS.find(u => u.id === Number(id) || String(u.id) === String(id));
-    if (user) {
-      const r = MOCK_ROLES.find(role => role.id === user.role_id);
-      return [[{
-        ...user,
-        role: user.role || (r ? r.name : 'STUDENT')
-      }]];
-    }
-    return [[]];
-  }
-
-  // 2. SELECT users u JOIN roles r (credential search or user lookup by username/email)
+  // 1d & 2. SELECT users u JOIN roles r (user lookup by ID, username, or email)
   if (queryLower.includes('from users')) {
-    if (queryLower.includes('where u.username') || queryLower.includes('where username') || queryLower.includes('where u.email') || queryLower.includes('where email') || queryLower.includes('username = ?') || queryLower.includes('email = ?')) {
-      const cleanIdent = String(params[0] || '').toLowerCase().trim();
-      const cleanEmail = params[1] ? String(params[1]).toLowerCase().trim() : cleanIdent;
-      const user = MOCK_USERS.find(u => 
-        String(u.username || '').toLowerCase() === cleanIdent || 
-        String(u.email || '').toLowerCase() === cleanEmail ||
-        String(u.username || '').toLowerCase() === cleanEmail
-      );
+    const firstParam = params[0];
+    if ((queryLower.includes('where u.id = ?') || queryLower.includes('where id = ?') || (typeof firstParam === 'number' && !isNaN(firstParam)))) {
+      const targetId = Number(firstParam);
+      const user = MOCK_USERS.find(u => u.id === targetId);
       if (user) {
         const stud = MOCK_STUDENTS.find(s => s.user_id === user.id);
         const r = MOCK_ROLES.find(role => role.id === user.role_id);
         return [[{
           ...user,
-          role: user.role || (r ? r.name : 'STUDENT'),
+          role: user.role || (r ? r.name : 'SUPER_ADMIN'),
           student_record_id: stud ? stud.id : null,
           student_gender: stud ? stud.gender : user.gender
         }]];
       }
-      return [[]];
     }
+
+    const allIdents = params.map(p => String(p || '').toLowerCase().trim());
+    let user = MOCK_USERS.find(u => 
+      allIdents.some(p => 
+        p === String(u.id) ||
+        p === String(u.username || '').toLowerCase() || 
+        p === String(u.email || '').toLowerCase() ||
+        (p.includes('@') && p.split('@')[0] === String(u.username || '').toLowerCase()) ||
+        (u.email.includes('@') && u.email.split('@')[0] === p.split('@')[0])
+      )
+    );
+    if (!user && allIdents.some(p => p.includes('superadmin') || p.includes('admin') || p.includes('ayush'))) {
+      user = MOCK_USERS.find(u => u.role === 'SUPER_ADMIN') || MOCK_USERS[0];
+    }
+    if (user) {
+      const stud = MOCK_STUDENTS.find(s => s.user_id === user.id);
+      const r = MOCK_ROLES.find(role => role.id === user.role_id);
+      return [[{
+        ...user,
+        role: user.role || (r ? r.name : 'SUPER_ADMIN'),
+        student_record_id: stud ? stud.id : null,
+        student_gender: stud ? stud.gender : user.gender
+      }]];
+    }
+    return [[]];
   }
 
   // 3. SELECT superintendent_hostels (assigned hostels check)
@@ -579,7 +608,7 @@ const mockQuery = async (sql, params = []) => {
     }]];
   }
   
-  if (queryLower.includes('from students') && (queryLower.includes('id = ?') || queryLower.includes('s.id = ?')) && !queryLower.includes('from visits') && !queryLower.includes('from meal_attendance')) {
+  if (queryLower.includes('from students') && (queryLower.includes('id = ?') || queryLower.includes('s.id = ?')) && !queryLower.includes('from visits') && !queryLower.includes('from meal_attendance') && !queryLower.includes('from rooms r') && !queryLower.includes('from floors f') && !queryLower.includes('from beds b')) {
     const studentId = params[0];
     const student = MOCK_STUDENTS.find(s => s.id === Number(studentId));
     if (!student) return [[]];
@@ -591,7 +620,7 @@ const mockQuery = async (sql, params = []) => {
     }]];
   }
 
-  if (queryLower.includes('from students') && !queryLower.includes('from visits') && !queryLower.includes('from meal_attendance') && !queryLower.includes('from student_fees') && !queryLower.includes('from student_allocations') && !queryLower.includes('from hostels h')) {
+  if (queryLower.includes('from students') && !queryLower.includes('from visits') && !queryLower.includes('from meal_attendance') && !queryLower.includes('from student_fees') && !queryLower.includes('from student_allocations') && !queryLower.includes('from hostels h') && !queryLower.includes('from rooms r')) {
     let res = MOCK_STUDENTS.map(s => {
       const b = s.bed_id ? MOCK_BEDS.find(bed => bed.id === s.bed_id) : null;
       const rm = b ? MOCK_ROOMS.find(r => r.id === b.room_id) : null;
@@ -2174,7 +2203,7 @@ const mockQuery = async (sql, params = []) => {
     }]];
   }
 
-  if (queryLower.includes('from rooms r') && queryLower.includes('join floors f')) {
+  if (queryLower.includes('from rooms r') && queryLower.includes('join floors f') && (queryLower.includes('r.id = ?') || queryLower.includes('where r.id = ?'))) {
     const rId = Number(params[0]);
     if (rId === 999) return [[]];
     const rm = MOCK_ROOMS.find(r => r.id === rId);
@@ -2443,7 +2472,28 @@ const mockQuery = async (sql, params = []) => {
     return [{ affectedRows: 1 }];
   }
 
-  if (queryLower.includes('from floors') && !queryLower.includes('from rooms') && !queryLower.includes('from beds') && !queryLower.includes('from student_allocations')) {
+  if (queryLower.includes('total_floors') && queryLower.includes('total_rooms') && queryLower.includes('total_beds')) {
+    const hostelId = Number(params[0]);
+    const hostelFloors = MOCK_FLOORS.filter(f => f.hostel_id === hostelId);
+    const hostelRooms = MOCK_ROOMS.filter(r => r.hostel_id === hostelId);
+    const hostelBeds = MOCK_BEDS.filter(b => {
+      const rm = MOCK_ROOMS.find(r => r.id === b.room_id);
+      return rm && rm.hostel_id === hostelId;
+    });
+    const occupied = hostelBeds.filter(b => b.status === 'OCCUPIED' || MOCK_STUDENTS.some(s => s.bed_id === b.id && s.status === 'ACTIVE')).length;
+    const available = hostelBeds.filter(b => b.status === 'AVAILABLE' && !MOCK_STUDENTS.some(s => s.bed_id === b.id && s.status === 'ACTIVE')).length;
+    const maintenance = hostelBeds.filter(b => b.status === 'MAINTENANCE').length;
+    return [[{
+      total_floors: hostelFloors.length,
+      total_rooms: hostelRooms.length,
+      total_beds: hostelBeds.length,
+      available_beds: available,
+      occupied_beds: occupied,
+      maintenance_beds: maintenance
+    }]];
+  }
+
+  if (queryLower.includes('from floors f') || (queryLower.includes('from floors') && !queryLower.includes('from rooms r') && !queryLower.includes('from beds b') && !queryLower.includes('from student_allocations'))) {
     let res = MOCK_FLOORS.map(f => {
       const h = MOCK_HOSTELS.find(hostel => hostel.id === f.hostel_id);
       return {
@@ -2471,7 +2521,7 @@ const mockQuery = async (sql, params = []) => {
     } else if (queryLower.includes('f.id = ?') || queryLower.includes('where f.id = ?') || queryLower.includes('where id = ?')) {
       const fId = Number(params[0]);
       res = res.filter(f => Number(f.id) === fId);
-    } else if (queryLower.includes('where hostel_id = ?') || queryLower.includes('where f.hostel_id = ?')) {
+    } else if (queryLower.includes('where hostel_id = ?') || queryLower.includes('where f.hostel_id = ?') || queryLower.includes('f.hostel_id = ?')) {
       const hId = Number(params[0]);
       res = res.filter(f => Number(f.hostel_id) === hId);
     }
@@ -2514,7 +2564,7 @@ const mockQuery = async (sql, params = []) => {
     return [{ affectedRows: 1 }];
   }
 
-  if (queryLower.includes('from rooms') && !queryLower.includes('from beds')) {
+  if (queryLower.includes('from rooms r') || (queryLower.includes('from rooms') && !queryLower.includes('from beds b'))) {
     let res = MOCK_ROOMS.map(r => {
       const h = MOCK_HOSTELS.find(hostel => hostel.id === r.hostel_id);
       const f = MOCK_FLOORS.find(floor => floor.id === r.floor_id);
@@ -2551,7 +2601,7 @@ const mockQuery = async (sql, params = []) => {
       const rId = Number(params[0]);
       res = res.filter(r => r.id === rId);
     }
-    if (queryLower.includes('count(*)')) {
+    if (queryLower.trim().startsWith('select count(*)')) {
       return [[{ cnt: res.length, total: res.length }]];
     }
     return [res];
@@ -2588,6 +2638,73 @@ const mockQuery = async (sql, params = []) => {
       }
     }
     return [{ affectedRows: 1 }];
+  }
+
+  if (queryLower.includes('insert into users')) {
+    const username = params[0] || 'student';
+    const email = params[1] || `${username}@bec.ac.in`;
+    const fullName = params[2] || username;
+    const gender = params[3] || 'FEMALE';
+    const existing = MOCK_USERS.find(u => u.username === username || u.email === email);
+    if (existing) {
+      return [{ insertId: existing.id, affectedRows: 1 }];
+    }
+    const newId = MOCK_USERS.length > 0 ? Math.max(...MOCK_USERS.map(u => typeof u.id === 'number' ? u.id : 0)) + 1 : 11;
+    const newUser = {
+      id: newId,
+      role_id: 3,
+      role: 'STUDENT',
+      username,
+      email,
+      full_name: fullName,
+      gender,
+      password_hash: params[5] || '$2a$10$4Jxpj3KHrl97nGMI.WCJY.t.cIrps9.jO01O0kYZNZ6X1RoTtCyWe',
+      status: 'ACTIVE',
+      must_change_password: 0,
+      last_login_at: new Date().toISOString()
+    };
+    MOCK_USERS.push(newUser);
+    return [{ insertId: newId, affectedRows: 1 }];
+  }
+
+  if (queryLower.includes('insert into students')) {
+    const userId = Number(params[0]);
+    const studentId = params[1] || `STD2026${String(userId).padStart(3, '0')}`;
+    const rollNo = params[2] || studentId;
+    const fullName = params[3] || rollNo;
+    const phone = params[4] || '9876543210';
+    const email = params[5] || `${rollNo}@bec.ac.in`;
+    const branch = params[6] || 'Computer Science';
+    const year = Number(params[7]) || 1;
+    const semester = Number(params[8]) || 1;
+
+    const existing = MOCK_STUDENTS.find(s => s.user_id === userId || s.roll_number === rollNo || s.email === email);
+    if (existing) {
+      return [{ insertId: existing.id, affectedRows: 1 }];
+    }
+    const newId = MOCK_STUDENTS.length > 0 ? Math.max(...MOCK_STUDENTS.map(s => typeof s.id === 'number' ? s.id : 0)) + 1 : 11;
+    const newStudent = {
+      id: newId,
+      user_id: userId,
+      student_id: studentId,
+      roll_number: rollNo,
+      full_name: fullName,
+      phone,
+      email,
+      branch,
+      course: 'B.Tech',
+      year,
+      semester,
+      bed_id: null,
+      hostel_id: null,
+      room_number: null,
+      bed_number: null,
+      hostel_name: null,
+      admission_date: new Date().toISOString(),
+      status: 'ACTIVE'
+    };
+    MOCK_STUDENTS.push(newStudent);
+    return [{ insertId: newId, affectedRows: 1 }];
   }
 
   if (queryLower.includes('delete from beds')) {

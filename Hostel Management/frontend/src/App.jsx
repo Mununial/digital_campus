@@ -48,12 +48,14 @@ const RoleRedirect = () => {
   const { user, isLoading } = useAuth();
   if (isLoading) return <div className="fullscreen-loading"><Loading message="Loading..." /></div>;
   if (!user) return <Navigate to="/login" replace />;
-  switch (user.role) {
-    case 'SUPER_ADMIN':     return <Navigate to="/admin/dashboard" replace />;
-    case 'SUPERINTENDENT':  return <Navigate to="/superintendent/dashboard" replace />;
-    case 'STUDENT':         return <Navigate to="/student/dashboard" replace />;
-    default:                return <Navigate to="/student/dashboard" replace />;
+  const roleUpper = String(user.role || '').toUpperCase();
+  if (roleUpper.includes('ADMIN') || user.role === 'Admin') {
+    return <Navigate to="/admin/dashboard" replace />;
   }
+  if (roleUpper.includes('SUPERINTENDENT') || roleUpper.includes('FACULTY') || roleUpper.includes('WARDEN')) {
+    return <Navigate to="/superintendent/dashboard" replace />;
+  }
+  return <Navigate to="/student/dashboard" replace />;
 };
 
 function App() {
@@ -90,7 +92,7 @@ function App() {
           <Route
             path="/admin/*"
             element={
-              <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+              <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'Admin', 'ADMIN']}>
                 <DashboardLayout>
                   <Routes>
                     <Route path="dashboard"           element={<AdminDashboard />} />

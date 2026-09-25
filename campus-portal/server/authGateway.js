@@ -7,8 +7,8 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
-const HOSTEL_JWT_SECRET = process.env.HOSTEL_JWT_SECRET || 'super_secret_genz_university_jwt_key_2026';
+const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'bec_hostel_jwt_secret_key_2026';
+const HOSTEL_JWT_SECRET = process.env.HOSTEL_JWT_SECRET || process.env.JWT_SECRET || 'bec_hostel_jwt_secret_key_2026';
 const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyC8-xW8PG4xDf-UI9pBH0jMwrWIIfk2mUQ';
 
 // Database pool for Module C (u847513759_ERP_COLLEGE)
@@ -154,36 +154,12 @@ function normalizeRole(rawRole) {
   return 'Student';
 }
 
-// Local custom admin storage path
-const CUSTOM_ADMINS_STORE_PATH = path.join(__dirname, '../custom_admins.json');
-
-function loadCustomAdminsStore() {
-  try {
-    if (fs.existsSync(CUSTOM_ADMINS_STORE_PATH)) {
-      const raw = fs.readFileSync(CUSTOM_ADMINS_STORE_PATH, 'utf-8');
-      return JSON.parse(raw);
-    }
-  } catch (err) {
-    console.warn('[Custom Admin Store Load Notice]:', err.message);
-  }
-  return [];
-}
-
-function saveCustomAdminsStore(admins) {
-  try {
-    fs.writeFileSync(CUSTOM_ADMINS_STORE_PATH, JSON.stringify(admins, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[Custom Admin Store Save Error]:', err.message);
-  }
-}
-
 /**
- * POST /api/gateway/login & /api/auth/login
- * Step 0: Check Custom persistent Admins Store
+ * POST /api/gateway/login
  * Step 1: Try Module A (Firebase Auth & Module A Authentic Database)
  * Step 2: Try Module B (Hostel MySQL)
  * Step 3: Try Module C (Reporting MySQL)
- * Step 4: Fallback Official Admin / Student Roll Number
+ * Step 4: If all fail -> 401 Invalid credentials
  */
 router.post('/login', async (req, res) => {
   try {
@@ -201,47 +177,22 @@ router.post('/login', async (req, res) => {
     let authResult = null;
     let sourceModule = null;
 
-    // STEP 0: Check Custom Persistent Admins Store
-    try {
-      const customAdmins = loadCustomAdminsStore();
-      const matchCustom = customAdmins.find(a => 
-        (a.email.toLowerCase() === cleanId.toLowerCase() || a.username?.toLowerCase() === cleanId.toLowerCase() || a.id === cleanId) &&
-        a.password === cleanPass
-      );
-      if (matchCustom) {
-        authResult = {
-          id: matchCustom.id,
-          uid: matchCustom.id,
-          email: matchCustom.email,
-          name: matchCustom.fullName || matchCustom.name || matchCustom.email,
-          fullName: matchCustom.fullName || matchCustom.name || matchCustom.email,
-          role: matchCustom.role || 'ADMIN',
-          isAdmin: true
-        };
-        sourceModule = 'Custom Admin Store (RBAC)';
-      }
-    } catch (cErr) {
-      console.warn('[Custom Admin Auth Check]:', cErr.message);
-    }
-
     // STEP 1: Try Module A (Attendance - Firebase Auth & Registered College Users)
-    if (!authResult) {
-      try {
-        const fbRes = await tryFirebaseAuth(cleanId, cleanPass);
-        if (fbRes.success) {
-          authResult = {
-            id: fbRes.localId,
-            uid: fbRes.localId,
-            email: fbRes.email,
-            name: fbRes.email.split('@')[0],
-            fullName: fbRes.email.split('@')[0],
-            role: cleanId.toLowerCase().includes('admin') ? 'Admin' : (cleanId.toLowerCase().includes('teacher') ? 'Faculty' : 'Student'),
-            firebaseToken: fbRes.idToken
-          };
-          sourceModule = 'Module A (Attendance - Firebase)';
-        }
-      } catch (fbErr) {}
-    }
+    try {
+      const fbRes = await tryFirebaseAuth(cleanId, cleanPass);
+      if (fbRes.success) {
+        authResult = {
+          id: fbRes.localId,
+          uid: fbRes.localId,
+          email: fbRes.email,
+          name: fbRes.email.split('@')[0],
+          fullName: fbRes.email.split('@')[0],
+          role: cleanId.toLowerCase().includes('admin') ? 'Admin' : (cleanId.toLowerCase().includes('teacher') ? 'Faculty' : 'Student'),
+          firebaseToken: fbRes.idToken
+        };
+        sourceModule = 'Module A (Attendance - Firebase)';
+      }
+    } catch (fbErr) {}
 
     // Check Module A Staff (admin / faculty)
     if (!authResult) {
@@ -366,9 +317,6 @@ router.post('/login', async (req, res) => {
     }
 
     // GENERATE SYNCHRONIZED TOKENS FOR ALL 3 MODULES
-    const roleUpper = String(authResult.role || '').toUpperCase();
-    const isAnyAdmin = authResult.isAdmin || roleUpper.includes('ADMIN') || roleUpper === 'SUPER_ADMIN';
-
     const tokenPayload = {
       id: authResult.id,
       uid: authResult.uid,
@@ -377,7 +325,7 @@ router.post('/login', async (req, res) => {
       fullName: authResult.fullName,
       role: authResult.role,
       gender: authResult.gender || 'FEMALE',
-      isAdmin: isAnyAdmin,
+      isAdmin: authResult.role === 'Admin',
       rollNo: authResult.rollNo || ''
     };
 
@@ -385,13 +333,7 @@ router.post('/login', async (req, res) => {
     const masterToken = jwt.sign(tokenPayload, GATEWAY_SECRET, { expiresIn: '7d' });
 
     // Module B Hostel Token (signed with Module B secret and mapped to active role)
-    let hostelRole = 'STUDENT';
-    if (isAnyAdmin) {
-      hostelRole = 'SUPER_ADMIN';
-    } else if (roleUpper.includes('TEACH') || roleUpper.includes('FACULTY') || roleUpper.includes('SUPERINTENDENT')) {
-      hostelRole = 'SUPERINTENDENT';
-    }
-
+    const hostelRole = authResult.role === 'Admin' ? 'SUPER_ADMIN' : (authResult.role === 'Faculty' ? 'SUPERINTENDENT' : 'STUDENT');
     let hostelUserId = null;
     let studentGender = authResult.gender || 'FEMALE';
 
@@ -478,7 +420,7 @@ router.post('/login', async (req, res) => {
     }
 
     if (!hostelUserId) {
-      hostelUserId = isAnyAdmin ? 1 : 999;
+      throw new Error(`Failed to resolve or provision Hostel user account for ${authResult.rollNo || authResult.email}`);
     }
 
     const hostelToken = jwt.sign({
@@ -587,75 +529,6 @@ router.post('/logout', (req, res) => {
   res.clearCookie('authToken');
   res.clearCookie('token');
   return res.status(200).json({ success: true, message: 'Logged out from all modules' });
-});
-
-/**
- * POST /api/auth/create-admin & /api/gateway/create-admin
- */
-router.post('/create-admin', (req, res) => {
-  try {
-    const { fullName, email, username, password, role } = req.body;
-    const cleanEmail = (email || username || '').trim();
-    const cleanPass = (password || '').trim();
-
-    if (!cleanEmail || !cleanPass) {
-      return res.status(400).json({ success: false, message: 'Email/Username and password are required.' });
-    }
-
-    const admins = loadCustomAdminsStore();
-    const existing = admins.find(a => a.email.toLowerCase() === cleanEmail.toLowerCase());
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'An admin account with this email/username already exists.' });
-    }
-
-    const requestedRole = (role || 'ADMIN').toUpperCase();
-    const validRoles = ['SUPER_ADMIN', 'ADMIN', 'HOSTEL_ADMIN', 'ATTENDANCE_ADMIN', 'REPORTING_ADMIN'];
-    const finalRole = validRoles.includes(requestedRole) ? requestedRole : 'ADMIN';
-
-    const newAdmin = {
-      id: 'ADM_' + Date.now(),
-      fullName: fullName || 'Administrator',
-      name: fullName || 'Administrator',
-      email: cleanEmail,
-      username: username || cleanEmail.split('@')[0],
-      password: cleanPass,
-      role: finalRole,
-      isAdmin: true,
-      createdAt: new Date().toISOString()
-    };
-
-    admins.push(newAdmin);
-    saveCustomAdminsStore(admins);
-
-    return res.status(201).json({
-      success: true,
-      message: `New administrator created with role [${finalRole}]!`,
-      admin: {
-        id: newAdmin.id,
-        fullName: newAdmin.fullName,
-        email: newAdmin.email,
-        role: newAdmin.role
-      }
-    });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: 'Failed to create admin: ' + err.message });
-  }
-});
-
-/**
- * GET /api/auth/admins & /api/gateway/admins
- */
-router.get('/admins', (req, res) => {
-  const admins = loadCustomAdminsStore();
-  const safeAdmins = admins.map(a => ({
-    id: a.id,
-    fullName: a.fullName,
-    email: a.email,
-    username: a.username,
-    role: a.role,
-    createdAt: a.createdAt
-  }));
-  return res.status(200).json({ success: true, admins: safeAdmins });
 });
 
 module.exports = router;

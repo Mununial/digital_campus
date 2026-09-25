@@ -24,7 +24,15 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
+  const userRoleUpper = String(user?.role || '').toUpperCase();
+  const isAllowed = allowedRoles.length === 0 || allowedRoles.some(r => {
+    const rUpper = String(r).toUpperCase();
+    if (rUpper === userRoleUpper) return true;
+    if ((rUpper.includes('ADMIN') || rUpper === 'SUPER_ADMIN') && (userRoleUpper.includes('ADMIN') || userRoleUpper === 'SUPER_ADMIN')) return true;
+    return false;
+  });
+
+  if (!isAllowed) {
     return (
       <div className="forbidden-container">
         <div className="forbidden-card">

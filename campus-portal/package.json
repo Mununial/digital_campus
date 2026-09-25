@@ -4,7 +4,8 @@
   "description": "Bhubaneswar Engineering College (BEC) - Unified Digital Campus Student & Admin Portal",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

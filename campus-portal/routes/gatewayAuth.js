@@ -4,33 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mysql = require('mysql2/promise');
 
-const fs = require('fs');
-const path = require('path');
-
 const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
-
-// Local custom admin storage path
-const STORE_PATH = path.join(__dirname, '../custom_admins.json');
-
-function loadCustomAdmins() {
-  try {
-    if (fs.existsSync(STORE_PATH)) {
-      const raw = fs.readFileSync(STORE_PATH, 'utf-8');
-      return JSON.parse(raw);
-    }
-  } catch (err) {
-    console.warn('[Custom Admin Store Load Error]:', err.message);
-  }
-  return [];
-}
-
-function saveCustomAdmins(admins) {
-  try {
-    fs.writeFileSync(STORE_PATH, JSON.stringify(admins, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('[Custom Admin Store Save Error]:', err.message);
-  }
-}
 
 // Direct database connection to Module C (u847513759_ERP_COLLEGE)
 const pool = mysql.createPool({
@@ -77,65 +51,40 @@ router.post('/login', async (req, res) => {
     let authenticatedUser = null;
     let authSource = null;
 
-    // 0. Check Custom Persistent Admin Store
-    try {
-      const customAdmins = loadCustomAdmins();
-      const matchCustom = customAdmins.find(a => 
-        (a.email.toLowerCase() === cleanId.toLowerCase() || a.username?.toLowerCase() === cleanId.toLowerCase() || a.id === cleanId) &&
-        a.password === cleanPass
-      );
-      if (matchCustom) {
-        authenticatedUser = {
-          id: matchCustom.id,
-          uid: matchCustom.id,
-          email: matchCustom.email,
-          name: matchCustom.fullName || matchCustom.name || matchCustom.email,
-          fullName: matchCustom.fullName || matchCustom.name || matchCustom.email,
-          role: matchCustom.role || 'ADMIN',
-          isAdmin: true
-        };
-        authSource = 'custom_admin_store';
-      }
-    } catch (cErr) {
-      console.warn('[Custom Admin Check Error]:', cErr.message);
-    }
-
     // 1. Try Module C Database (u847513759_ERP_COLLEGE)
-    if (!authenticatedUser) {
-      try {
-        const [rows] = await pool.query(
-          'SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR id = ? OR LOWER(display_name) = LOWER(?) LIMIT 1',
-          [cleanId, cleanId, cleanId]
-        );
-        if (rows && rows.length > 0) {
-          const u = rows[0];
-          let passwordMatches = false;
-          if (u.password_hash) {
-            try {
-              passwordMatches = await bcrypt.compare(cleanPass, u.password_hash);
-            } catch (e) {
-              passwordMatches = false;
-            }
-            if (!passwordMatches && u.password_hash === cleanPass) {
-              passwordMatches = true;
-            }
+    try {
+      const [rows] = await pool.query(
+        'SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR id = ? OR LOWER(display_name) = LOWER(?) LIMIT 1',
+        [cleanId, cleanId, cleanId]
+      );
+      if (rows && rows.length > 0) {
+        const u = rows[0];
+        let passwordMatches = false;
+        if (u.password_hash) {
+          try {
+            passwordMatches = await bcrypt.compare(cleanPass, u.password_hash);
+          } catch (e) {
+            passwordMatches = false;
           }
-          if (passwordMatches) {
-            authenticatedUser = {
-              id: u.id,
-              uid: u.id,
-              email: u.email,
-              name: u.display_name || u.email,
-              fullName: u.display_name || u.email,
-              role: (u.role || u.user_role || (u.is_admin ? 'ADMIN' : 'STUDENT')).toUpperCase(),
-              isAdmin: Boolean(u.is_admin)
-            };
-            authSource = 'module_c';
+          if (!passwordMatches && u.password_hash === cleanPass) {
+            passwordMatches = true;
           }
         }
-      } catch (dbErr) {
-        console.warn('[Module C Auth Check]:', dbErr.message);
+        if (passwordMatches) {
+          authenticatedUser = {
+            id: u.id,
+            uid: u.id,
+            email: u.email,
+            name: u.display_name || u.email,
+            fullName: u.display_name || u.email,
+            role: (u.role || u.user_role || (u.is_admin ? 'ADMIN' : 'STUDENT')).toUpperCase(),
+            isAdmin: Boolean(u.is_admin)
+          };
+          authSource = 'module_c';
+        }
       }
+    } catch (dbErr) {
+      console.warn('[Module C Auth Check]:', dbErr.message);
     }
 
     // 2. Try Module B (Hostel Management)
@@ -246,75 +195,6 @@ router.get('/me', (req, res) => {
     }
     return res.status(200).json({ success: true, user: decoded });
   });
-});
-
-/**
- * Endpoint to Create New Admin User
- */
-router.post('/create-admin', (req, res) => {
-  try {
-    const { fullName, email, username, password, role } = req.body;
-    const cleanEmail = (email || username || '').trim();
-    const cleanPass = (password || '').trim();
-
-    if (!cleanEmail || !cleanPass) {
-      return res.status(400).json({ success: false, message: 'Email/Username and password are required.' });
-    }
-
-    const admins = loadCustomAdmins();
-    const existing = admins.find(a => a.email.toLowerCase() === cleanEmail.toLowerCase());
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'An admin account with this email/username already exists.' });
-    }
-
-    const requestedRole = (role || 'ADMIN').toUpperCase();
-    const validRoles = ['SUPER_ADMIN', 'ADMIN', 'HOSTEL_ADMIN', 'ATTENDANCE_ADMIN', 'REPORTING_ADMIN'];
-    const finalRole = validRoles.includes(requestedRole) ? requestedRole : 'ADMIN';
-
-    const newAdmin = {
-      id: 'ADM_' + Date.now(),
-      fullName: fullName || 'Administrator',
-      name: fullName || 'Administrator',
-      email: cleanEmail,
-      username: username || cleanEmail.split('@')[0],
-      password: cleanPass,
-      role: finalRole,
-      isAdmin: true,
-      createdAt: new Date().toISOString()
-    };
-
-    admins.push(newAdmin);
-    saveCustomAdmins(admins);
-
-    return res.status(201).json({
-      success: true,
-      message: 'New administrator created successfully!',
-      admin: {
-        id: newAdmin.id,
-        fullName: newAdmin.fullName,
-        email: newAdmin.email,
-        role: newAdmin.role
-      }
-    });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: 'Failed to create admin: ' + err.message });
-  }
-});
-
-/**
- * List Custom Admins Endpoint
- */
-router.get('/admins', (req, res) => {
-  const admins = loadCustomAdmins();
-  const safeAdmins = admins.map(a => ({
-    id: a.id,
-    fullName: a.fullName,
-    email: a.email,
-    username: a.username,
-    role: a.role,
-    createdAt: a.createdAt
-  }));
-  return res.status(200).json({ success: true, admins: safeAdmins });
 });
 
 module.exports = router;

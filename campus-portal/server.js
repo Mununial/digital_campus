@@ -35,8 +35,6 @@ app.use((req, res, next) => {
 // -------------------------------------------------------------
 app.get('/attendance/login',           (req, res) => res.redirect('/'));
 app.get('/attendance/login/*',         (req, res) => res.redirect('/'));
-app.get('/hostel/login',               (req, res) => res.redirect('/'));
-app.get('/hostel/login/*',             (req, res) => res.redirect('/'));
 app.get('/reporting/pages/login.html', (req, res) => res.redirect('/'));
 app.get('/reporting/login',            (req, res) => res.redirect('/'));
 app.get('/login',                      (req, res) => res.redirect('/'));
@@ -80,8 +78,17 @@ try {
   const cafeteriaRoutes = require('../Hostel Management/backend/src/routes/cafeteriaRoutes');
   const documentRoutes = require('../Hostel Management/backend/src/routes/documentRoutes');
   const hostelStudentRoutes = require('../Hostel Management/backend/src/routes/studentRoutes');
+  const floorRoutes = require('../Hostel Management/backend/src/routes/floorRoutes');
+  const roomRoutes = require('../Hostel Management/backend/src/routes/roomRoutes');
+  const bedRoutes = require('../Hostel Management/backend/src/routes/bedRoutes');
+  const attendanceRoutes = require('../Hostel Management/backend/src/routes/attendanceRoutes');
+  const roomApplicationRoutes = require('../Hostel Management/backend/src/routes/roomApplicationRoutes');
+  const userRoutes = require('../Hostel Management/backend/src/routes/userRoutes');
 
   app.use('/api/hostels', hostelRoutes);
+  app.use('/api/floors', floorRoutes);
+  app.use('/api/rooms', roomRoutes);
+  app.use('/api/beds', bedRoutes);
   app.use('/api/complaints', complaintRoutes);
   app.use('/api/mess', messRoutes);
   app.use('/api/fees', feeRoutes);
@@ -96,10 +103,15 @@ try {
   app.use('/api/inspections', inspectionRoutes);
   app.use('/api/operations', operationsRoutes);
   app.use('/api/master', masterRoutes);
+  app.use('/api/data-integrity', masterRoutes);
   app.use('/api/cafeteria', cafeteriaRoutes);
   app.use('/api/documents', documentRoutes);
   app.use('/api/students', hostelStudentRoutes);
   app.use('/api/hostel-students', hostelStudentRoutes);
+  app.use('/api/attendance', attendanceRoutes);
+  app.use('/api/room-applications', roomApplicationRoutes);
+  app.use('/api/users', userRoutes);
+  app.use('/api', userRoutes);
   try {
     app.use('/api/dashboard', require('../Hostel Management/backend/src/routes/dashboardRoutes'));
   } catch (dErr) {}
@@ -113,75 +125,16 @@ try {
 // 4. STATIC SERVING & SPA FALLBACKS FOR ORIGINAL MODULES
 // -------------------------------------------------------------
 const publicDir = path.join(__dirname, 'public');
-const jwt = require('jsonwebtoken');
-const GATEWAY_SECRET = process.env.GATEWAY_JWT_SECRET || process.env.JWT_SECRET || 'super_secret_bec_gateway_jwt_key_2026';
-
-function sendForbiddenPage(res, currentRole, moduleName, requiredRole) {
-  return res.status(403).send(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>403 Access Denied - BEC Digital Campus</title>
-      <style>
-        body { background: #0f172a; color: #fff; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; border: 1px solid #ef4444; border-radius: 16px; padding: 36px; text-align: center; max-width: 480px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        h1 { color: #fca5a5; font-size: 1.4rem; margin-bottom: 12px; }
-        p { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
-        .role-badge { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
-        .btn { display: inline-block; margin-top: 20px; padding: 10px 22px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 0.88rem; }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <h1>⛔ Access Restricted (RBAC Protected)</h1>
-        <p>Your account is assigned the role <span class="role-badge">${currentRole || 'USER'}</span>.</p>
-        <p>Access to <strong>${moduleName}</strong> is restricted to <strong>${requiredRole}</strong> or Master Admins only.</p>
-        <a href="/" class="btn">Return to Portal Home</a>
-      </div>
-    </body>
-    </html>
-  `);
-}
-
-function checkModuleRBAC(moduleKey) {
-  return (req, res, next) => {
-    const pathStr = req.path.toLowerCase();
-    const isTargetingAdmin = pathStr.includes('/admin') || pathStr.includes('admin.html') || pathStr.includes('/superintendent');
-    if (!isTargetingAdmin) return next();
-
-    const token = req.cookies?.portalToken || req.cookies?.authToken || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
-    if (!token) return next();
-
-    try {
-      const decoded = jwt.verify(token, GATEWAY_SECRET);
-      const userRole = (decoded.role || '').toUpperCase();
-      const isMasterAdmin = decoded.isAdmin && (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN' || decoded.id === 'ADM_MASTER');
-
-      if (isMasterAdmin) return next();
-
-      if (moduleKey === 'ATTENDANCE' && userRole !== 'ATTENDANCE_ADMIN') {
-        return sendForbiddenPage(res, userRole, 'Attendance Management System', 'ATTENDANCE_ADMIN');
-      }
-      if (moduleKey === 'HOSTEL' && userRole !== 'HOSTEL_ADMIN') {
-        return sendForbiddenPage(res, userRole, 'Hostel & Warden Management', 'HOSTEL_ADMIN');
-      }
-      if (moduleKey === 'REPORTING' && userRole !== 'REPORTING_ADMIN') {
-        return sendForbiddenPage(res, userRole, 'Academic Reporting & SRMS', 'REPORTING_ADMIN');
-      }
-    } catch (e) {}
-    next();
-  };
-}
 
 // Module A: Attendance System
 const attendanceDist = fs.existsSync(path.join(__dirname, '../BEC-ATTENDANCCE-SYSTEM/dist'))
   ? path.join(__dirname, '../BEC-ATTENDANCCE-SYSTEM/dist')
   : path.join(publicDir, 'modules/attendance');
 
-app.use('/attendance', checkModuleRBAC('ATTENDANCE'), express.static(attendanceDist));
+app.use('/attendance', express.static(attendanceDist));
 
 // SPA Fallback for Module A (blocks /login and /signup, redirects to doorway /)
-app.get(['/attendance', '/attendance/*'], checkModuleRBAC('ATTENDANCE'), (req, res, next) => {
+app.get(['/attendance', '/attendance/*'], (req, res, next) => {
   if (req.path.includes('/login') || req.path.includes('/signup')) {
     return res.redirect('/');
   }
@@ -194,23 +147,11 @@ const hostelDist = fs.existsSync(path.join(__dirname, '../Hostel Management/fron
   ? path.join(__dirname, '../Hostel Management/frontend/dist')
   : path.join(publicDir, 'modules/hostel');
 
-app.use('/hostel', checkModuleRBAC('HOSTEL'), express.static(hostelDist));
+app.use('/hostel', express.static(hostelDist));
 
-// SPA Fallback for Module B (blocks /login, redirects to doorway /)
-app.get(['/hostel', '/hostel/*'], checkModuleRBAC('HOSTEL'), (req, res, next) => {
-  if (req.path.includes('/login')) {
-    return res.redirect('/');
-  }
+// SPA Fallback for Module B (Hostel Management) & Deep Links (/admin/*, /superintendent/*, /student/*, /profile)
+app.get(['/hostel', '/hostel/*', '/admin/dashboard', '/admin/*', '/superintendent', '/superintendent/*', '/student/*', '/profile'], (req, res, next) => {
   if (path.extname(req.path)) return next();
-  res.sendFile(path.join(hostelDist, 'index.html'));
-});
-
-// Deep Link Route Support for Client-Side SPAs
-app.get(['/student', '/teacher'], (req, res) => {
-  res.sendFile(path.join(attendanceDist, 'index.html'));
-});
-
-app.get(['/student/*', '/superintendent', '/superintendent/*'], checkModuleRBAC('HOSTEL'), (req, res) => {
   res.sendFile(path.join(hostelDist, 'index.html'));
 });
 
@@ -219,8 +160,8 @@ const reportingClient = fs.existsSync(path.join(__dirname, '../BEC REPORTING APP
   ? path.join(__dirname, '../BEC REPORTING APP/client')
   : path.join(publicDir, 'modules/reporting');
 
-app.use('/reporting', checkModuleRBAC('REPORTING'), express.static(reportingClient));
-app.use('/reporting/pages', checkModuleRBAC('REPORTING'), express.static(path.join(reportingClient, 'pages')));
+app.use('/reporting', express.static(reportingClient));
+app.use('/reporting/pages', express.static(path.join(reportingClient, 'pages')));
 app.use('/reporting/css', express.static(path.join(reportingClient, 'css')));
 app.use('/reporting/js', express.static(path.join(reportingClient, 'js')));
 app.use('/reporting/assets', express.static(path.join(reportingClient, 'assets')));

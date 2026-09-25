@@ -48,72 +48,73 @@ const Sidebar = ({ isOpen, onClose }) => {
   const getNavItems = () => {
     if (!user) return [];
 
-    switch (user.role) {
-      case 'SUPER_ADMIN':
-        return [
-          { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/admin/dashboard' },
-          { label: 'Master Data Hub', icon: <Database size={18} />, path: '/admin/master' },
-          { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/admin/gate-passes' },
-          { label: 'Leave Applications', icon: <FileText size={18} />, path: '/admin/leaves' },
-          { label: 'Room Applications', icon: <BedDouble size={18} />, path: '/admin/room-applications' },
-          { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/admin/documents' },
-          { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/admin/cafeteria' },
-          { label: 'Maintenance Requests', icon: <Wrench size={18} />, path: '/admin/maintenance' },
-          { label: 'User Directory', icon: <Users size={18} />, path: '/admin/users' },
-          { label: 'Activity Log', icon: <ClipboardList size={18} />, path: '/admin/activity' },
-          { label: 'Security Audit', icon: <ShieldCheck size={18} />, path: '/admin/security-audit' },
-          { label: 'Hostels', icon: <Building2 size={18} />, path: '/admin/hostels' },
-          { label: 'Students', icon: <GraduationCap size={18} />, path: '/admin/students' },
-          { label: 'Allocations & Transfers', icon: <BedDouble size={18} />, path: '/admin/allocations' },
-          { label: 'Reports Center', icon: <BarChart3 size={18} />, path: '/admin/reports' },
-          { label: 'Visitors', icon: <UserCheck size={18} />, path: '/admin/visitors' },
-          { label: 'Complaints', icon: <AlertCircle size={18} />, path: '/admin/complaints' },
-          { label: 'Mess & Food', icon: <Utensils size={18} />, path: '/admin/mess' },
-          { label: 'Attendance', icon: <CalendarCheck size={18} />, path: '/admin/attendance' },
-          { label: 'Notices', icon: <Bell size={18} />, path: '/admin/notices', badge: unreadCount },
-          { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
-        ];
-      case 'SUPERINTENDENT':
-        return [
-          { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/superintendent/dashboard' },
-          { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/superintendent/gate-passes' },
-          { label: 'Leave Applications', icon: <FileText size={18} />, path: '/superintendent/leaves' },
-          { label: 'Room Applications', icon: <BedDouble size={18} />, path: '/superintendent/room-applications' },
-          { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/superintendent/documents' },
-          { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/superintendent/cafeteria' },
-          { label: 'Maintenance Requests', icon: <Wrench size={18} />, path: '/superintendent/maintenance' },
-          { label: 'My Hostels', icon: <Building2 size={18} />, path: '/superintendent/hostels' },
-          { label: 'Students', icon: <GraduationCap size={18} />, path: '/superintendent/students' },
-          { label: 'Allocations & Transfers', icon: <BedDouble size={18} />, path: '/superintendent/allocations' },
-          { label: 'Activity Log', icon: <ClipboardList size={18} />, path: '/superintendent/activity' },
-          { label: 'Reports Center', icon: <BarChart3 size={18} />, path: '/superintendent/reports' },
-          { label: 'Visitors', icon: <UserCheck size={18} />, path: '/superintendent/visitors' },
-          { label: 'Complaints', icon: <AlertCircle size={18} />, path: '/superintendent/complaints' },
-          { label: 'Mess & Food', icon: <Utensils size={18} />, path: '/superintendent/mess' },
-          { label: 'Attendance', icon: <CalendarCheck size={18} />, path: '/superintendent/attendance' },
-          { label: 'Notices', icon: <Bell size={18} />, path: '/superintendent/notices', badge: unreadCount },
-          { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
-        ];
-      case 'STUDENT':
-        return [
-          { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/student/dashboard' },
-          { label: 'My Accommodation', icon: <BedDouble size={18} />, path: '/student/accommodation' },
-          { label: 'Room Application', icon: <BedDouble size={18} />, path: '/student/room-applications' },
-          { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/student/gate-passes' },
-          { label: 'Leave Applications', icon: <FileText size={18} />, path: '/student/leaves' },
-          { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/student/documents' },
-          { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/student/cafeteria' },
-          { label: 'My Maintenance', icon: <Wrench size={18} />, path: '/student/maintenance' },
-          { label: 'Visitors', icon: <UserCheck size={18} />, path: '/student/visitors' },
-          { label: 'My Complaints', icon: <AlertCircle size={18} />, path: '/student/complaints' },
-          { label: 'Notices', icon: <Bell size={18} />, path: '/student/notices', badge: unreadCount },
-          { label: 'Mess Schedule', icon: <Utensils size={18} />, path: '/student/mess' },
-          { label: 'My Attendance', icon: <CalendarCheck size={18} />, path: '/student/attendance' },
-          { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
-        ];
-      default:
-        return [];
+    const roleUpper = String(user.role || '').toUpperCase();
+
+    if (roleUpper === 'SUPER_ADMIN' || roleUpper === 'ADMIN' || user.role === 'Admin') {
+      return [
+        { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/admin/dashboard' },
+        { label: 'Master Data Hub', icon: <Database size={18} />, path: '/admin/master' },
+        { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/admin/gate-passes' },
+        { label: 'Leave Applications', icon: <FileText size={18} />, path: '/admin/leaves' },
+        { label: 'Room Applications', icon: <BedDouble size={18} />, path: '/admin/room-applications' },
+        { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/admin/documents' },
+        { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/admin/cafeteria' },
+        { label: 'Maintenance Requests', icon: <Wrench size={18} />, path: '/admin/maintenance' },
+        { label: 'User Directory', icon: <Users size={18} />, path: '/admin/users' },
+        { label: 'Activity Log', icon: <ClipboardList size={18} />, path: '/admin/activity' },
+        { label: 'Security Audit', icon: <ShieldCheck size={18} />, path: '/admin/security-audit' },
+        { label: 'Hostels', icon: <Building2 size={18} />, path: '/admin/hostels' },
+        { label: 'Students', icon: <GraduationCap size={18} />, path: '/admin/students' },
+        { label: 'Allocations & Transfers', icon: <BedDouble size={18} />, path: '/admin/allocations' },
+        { label: 'Reports Center', icon: <BarChart3 size={18} />, path: '/admin/reports' },
+        { label: 'Visitors', icon: <UserCheck size={18} />, path: '/admin/visitors' },
+        { label: 'Complaints', icon: <AlertCircle size={18} />, path: '/admin/complaints' },
+        { label: 'Mess & Food', icon: <Utensils size={18} />, path: '/admin/mess' },
+        { label: 'Attendance', icon: <CalendarCheck size={18} />, path: '/admin/attendance' },
+        { label: 'Notices', icon: <Bell size={18} />, path: '/admin/notices', badge: unreadCount },
+        { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
+      ];
     }
+
+    if (roleUpper === 'SUPERINTENDENT' || roleUpper.includes('FACULTY') || roleUpper.includes('WARDEN')) {
+      return [
+        { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/superintendent/dashboard' },
+        { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/superintendent/gate-passes' },
+        { label: 'Leave Applications', icon: <FileText size={18} />, path: '/superintendent/leaves' },
+        { label: 'Room Applications', icon: <BedDouble size={18} />, path: '/superintendent/room-applications' },
+        { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/superintendent/documents' },
+        { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/superintendent/cafeteria' },
+        { label: 'Maintenance Requests', icon: <Wrench size={18} />, path: '/superintendent/maintenance' },
+        { label: 'My Hostels', icon: <Building2 size={18} />, path: '/superintendent/hostels' },
+        { label: 'Students', icon: <GraduationCap size={18} />, path: '/superintendent/students' },
+        { label: 'Allocations & Transfers', icon: <BedDouble size={18} />, path: '/superintendent/allocations' },
+        { label: 'Activity Log', icon: <ClipboardList size={18} />, path: '/superintendent/activity' },
+        { label: 'Reports Center', icon: <BarChart3 size={18} />, path: '/superintendent/reports' },
+        { label: 'Visitors', icon: <UserCheck size={18} />, path: '/superintendent/visitors' },
+        { label: 'Complaints', icon: <AlertCircle size={18} />, path: '/superintendent/complaints' },
+        { label: 'Mess & Food', icon: <Utensils size={18} />, path: '/superintendent/mess' },
+        { label: 'Attendance', icon: <CalendarCheck size={18} />, path: '/superintendent/attendance' },
+        { label: 'Notices', icon: <Bell size={18} />, path: '/superintendent/notices', badge: unreadCount },
+        { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
+      ];
+    }
+
+    return [
+      { label: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/student/dashboard' },
+      { label: 'My Accommodation', icon: <BedDouble size={18} />, path: '/student/accommodation' },
+      { label: 'Room Application', icon: <BedDouble size={18} />, path: '/student/room-applications' },
+      { label: 'Gate Pass & Outings', icon: <DoorOpen size={18} />, path: '/student/gate-passes' },
+      { label: 'Leave Applications', icon: <FileText size={18} />, path: '/student/leaves' },
+      { label: 'Documents & Certificates', icon: <FileText size={18} />, path: '/student/documents' },
+      { label: 'Campus Cafeteria', icon: <Utensils size={18} />, path: '/student/cafeteria' },
+      { label: 'My Maintenance', icon: <Wrench size={18} />, path: '/student/maintenance' },
+      { label: 'Visitors', icon: <UserCheck size={18} />, path: '/student/visitors' },
+      { label: 'My Complaints', icon: <AlertCircle size={18} />, path: '/student/complaints' },
+      { label: 'Notices', icon: <Bell size={18} />, path: '/student/notices', badge: unreadCount },
+      { label: 'Mess Schedule', icon: <Utensils size={18} />, path: '/student/mess' },
+      { label: 'My Attendance', icon: <CalendarCheck size={18} />, path: '/student/attendance' },
+      { label: 'My Profile', icon: <User size={18} />, path: '/profile' },
+    ];
   };
 
   const navItems = getNavItems();

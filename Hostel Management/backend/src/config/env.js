@@ -24,27 +24,41 @@ requiredEnvVars.forEach((varName) => {
   }
 });
 
+const defaultEnvVars = {
+  DB_HOST: 'localhost',
+  DB_USER: 'root',
+  DB_PASSWORD: '',
+  DB_NAME: 'hostel_management',
+  JWT_SECRET: 'dev_jwt_secret_key_12345',
+  CLOUDINARY_CLOUD_NAME: 'demo',
+  CLOUDINARY_API_KEY: '1234567890',
+  CLOUDINARY_API_SECRET: 'secret'
+};
+
 if (missingEnvVars.length > 0) {
-  console.warn('[Hostel Config Notice]: Missing env vars, using production fallbacks for:', missingEnvVars.join(', '));
+  console.log('[Hostel Config Notice]: Missing env vars, using production fallbacks for:', missingEnvVars.join(', '));
+  missingEnvVars.forEach((v) => {
+    process.env[v] = process.env[v] || defaultEnvVars[v] || 'dev_fallback';
+  });
 }
 
 module.exports = {
   PORT: parseInt(process.env.PORT, 10) || 5000,
   NODE_ENV: process.env.NODE_ENV || 'development',
   DB: {
-    host: process.env.DB_HOST || 'srv1334.hstgr.io',
+    host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT, 10) || 3306,
-    user: process.env.DB_USER || 'u847513759_ERP_COLLEGE',
-    password: process.env.DB_PASSWORD || 'ayusHtechnologies@2026',
-    name: process.env.DB_NAME || 'u847513759_ERP_COLLEGE'
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    name: process.env.DB_NAME
   },
   JWT: {
-    secret: process.env.JWT_SECRET || 'super_secret_genz_university_jwt_key_2026',
+    secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   },
   CLOUDINARY: {
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME || 'demo_cloud',
-    apiKey: process.env.CLOUDINARY_API_KEY || '123456789',
-    apiSecret: process.env.CLOUDINARY_API_SECRET || 'secret'
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET
   }
 };
