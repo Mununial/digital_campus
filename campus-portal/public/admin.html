@@ -139,7 +139,7 @@
     <div class="launcher-grid">
 
       <!-- CARD 1: ATTENDANCE ADMIN CONSOLE -->
-      <div class="launcher-card">
+      <div id="launcher-card-attendance" class="launcher-card">
         <div>
           <div class="launcher-icon" style="background: rgba(16,185,129,0.15); color: #34d399;">
             <i class="fa-solid fa-clipboard-user"></i>
@@ -149,13 +149,13 @@
             Direct access to Module A's faculty & administrative console. Manage daily roll calls, QR sessions, live photo verification stream, branch attendance sheets, and export official BPUT reports.
           </div>
         </div>
-        <a href="/attendance/admin" class="launcher-btn" style="background: #059669; color: #fff;">
-          Launch Attendance Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
+        <button onclick="openModuleAuthModal('ATTENDANCE', 'Attendance Administration Console', '/attendance/admin', 'ATTENDANCE_ADMIN')" class="launcher-btn" style="background: #059669; color: #fff; border: none; width: 100%;">
+          Launch Attendance Console <i class="fa-solid fa-lock" style="margin-left: 6px;"></i>
+        </button>
       </div>
 
       <!-- CARD 2: HOSTEL ADMIN CONSOLE -->
-      <div class="launcher-card">
+      <div id="launcher-card-hostel" class="launcher-card">
         <div>
           <div class="launcher-icon" style="background: rgba(59,130,246,0.15); color: #60a5fa;">
             <i class="fa-solid fa-hotel"></i>
@@ -165,13 +165,13 @@
             Direct access to Module B's administrative console. Manage hostel blocks, room allotments, superintendent assignments, disciplinary complaints, student gate passes, mess menus, and fee records.
           </div>
         </div>
-        <a href="/hostel/admin/dashboard" class="launcher-btn" style="background: #2563eb; color: #fff;">
-          Launch Hostel Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
+        <button onclick="openModuleAuthModal('HOSTEL', 'Hostel & Chief Warden Console', '/hostel/admin/dashboard', 'HOSTEL_ADMIN')" class="launcher-btn" style="background: #2563eb; color: #fff; border: none; width: 100%;">
+          Launch Hostel Console <i class="fa-solid fa-lock" style="margin-left: 6px;"></i>
+        </button>
       </div>
 
       <!-- CARD 3: REPORTING & SRMS CONSOLE -->
-      <div class="launcher-card">
+      <div id="launcher-card-reporting" class="launcher-card">
         <div>
           <div class="launcher-icon" style="background: rgba(168,85,247,0.15); color: #c084fc;">
             <i class="fa-solid fa-file-signature"></i>
@@ -181,11 +181,117 @@
             Direct access to Module C's master reporting and verification console. Inspect 1st Year student databases, verify certificates, approve admission documentation, and generate student dossier PDFs.
           </div>
         </div>
-        <a href="/reporting/pages/admin.html" class="launcher-btn" style="background: #7c3aed; color: #fff;">
-          Launch Reporting Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
+        <button onclick="openModuleAuthModal('REPORTING', 'Academic Reporting Console', '/reporting/pages/admin.html', 'REPORTING_ADMIN')" class="launcher-btn" style="background: #7c3aed; color: #fff; border: none; width: 100%;">
+          Launch Reporting Console <i class="fa-solid fa-lock" style="margin-left: 6px;"></i>
+        </button>
       </div>
 
+    </div>
+
+    <!-- Module Password Verification Modal -->
+    <div id="module-auth-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px;">
+      <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 28px; width: 100%; max-width: 440px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <i id="mod-auth-icon" class="fa-solid fa-shield-halved" style="font-size: 1.3rem; color: #3b82f6;"></i>
+            <div>
+              <h3 id="mod-auth-title" style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">Module Password Verification</h3>
+              <p id="mod-auth-subtitle" style="font-size: 0.78rem; color: #94a3b8; margin-top: 2px;">Enter credentials to unlock module access</p>
+            </div>
+          </div>
+          <button onclick="document.getElementById('module-auth-modal').style.display='none'" style="background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer;">&times;</button>
+        </div>
+
+        <form id="module-auth-form" onsubmit="handleModuleAuthSubmit(event)">
+          <input type="hidden" id="mod-target-key">
+          <input type="hidden" id="mod-target-url">
+          <input type="hidden" id="mod-required-role">
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Admin Email / Username</label>
+            <input type="text" id="mod-auth-username" required placeholder="e.g. hostel_admin@bec.ac.in or admin@college.ac.in" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+          </div>
+
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Admin Password</label>
+            <input type="password" id="mod-auth-password" required placeholder="Enter password to verify" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+          </div>
+
+          <div id="mod-auth-msg" style="display: none; font-size: 0.82rem; margin-bottom: 14px; padding: 10px; border-radius: 8px;"></div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" onclick="document.getElementById('module-auth-modal').style.display='none'" style="padding: 10px 16px; border-radius: 8px; background: #334155; border: none; color: #cbd5e1; font-weight: 700; cursor: pointer;">Cancel</button>
+            <button type="submit" style="padding: 10px 22px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-weight: 700; cursor: pointer;">Verify & Enter Console</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin User Management Panel -->
+    <div id="admin-management-panel" style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">
+            <i class="fa-solid fa-user-shield" style="margin-right: 8px; color: #3b82f6;"></i> Admin Accounts & Role-Based Permissions
+          </h3>
+          <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 2px;">Create and manage administrator credentials with strict module-level RBAC</p>
+        </div>
+        <button id="add-admin-btn" onclick="document.getElementById('add-admin-modal').style.display='flex'" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+          <i class="fa-solid fa-plus"></i> Add New Admin
+        </button>
+      </div>
+
+      <!-- Admin List -->
+      <div id="admin-accounts-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+        <div style="background: rgba(15,23,42,0.6); padding: 14px 18px; border-radius: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">BEC Master Admin (Default)</div>
+            <div style="color: #94a3b8; font-size: 0.78rem; margin-top: 2px;">admin@college.ac.in</div>
+          </div>
+          <span style="background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 700;">SUPER ADMIN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Admin Modal -->
+    <div id="add-admin-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; padding: 20px;">
+      <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 28px; width: 100%; max-width: 460px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="font-size: 1.2rem; font-weight: 800; color: #fff; margin: 0;">
+            <i class="fa-solid fa-user-plus" style="color: #3b82f6; margin-right: 8px;"></i> Add New Administrator
+          </h3>
+          <button onclick="document.getElementById('add-admin-modal').style.display='none'" style="background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+
+        <form id="create-admin-form" onsubmit="handleCreateAdmin(event)">
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Full Name</label>
+            <input type="text" id="admin-fullname" required placeholder="e.g. Dr. Rajesh Sharma" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+          </div>
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Email / Username</label>
+            <input type="text" id="admin-email" required placeholder="e.g. rajesh@bec.ac.in or hostel_admin" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+          </div>
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Admin Role & Permissions</label>
+            <select id="admin-role" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+              <option value="SUPER_ADMIN">👑 Super Admin (Full Access to All Modules)</option>
+              <option value="HOSTEL_ADMIN">🏢 Hostel Admin (Hostel Management Only)</option>
+              <option value="ATTENDANCE_ADMIN">📊 Attendance Admin (Attendance System Only)</option>
+              <option value="REPORTING_ADMIN">📝 Academic Reporting Admin (Reporting & SRMS Only)</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">Password</label>
+            <input type="password" id="admin-password" required placeholder="Set admin password" style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; color: #fff; font-size: 0.85rem; outline: none;">
+          </div>
+          <div id="admin-create-msg" style="display: none; font-size: 0.82rem; margin-bottom: 14px; padding: 10px; border-radius: 8px;"></div>
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" onclick="document.getElementById('add-admin-modal').style.display='none'" style="padding: 10px 16px; border-radius: 8px; background: #334155; border: none; color: #cbd5e1; font-weight: 700; cursor: pointer;">Cancel</button>
+            <button type="submit" style="padding: 10px 20px; border-radius: 8px; background: #2563eb; border: none; color: #fff; font-weight: 700; cursor: pointer;">Create Account</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <!-- Live System Telemetry Status -->
@@ -236,6 +342,196 @@
         pill.style.background = '#7f1d1d';
         pill.style.color = '#fca5a5';
       });
+
+    // Open Module Password Verification Modal
+    function openModuleAuthModal(moduleKey, moduleTitle, targetUrl, requiredRole) {
+      document.getElementById('mod-target-key').value = moduleKey;
+      document.getElementById('mod-target-url').value = targetUrl;
+      document.getElementById('mod-required-role').value = requiredRole;
+
+      document.getElementById('mod-auth-title').textContent = moduleTitle;
+      document.getElementById('mod-auth-subtitle').textContent = 'Enter admin credentials to authenticate into ' + moduleTitle;
+
+      const user = PortalAuth.getCurrentUser();
+      const userField = document.getElementById('mod-auth-username');
+      const passField = document.getElementById('mod-auth-password');
+      const msg = document.getElementById('mod-auth-msg');
+
+      if (user && user.email) {
+        userField.value = user.email;
+      } else {
+        userField.value = '';
+      }
+      passField.value = '';
+      msg.style.display = 'none';
+
+      document.getElementById('module-auth-modal').style.display = 'flex';
+      passField.focus();
+    }
+
+    // Handle Module Authentication & Redirect
+    function handleModuleAuthSubmit(e) {
+      e.preventDefault();
+      const moduleKey = document.getElementById('mod-target-key').value;
+      const targetUrl = document.getElementById('mod-target-url').value;
+      const requiredRole = document.getElementById('mod-required-role').value;
+      const identifier = document.getElementById('mod-auth-username').value.trim();
+      const password = document.getElementById('mod-auth-password').value.trim();
+      const msg = document.getElementById('mod-auth-msg');
+
+      msg.style.display = 'block';
+      msg.style.background = '#1e293b';
+      msg.style.color = '#94a3b8';
+      msg.textContent = 'Verifying credentials...';
+
+      fetch('/api/gateway/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.success) {
+          msg.style.background = 'rgba(239,68,68,0.2)';
+          msg.style.color = '#fca5a5';
+          msg.textContent = data.message || 'Invalid username or password.';
+          return;
+        }
+
+        const userRole = String(data.user.role || '').toUpperCase();
+        const isMaster = data.user.isAdmin && (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN' || data.user.id === 'ADM_MASTER');
+
+        if (!isMaster && userRole !== requiredRole) {
+          msg.style.background = 'rgba(239,68,68,0.2)';
+          msg.style.color = '#fca5a5';
+          msg.textContent = 'Access Denied: Account role (' + userRole + ') is unauthorized for this console. Required: ' + requiredRole;
+          return;
+        }
+
+        PortalAuth.saveSession(data.token, data.user, data.tokens || {});
+
+        msg.style.background = 'rgba(16,185,129,0.2)';
+        msg.style.color = '#34d399';
+        msg.textContent = 'Authentication successful! Opening console...';
+
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 600);
+      })
+      .catch(err => {
+        msg.style.background = 'rgba(239,68,68,0.2)';
+        msg.style.color = '#fca5a5';
+        msg.textContent = 'Authentication error: ' + err.message;
+      });
+    }
+
+    // Enforce UI Access Guard based on Role
+    function enforceRoleUI() {
+      const user = PortalAuth.getCurrentUser();
+      if (!user) return;
+
+      const userRole = String(user.role || '').toUpperCase();
+      const isSuper = user.isAdmin && (userRole === 'SUPER_ADMIN' || userRole === 'ADMIN' || user.id === 'ADM_MASTER');
+
+      const cardAttendance = document.getElementById('launcher-card-attendance');
+      const cardHostel = document.getElementById('launcher-card-hostel');
+      const cardReporting = document.getElementById('launcher-card-reporting');
+      const addAdminBtn = document.getElementById('add-admin-btn');
+
+      if (!isSuper) {
+        if (addAdminBtn) addAdminBtn.style.display = 'none';
+
+        if (userRole === 'HOSTEL_ADMIN') {
+          if (cardAttendance) cardAttendance.style.display = 'none';
+          if (cardReporting) cardReporting.style.display = 'none';
+          if (cardHostel) cardHostel.style.display = 'flex';
+        } else if (userRole === 'ATTENDANCE_ADMIN') {
+          if (cardHostel) cardHostel.style.display = 'none';
+          if (cardReporting) cardReporting.style.display = 'none';
+          if (cardAttendance) cardAttendance.style.display = 'flex';
+        } else if (userRole === 'REPORTING_ADMIN') {
+          if (cardHostel) cardHostel.style.display = 'none';
+          if (cardAttendance) cardAttendance.style.display = 'none';
+          if (cardReporting) cardReporting.style.display = 'flex';
+        }
+      }
+    }
+
+    enforceRoleUI();
+
+    // Load custom admins list
+    function loadAdminList() {
+      fetch('/api/auth/admins')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.admins.length > 0) {
+            const container = document.getElementById('admin-accounts-list');
+            const defaultCard = `<div style="background: rgba(15,23,42,0.6); padding: 14px 18px; border-radius: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">BEC Master Admin (Default)</div>
+                <div style="color: #94a3b8; font-size: 0.78rem; margin-top: 2px;">admin@college.ac.in</div>
+              </div>
+              <span style="background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 700;">SUPER ADMIN</span>
+            </div>`;
+            const customCards = data.admins.map(a => `
+              <div style="background: rgba(15,23,42,0.6); padding: 14px 18px; border-radius: 10px; border: 1px solid #334155; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">${a.fullName}</div>
+                  <div style="color: #94a3b8; font-size: 0.78rem; margin-top: 2px;">${a.email}</div>
+                </div>
+                <span style="background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 700;">${a.role}</span>
+              </div>
+            `).join('');
+            container.innerHTML = defaultCard + customCards;
+          }
+        }).catch(e => console.warn(e));
+    }
+
+    loadAdminList();
+
+    // Create Admin Handler
+    function handleCreateAdmin(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('admin-fullname').value;
+      const email = document.getElementById('admin-email').value;
+      const password = document.getElementById('admin-password').value;
+      const role = document.getElementById('admin-role').value;
+      const msg = document.getElementById('admin-create-msg');
+
+      msg.style.display = 'block';
+      msg.style.background = '#1e293b';
+      msg.style.color = '#94a3b8';
+      msg.textContent = 'Creating administrator account with role (' + role + ')...';
+
+      fetch('/api/auth/create-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email, password, role })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          msg.style.background = 'rgba(16,185,129,0.2)';
+          msg.style.color = '#34d399';
+          msg.textContent = 'Success! Admin created with role [' + role + ']. Refreshing...';
+          document.getElementById('create-admin-form').reset();
+          setTimeout(() => {
+            document.getElementById('add-admin-modal').style.display = 'none';
+            msg.style.display = 'none';
+            loadAdminList();
+          }, 1200);
+        } else {
+          msg.style.background = 'rgba(239,68,68,0.2)';
+          msg.style.color = '#fca5a5';
+          msg.textContent = data.message || 'Error creating account';
+        }
+      })
+      .catch(err => {
+        msg.style.background = 'rgba(239,68,68,0.2)';
+        msg.style.color = '#fca5a5';
+        msg.textContent = 'Network error: ' + err.message;
+      });
+    }
   </script>
 </body>
 </html>
