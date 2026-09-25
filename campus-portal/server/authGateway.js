@@ -16,7 +16,7 @@ const moduleCPool = mysql.createPool({
   host: process.env.DB_HOST || 'srv1334.hstgr.io',
   port: parseInt(process.env.DB_PORT, 10) || 3306,
   user: process.env.DB_USER || 'u847513759_ERP_COLLEGE',
-  password: process.env.DB_PASSWORD || 'ayusHtechnologies@2026',
+  password: process.env.DB_PASSWORD || 'Ayushtech@26',
   database: process.env.DB_NAME || 'u847513759_ERP_COLLEGE',
   waitForConnections: true,
   connectionLimit: 5,
