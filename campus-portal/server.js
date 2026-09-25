@@ -40,6 +40,8 @@ app.get('/reporting/login',            (req, res) => res.redirect('/'));
 app.get('/login',                      (req, res) => res.redirect('/'));
 app.get('/library',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'library.html')));
 app.get('/library/admin',              (req, res) => res.sendFile(path.join(__dirname, 'public', 'library-admin.html')));
+app.get('/notices',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'notices.html')));
+app.get('/notices/admin',              (req, res) => res.sendFile(path.join(__dirname, 'public', 'notice-admin.html')));
 
 // -------------------------------------------------------------
 // 2. UNIFIED GATEWAY & MODULE C (REPORTING) API ROUTES
@@ -48,12 +50,15 @@ const gatewayAuthRoutes = require('./server/authGateway');
 const gatewayReportingRoutes = require('./routes/gatewayReporting');
 const gatewayLibraryRoutes = require('./routes/gatewayLibrary');
 const gatewayStudentRoutes = require('./routes/gatewayStudent');
+const gatewayNoticesRoutes = require('./routes/gatewayNotices');
 
 // Central Gateway Endpoints
 app.use('/api/gateway', gatewayAuthRoutes);
 app.use('/api/auth', gatewayAuthRoutes);
 app.use('/api/library', gatewayLibraryRoutes);
 app.use('/api/student', gatewayStudentRoutes);
+app.use('/api/notices', gatewayNoticesRoutes);
+
 
 
 // Reporting System APIs

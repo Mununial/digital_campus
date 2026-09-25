@@ -98,9 +98,18 @@ const MODULE_A_STAFF = [
     username: "teacher",
     name: "Dr. Rajesh Sharma",
     role: "Faculty",
-    password: "Ayushtech@26"
+    password: "demo123"
+  },
+  {
+    uid: "notice_admin_01",
+    email: "notice@bec.ac.in",
+    username: "notice",
+    name: "Chief Notice & Circular Officer",
+    role: "Admin",
+    password: "notice@bec"
   }
 ];
+
 
 /**
  * Helper: Verify Firebase Auth credentials via Google Identity Toolkit REST API
