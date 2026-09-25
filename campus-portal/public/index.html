@@ -621,7 +621,9 @@
                     signatureUrl: sMatch.studentSignatureUrl || '',
                     gender: sMatch.gender || 'Male',
                     role: 'STUDENT',
-                    isAdmin: false
+                    isAdmin: false,
+                    hostel_required: sMatch.hostelRequired || 'No',
+                    isDayScholar: (sMatch.hostelRequired || 'No') !== 'Yes'
                   };
                 }
               }

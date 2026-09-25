@@ -150,9 +150,95 @@ api.bulkMarkAttendance = (data) => api.post('/attendance/bulk', data);
 api.updateAttendanceRecord = (id, status) => api.put(`/attendance/${id}`, { status });
 
 // Student Allocations, Transfers & Checkout API methods
-api.getAllocations = (params = {}) => api.get('/allocations', { params });
+api.getAllocations = async (params = {}) => {
+  try {
+    const res = await api.get('/allocations', { params });
+    if (res && (res.data || Array.isArray(res))) return res;
+  } catch (err) {
+    console.warn('API /allocations notice, checking authentic database snapshot:', err.message);
+  }
+  try {
+    const snapshotRes = await fetch('/data/allocationsMaster.json');
+    if (snapshotRes.ok) {
+      const catalog = await snapshotRes.json();
+      const seen = new Set();
+      const list = [];
+      for (const item of Object.values(catalog)) {
+        if (item?.currentAllocation && !seen.has(item.currentAllocation.id)) {
+          seen.add(item.currentAllocation.id);
+          list.push({
+            ...item.currentAllocation,
+            full_name: item.student.full_name,
+            roll_number: item.student.roll_number,
+            branch: item.student.branch
+          });
+        }
+      }
+      return { data: list, total: list.length };
+    }
+  } catch (catErr) {}
+  return { data: [], total: 0 };
+};
+
 api.getAllocationById = (id) => api.get(`/allocations/${id}`);
-api.getMyAllocation = () => api.get('/allocations/me');
+
+api.getMyAllocation = async () => {
+  // First, check Day Scholar status from session
+  try {
+    const rawUser = localStorage.getItem('bec_portal_user') || localStorage.getItem('user');
+    if (rawUser) {
+      const u = JSON.parse(rawUser);
+      if (u.hostel_required === 'No' || u.isDayScholar) {
+        const dayScholarErr = new Error('You are a Day Scholar. Hostel facility not applicable.');
+        dayScholarErr.status = 403;
+        dayScholarErr.response = {
+          status: 403,
+          data: {
+            isDayScholar: true,
+            message: 'You are a Day Scholar. Hostel facility not applicable.'
+          }
+        };
+        throw dayScholarErr;
+      }
+    }
+  } catch (parseErr) {
+    if (parseErr.status === 403) throw parseErr;
+  }
+
+  // 1. Try real server API endpoint
+  try {
+    const res = await api.get('/allocations/me');
+    if (res && (res.currentAllocation || res.data?.currentAllocation)) {
+      return res;
+    }
+  } catch (err) {
+    if (err.status === 403 || err.response?.status === 403) {
+      throw err;
+    }
+    console.warn('API /allocations/me notice, checking authentic database snapshot:', err.message);
+  }
+
+  // 2. Static Firebase Hosting fallback: resolve from authentic exported allocations catalog
+  try {
+    const rawUser = localStorage.getItem('bec_portal_user') || localStorage.getItem('user');
+    const u = rawUser ? JSON.parse(rawUser) : {};
+    const key = (u.rollNo || u.roll_number || u.username || u.email || '').toLowerCase().trim();
+
+    const snapshotRes = await fetch('/data/allocationsMaster.json');
+    if (snapshotRes.ok) {
+      const catalog = await snapshotRes.json();
+      const match = catalog[key] || catalog[u.email?.toLowerCase()] || catalog[u.id];
+      if (match) {
+        return { data: match };
+      }
+    }
+  } catch (catErr) {
+    console.warn('Allocations catalog lookup error:', catErr.message);
+  }
+
+  throw new Error('No accommodation profile found.');
+};
+
 api.getStudentAllocationHistory = (studentId) => api.get(`/allocations/student/${studentId}/history`);
 api.getAvailableBeds = (hostel_id, room_id) => api.get('/allocations/available-beds', { params: { hostel_id, room_id } });
 api.allocateStudent = (data) => api.post('/allocations', data);
