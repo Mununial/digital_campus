@@ -68,7 +68,23 @@ function getFallbackReportingStudents() {
           dob: s.dob || '',
           category: s.category || 'General',
           studentEmail: s.email,
-          studentMobile: s.phone || '9876543210'
+          personalEmail: s.personalEmail || s.email,
+          studentMobile: s.phone || s.studentMobile || '9876543210',
+          studentWhatsApp: s.studentWhatsApp || s.phone || '',
+          bloodGroup: s.bloodGroup || '',
+          aadhaarNumber: s.aadhaarNumber || ''
+        },
+        parents: {
+          fatherName: s.fatherName || '',
+          fatherMobile: s.fatherMobile || '',
+          motherName: s.motherName || '',
+          motherMobile: s.motherMobile || ''
+        },
+        address: {
+          permanentAddress: s.permanentAddress || '',
+          district: s.district || '',
+          state: s.state || 'Odisha',
+          pinCode: s.pinCode || ''
         },
         reporting: {
           branch: s.rawBranch || s.branch,
@@ -76,7 +92,25 @@ function getFallbackReportingStudents() {
           program: 'B.Tech'
         },
         facilities: {
-          hostelRequired: 'Yes'
+          hostelRequired: s.hostelRequired || 'No',
+          hostelNo: s.hostelNo || 'N/A',
+          roomNo: s.roomNo || 'N/A',
+          transportRequired: s.transportRequired || 'No',
+          pickupStoppage: s.pickupStoppage || 'N/A'
+        },
+        fees: {
+          tuitionFee: s.tuitionFee || '0',
+          tuitionReceiptNo: s.tuitionReceiptNo || '',
+          tuitionReceiptDate: s.tuitionReceiptDate || ''
+        },
+        documents: {
+          studentPhoto: s.studentPhotoUrl || '',
+          studentSignature: s.studentSignatureUrl || '',
+          admissionLetter: s.allotmentLetterUrl || '',
+          feeReceipt: s.feeReceiptUrl || '',
+          marksheet10th: s.marksheet10thUrl || '',
+          marksheet12th: s.marksheet12thUrl || '',
+          aadhaarCard: s.aadhaarDocumentUrl || ''
         },
         updatedAt: s.createdAt || new Date().toISOString()
       }));

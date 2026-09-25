@@ -1,4 +1,4 @@
-export const FIRST_YEAR_STUDENTS = [
+[
   {
     "uid": "stud_1y_001",
     "name": "test test",
@@ -16650,4 +16650,4 @@ export const FIRST_YEAR_STUDENTS = [
     "aadhaarDocumentUrl": "https://res.cloudinary.com/sbnlowsc/image/upload/v1788255237/student_docs/PhnOSuSyC4TUpbOcAYmdV91Coxz2/w3oku0s6t4ohzdbgkg6a.jpg",
     "residenceCertificateUrl": "https://res.cloudinary.com/sbnlowsc/image/upload/v1788255367/student_docs/PhnOSuSyC4TUpbOcAYmdV91Coxz2/iow8aa4f7kexy8vjgwdi.jpg"
   }
-];
+]
