@@ -100,25 +100,44 @@ const StudentDashboard = () => {
 
   const displayName = studentProfile?.full_name || user?.full_name || user?.name || user?.username || 'Student';
   const displayRoll = studentProfile?.roll_number || user?.rollNo || studentProfile?.student_id || user?.username || '';
+  const userPhoto = user?.photo_url || user?.studentPhotoUrl || user?.photoUrl || studentProfile?.photo_url || studentProfile?.studentPhotoUrl;
 
   return (
     <div className="student-dashboard">
       {/* 1. Welcome & Academic Identity Banner */}
       <div className="student-welcome-banner">
         <div className="banner-glow"></div>
-        <div className="welcome-info">
-          <span className="welcome-greeting-tag">{getGreeting()}, Welcome Back</span>
-          <h1 className="welcome-name">{displayName}</h1>
-          <div className="welcome-academic-pills">
-            <span className="academic-pill highlight">
-              {studentProfile?.branch || user?.branch || 'Computer Science & Engineering (CSE)'}
-            </span>
-            <span className="academic-pill">
-              Year {studentProfile?.year || 1} • Sem {studentProfile?.semester || 1}
-            </span>
-            <span className="academic-pill">
-              Roll No: <strong>{displayRoll}</strong>
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', zIndex: 1, flexWrap: 'wrap' }}>
+          {userPhoto && (
+            <img 
+              src={userPhoto} 
+              alt={displayName} 
+              style={{
+                width: '76px',
+                height: '76px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '3px solid #6366f1',
+                boxShadow: '0 4px 14px rgba(0,0,0,0.35)',
+                background: '#fff',
+                flexShrink: 0
+              }} 
+            />
+          )}
+          <div className="welcome-info">
+            <span className="welcome-greeting-tag">{getGreeting()}, Welcome Back</span>
+            <h1 className="welcome-name">{displayName}</h1>
+            <div className="welcome-academic-pills">
+              <span className="academic-pill highlight">
+                {studentProfile?.branch || user?.branch || 'Computer Science & Engineering (CSE)'}
+              </span>
+              <span className="academic-pill">
+                Year {studentProfile?.year || 1} • Sem {studentProfile?.semester || 1}
+              </span>
+              <span className="academic-pill">
+                Roll No: <strong>{displayRoll}</strong>
+              </span>
+            </div>
           </div>
         </div>
 

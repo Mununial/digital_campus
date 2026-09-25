@@ -13,11 +13,15 @@ export const AuthProvider = ({ children }) => {
       const parsed = JSON.parse(raw);
       const roleStr = String(parsed.role || '').toUpperCase();
       const hostelRole = roleStr.includes('ADMIN') ? 'SUPER_ADMIN' : (roleStr.includes('TEACH') || roleStr.includes('FAC') || roleStr.includes('SUPER') ? 'SUPERINTENDENT' : 'STUDENT');
+      const realPhoto = parsed.photo_url || parsed.studentPhotoUrl || parsed.photoUrl || null;
       return {
         ...parsed,
         role: hostelRole,
         username: parsed.rollNo || parsed.username || parsed.email?.split('@')[0],
-        full_name: parsed.fullName || parsed.name
+        full_name: parsed.fullName || parsed.name,
+        photo_url: realPhoto,
+        photoUrl: realPhoto,
+        studentPhotoUrl: realPhoto
       };
     } catch (e) {
       return null;
@@ -32,7 +36,14 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.get('/auth/me');
       if (response.success && response.user) {
-        setUser(response.user);
+        const u = response.user;
+        const photo = u.photo_url || u.studentPhotoUrl || u.photoUrl || storedPortalUser?.photo_url || null;
+        setUser({
+          ...u,
+          photo_url: photo,
+          photoUrl: photo,
+          studentPhotoUrl: photo
+        });
         setIsAuthenticated(true);
       } else if (!initialToken) {
         localStorage.removeItem('authToken');

@@ -244,7 +244,11 @@ router.post('/login', async (req, res) => {
             fullName: studentMatch.name,
             rollNo: studentMatch.rollNo,
             role: 'Student',
-            branch: studentMatch.branch
+            gender: studentMatch.gender,
+            branch: studentMatch.branch,
+            photoUrl: studentMatch.studentPhotoUrl || studentMatch.photoUrl || null,
+            photo_url: studentMatch.studentPhotoUrl || studentMatch.photoUrl || null,
+            studentPhotoUrl: studentMatch.studentPhotoUrl || studentMatch.photoUrl || null
           };
           sourceModule = 'Module A (Attendance - Student Catalog)';
         }
@@ -316,6 +320,19 @@ router.post('/login', async (req, res) => {
       });
     }
 
+    // Resolve authentic passport photo from Module A catalog if not already set
+    let resolvedPhoto = authResult.studentPhotoUrl || authResult.photoUrl || authResult.photo_url || null;
+    if (!resolvedPhoto && moduleAStudents && moduleAStudents.length > 0) {
+      const match = moduleAStudents.find(s => 
+        (s.rollNo && (s.rollNo.toLowerCase() === (authResult.rollNo || '').toLowerCase() || s.rollNo.toLowerCase() === cleanId.toLowerCase())) ||
+        (s.email && (s.email.toLowerCase() === (authResult.email || '').toLowerCase() || s.email.toLowerCase() === cleanId.toLowerCase())) ||
+        (s.tempId && s.tempId.toLowerCase() === cleanId.toLowerCase())
+      );
+      if (match && (match.studentPhotoUrl || match.photoUrl)) {
+        resolvedPhoto = match.studentPhotoUrl || match.photoUrl;
+      }
+    }
+
     // GENERATE SYNCHRONIZED TOKENS FOR ALL 3 MODULES
     const tokenPayload = {
       id: authResult.id,
@@ -326,7 +343,10 @@ router.post('/login', async (req, res) => {
       role: authResult.role,
       gender: authResult.gender || 'FEMALE',
       isAdmin: authResult.role === 'Admin',
-      rollNo: authResult.rollNo || ''
+      rollNo: authResult.rollNo || '',
+      photoUrl: resolvedPhoto,
+      photo_url: resolvedPhoto,
+      studentPhotoUrl: resolvedPhoto
     };
 
     // Master Gateway JWT
@@ -431,7 +451,10 @@ router.post('/login', async (req, res) => {
       rollNo: authResult.rollNo || authResult.username || '',
       email: authResult.email,
       gender: studentGender,
-      role: hostelRole
+      role: hostelRole,
+      photoUrl: resolvedPhoto,
+      photo_url: resolvedPhoto,
+      studentPhotoUrl: resolvedPhoto
     }, HOSTEL_JWT_SECRET, { expiresIn: '7d' });
 
     // Module C Reporting Token
@@ -453,8 +476,12 @@ router.post('/login', async (req, res) => {
         fullName: authResult.fullName,
         email: authResult.email,
         role: authResult.role,
+        gender: studentGender,
         isAdmin: authResult.role === 'Admin',
-        rollNo: authResult.rollNo || ''
+        rollNo: authResult.rollNo || '',
+        photoUrl: resolvedPhoto,
+        photo_url: resolvedPhoto,
+        studentPhotoUrl: resolvedPhoto
       },
       tokens: {
         gateway: masterToken,
@@ -508,6 +535,17 @@ router.get('/me', (req, res) => {
     const rawRole = String(payload.role || '').toUpperCase();
     const hostelRole = rawRole.includes('ADMIN') ? 'SUPER_ADMIN' : (rawRole.includes('TEACH') || rawRole.includes('FAC') || rawRole.includes('SUPER') ? 'SUPERINTENDENT' : 'STUDENT');
 
+    let studentPhoto = payload.studentPhotoUrl || payload.photo_url || payload.photoUrl || null;
+    if (!studentPhoto && moduleAStudents && moduleAStudents.length > 0) {
+      const match = moduleAStudents.find(s => 
+        (s.rollNo && (s.rollNo.toLowerCase() === (payload.rollNo || '').toLowerCase() || s.rollNo.toLowerCase() === (payload.username || '').toLowerCase())) ||
+        (s.email && s.email.toLowerCase() === (payload.email || '').toLowerCase())
+      );
+      if (match && (match.studentPhotoUrl || match.photoUrl)) {
+        studentPhoto = match.studentPhotoUrl || match.photoUrl;
+      }
+    }
+
     const formattedUser = {
       id: payload.id || payload.uid,
       uid: payload.uid || payload.id,
@@ -522,6 +560,9 @@ router.get('/me', (req, res) => {
       branch: payload.branch || 'CSE',
       normalizedRole: rawRole.toLowerCase(),
       isAdmin: hostelRole === 'SUPER_ADMIN',
+      photoUrl: studentPhoto,
+      photo_url: studentPhoto,
+      studentPhotoUrl: studentPhoto,
       status: 'ACTIVE'
     };
 

@@ -70,8 +70,16 @@ export const Navbar = () => {
               {getRoleBadge()}
 
               <div className="hidden md:flex items-center space-x-3 bg-slate-50 py-1.5 px-3 rounded-full border border-slate-200">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-                  {userProfile.name?.charAt(0) || "U"}
+                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                  {(userProfile.studentPhotoUrl || userProfile.photoUrl || userProfile.photo_url) ? (
+                    <img 
+                      src={userProfile.studentPhotoUrl || userProfile.photoUrl || userProfile.photo_url} 
+                      alt={userProfile.name} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    userProfile.name?.charAt(0) || "U"
+                  )}
                 </div>
                 <div className="text-left text-xs leading-tight">
                   <span className="font-semibold text-slate-800 block truncate max-w-[120px]">

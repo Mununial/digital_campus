@@ -33,6 +33,8 @@ const PortalAuth = {
     else if (rawRole.includes('teach') || rawRole.includes('fac') || rawRole.includes('superintendent')) moduleARole = 'teacher';
     else moduleARole = 'student';
 
+    const photo = user.studentPhotoUrl || user.photoUrl || user.photo_url || '';
+
     const moduleAUser = {
       uid: user.id || user.uid || 'usr_' + Date.now(),
       name: user.name || user.fullName || 'Student',
@@ -45,23 +47,33 @@ const PortalAuth = {
       year: user.year || '1st',
       section: user.section || 'A',
       semester: user.semester || '1',
+      studentPhotoUrl: photo,
+      photoUrl: photo,
+      photo_url: photo,
       createdAt: new Date().toISOString()
+    };
+
+    const syncedUser = {
+      ...user,
+      normalizedRole: moduleARole,
+      photoUrl: photo,
+      photo_url: photo,
+      studentPhotoUrl: photo
     };
 
     // 2. Gateway Master Storage
     localStorage.setItem('portalToken', token);
-    localStorage.setItem('bec_portal_user', JSON.stringify({
-      ...user,
-      normalizedRole: moduleARole
-    }));
+    localStorage.setItem('bec_portal_user', JSON.stringify(syncedUser));
 
     // 3. Module B (Hostel Management React SPA)
     localStorage.setItem('authToken', hostelToken);
+    localStorage.setItem('user', JSON.stringify(syncedUser));
+    localStorage.setItem('hostel_user', JSON.stringify(syncedUser));
 
     // 4. Module C (Reporting & Verification System)
     localStorage.setItem('token', reportingToken);
     localStorage.setItem('college_erp_token', reportingToken);
-    localStorage.setItem('college_erp_user', JSON.stringify(user));
+    localStorage.setItem('college_erp_user', JSON.stringify(syncedUser));
 
     // 5. Module A (Attendance System)
     localStorage.setItem('bec_session_user', JSON.stringify(moduleAUser));

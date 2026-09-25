@@ -178,10 +178,18 @@ const Sidebar = ({ isOpen, onClose }) => {
         
         <div className="sidebar-footer">
           <div className="sidebar-user-badge">
-            <div className="avatar-mini">
-              {user?.full_name 
-                ? user.full_name.substring(0, 2).toUpperCase() 
-                : (user?.username ? user.username.substring(0, 2).toUpperCase() : 'AD')}
+            <div className="avatar-mini" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {(user?.photo_url || user?.studentPhotoUrl || user?.photoUrl) ? (
+                <img 
+                  src={user.photo_url || user.studentPhotoUrl || user.photoUrl} 
+                  alt={user.full_name || user.username} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                />
+              ) : (
+                user?.full_name 
+                  ? user.full_name.substring(0, 2).toUpperCase() 
+                  : (user?.username ? user.username.substring(0, 2).toUpperCase() : 'AD')
+              )}
             </div>
             <div className="badge-meta">
               <span className="badge-name" title={user?.full_name || user?.email || user?.username || 'User'}>

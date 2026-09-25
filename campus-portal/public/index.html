@@ -186,7 +186,7 @@
         <div style="background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); color: #fff; padding: 24px 28px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 14px;">
-              <img src="/assets/bec circle logo.png" alt="BEC Logo" style="width: 50px; height: 50px; border-radius: 50%; background: #fff; padding: 2px;">
+              <img id="dash-user-photo" src="/assets/bec circle logo.png" alt="User Photo" style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #fff; padding: 2px; border: 2px solid rgba(255,255,255,0.6); box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
               <div>
                 <h3 id="dash-user-name" style="font-size: 1.25rem; font-weight: 800; line-height: 1.2;">Welcome</h3>
                 <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
@@ -456,6 +456,17 @@
         }
 
         subEl.textContent = user.rollNo || user.rollNumber || user.email || '';
+
+        const photoEl = document.getElementById('dash-user-photo');
+        const photoSrc = user.studentPhotoUrl || user.photoUrl || user.photo_url;
+        if (photoEl) {
+          if (photoSrc) {
+            photoEl.src = photoSrc;
+            photoEl.onerror = () => { photoEl.src = '/assets/bec circle logo.png'; };
+          } else {
+            photoEl.src = '/assets/bec circle logo.png';
+          }
+        }
       } else {
         loginView.style.display = 'block';
         dashView.style.display = 'none';

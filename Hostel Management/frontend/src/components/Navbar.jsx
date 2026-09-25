@@ -49,8 +49,16 @@ const Navbar = ({ onToggleSidebar }) => {
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
             title="View Profile"
           >
-            <div className="user-avatar" style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff', fontWeight: 700 }}>
-              {getInitials(user.full_name || user.username)}
+            <div className="user-avatar" style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', color: '#fff', fontWeight: 700, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {(user.photo_url || user.studentPhotoUrl || user.photoUrl) ? (
+                <img 
+                  src={user.photo_url || user.studentPhotoUrl || user.photoUrl} 
+                  alt={user.full_name || user.username} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                getInitials(user.full_name || user.username)
+              )}
             </div>
             <div className="user-info-desktop">
               <span className="user-name">{user.full_name || user.username}</span>
