@@ -406,14 +406,27 @@
       }
     }
 
-    function checkPortalSession() {
-      const user = PortalAuth.getCurrentUser();
+    async function checkPortalSession() {
+      let user = PortalAuth.getCurrentUser();
       const token = PortalAuth.getToken();
 
       const loginView = document.getElementById('view-login');
       const dashView = document.getElementById('view-dashboard');
 
       if (token && user) {
+        // Query live profile from database
+        try {
+          const meRes = await fetch('/api/gateway/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          if (meRes.ok) {
+            const meData = await meRes.json();
+            if (meData.success && meData.user) {
+              user = { ...user, ...meData.user };
+            }
+          }
+        } catch (meErr) {}
+
         loginView.style.display = 'none';
         dashView.style.display = 'block';
 
@@ -432,30 +445,66 @@
         const roleStr = String(user.role || (user.isAdmin ? 'Admin' : 'Student')).toUpperCase();
         roleEl.textContent = roleStr;
 
+        const isDayScholar = user.isDayScholar === true || user.hostel_required === 'No';
+        const isStudent = (roleStr === 'STUDENT');
+
         if (roleStr === 'ADMIN' || roleStr === 'SUPER_ADMIN') {
           roleEl.className = 'role-pill role-admin';
           if (adminSection) adminSection.style.display = 'block';
           if (linkAttendance) linkAttendance.href = '/attendance/admin';
-          if (linkHostel) linkHostel.href = '/hostel/admin/dashboard';
+          if (linkHostel) {
+            linkHostel.style.display = 'flex';
+            linkHostel.href = '/hostel/admin/dashboard';
+          }
           if (navAttendance) navAttendance.href = '/attendance/admin';
-          if (navHostel) navHostel.href = '/hostel/admin/dashboard';
+          if (navHostel) {
+            navHostel.style.display = 'inline-flex';
+            navHostel.href = '/hostel/admin/dashboard';
+          }
         } else if (roleStr === 'FACULTY' || roleStr === 'SUPERINTENDENT' || roleStr === 'TEACHER') {
           roleEl.className = 'role-pill role-faculty';
           if (adminSection) adminSection.style.display = 'block';
           if (linkAttendance) linkAttendance.href = '/attendance/teacher';
-          if (linkHostel) linkHostel.href = '/hostel/superintendent/dashboard';
+          if (linkHostel) {
+            linkHostel.style.display = 'flex';
+            linkHostel.href = '/hostel/superintendent/dashboard';
+          }
           if (navAttendance) navAttendance.href = '/attendance/teacher';
-          if (navHostel) navHostel.href = '/hostel/superintendent/dashboard';
+          if (navHostel) {
+            navHostel.style.display = 'inline-flex';
+            navHostel.href = '/hostel/superintendent/dashboard';
+          }
         } else {
           roleEl.className = 'role-pill role-student';
           if (adminSection) adminSection.style.display = 'none';
           if (linkAttendance) linkAttendance.href = '/attendance/student';
-          if (linkHostel) linkHostel.href = '/hostel/student/dashboard';
           if (navAttendance) navAttendance.href = '/attendance/student';
-          if (navHostel) navHostel.href = '/hostel/student/dashboard';
+
+          if (isDayScholar) {
+            // Day Scholar: Completely hide Hostel card from doorway services grid
+            if (linkHostel) linkHostel.style.display = 'none';
+            if (navHostel) navHostel.style.display = 'none';
+          } else {
+            // Hosteller: Show Hostel card
+            if (linkHostel) {
+              linkHostel.style.display = 'flex';
+              linkHostel.href = '/hostel/student/dashboard';
+            }
+            if (navHostel) {
+              navHostel.style.display = 'inline-flex';
+              navHostel.href = '/hostel/student/dashboard';
+            }
+          }
         }
 
-        subEl.textContent = user.rollNo || user.rollNumber || user.email || '';
+        const rollDisplay = user.rollNo || user.rollNumber || user.email || '';
+        if (isStudent && isDayScholar) {
+          subEl.innerHTML = `${rollDisplay} <span style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-left: 6px;"><i class="fa-solid fa-graduation-cap"></i> Day Scholar</span>`;
+        } else if (isStudent) {
+          subEl.innerHTML = `${rollDisplay} <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); padding: 2px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-left: 6px;"><i class="fa-solid fa-house"></i> Hosteller</span>`;
+        } else {
+          subEl.textContent = rollDisplay;
+        }
 
         const photoEl = document.getElementById('dash-user-photo');
         const photoSrc = user.studentPhotoUrl || user.photoUrl || user.photo_url;

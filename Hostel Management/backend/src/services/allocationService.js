@@ -191,8 +191,8 @@ const getMyAllocation = async (user) => {
   }
 
   const [studentRows] = await db.pool.query(
-    'SELECT id, full_name, student_id, roll_number, status, bed_id FROM students WHERE user_id = ?',
-    [user.id]
+    'SELECT id, full_name, student_id, roll_number, status, bed_id, hostel_required FROM students WHERE user_id = ? OR roll_number = ?',
+    [user.id, user.username || user.rollNo || '']
   );
 
   if (studentRows.length === 0) {
@@ -202,6 +202,12 @@ const getMyAllocation = async (user) => {
   }
 
   const student = studentRows[0];
+  if (student.hostel_required === 'No') {
+    const err = new Error('You are a Day Scholar. Hostel facility not applicable.');
+    err.status = 403;
+    err.isDayScholar = true;
+    throw err;
+  }
   let history = await getStudentAllocationHistory(student.id, user);
   let activeAllocation = history.find(a => a.status === 'ACTIVE') || null;
 
@@ -824,6 +830,113 @@ const getConsistencyReport = async (user) => {
   };
 };
 
+/**
+ * Deterministic Auto-Allotment based on Reporting Database
+ * Boys -> Campus 1 (Boys Hostel), Girls -> Campus 2 (Girls Hostel)
+ * 3 students per room, rooms start from 101, grouped by branch and sorted by roll number.
+ */
+const autoAllotFromReporting = async (user) => {
+  if (user && user.role !== 'SUPER_ADMIN') {
+    const error = new Error('Forbidden: Only Super Administrators can trigger auto-allotment.');
+    error.status = 403;
+    throw error;
+  }
+
+  const [hostels] = await db.pool.query('SELECT id, name, code, gender FROM hostels ORDER BY id ASC');
+  const boysHostel = hostels.find(h => h.gender === 'MALE') || hostels[0];
+  const girlsHostel = hostels.find(h => h.gender === 'FEMALE') || hostels[1];
+
+  await db.pool.query(`
+    INSERT IGNORE INTO floors (id, hostel_id, floor_name, floor_number, status) VALUES
+    (1, ${boysHostel.id}, 'Ground Floor', 1, 'ACTIVE'),
+    (2, ${boysHostel.id}, 'First Floor', 2, 'ACTIVE'),
+    (3, ${boysHostel.id}, 'Second Floor', 3, 'ACTIVE'),
+    (4, ${girlsHostel.id}, 'Ground Floor', 1, 'ACTIVE')
+  `);
+
+  await db.pool.query('UPDATE students SET bed_id = NULL, hostel_id = NULL');
+  await db.pool.query('DELETE FROM student_allocations');
+  await db.pool.query('DELETE FROM beds');
+  await db.pool.query('DELETE FROM rooms');
+
+  const [hostellers] = await db.pool.query(`
+    SELECT id, user_id, student_id, roll_number, full_name, gender, branch, hostel_required, photo_url
+    FROM students
+    WHERE hostel_required = 'Yes' AND status = 'ACTIVE'
+    ORDER BY 
+      CASE WHEN UPPER(TRIM(gender)) LIKE 'F%' THEN 2 ELSE 1 END,
+      branch ASC,
+      roll_number ASC
+  `);
+
+  const boys = hostellers.filter(s => !String(s.gender).trim().toUpperCase().startsWith('F'));
+  const girls = hostellers.filter(s => String(s.gender).trim().toUpperCase().startsWith('F'));
+
+  async function allocateCohort(studentList, hostelId, startRoomNumber, floorMappings) {
+    const ROOM_CAPACITY = 3;
+    const totalRooms = Math.ceil(studentList.length / ROOM_CAPACITY);
+    let studentIdx = 0;
+
+    for (let r = 0; r < totalRooms; r++) {
+      const roomNumStr = String(startRoomNumber + r);
+      const floorId = floorMappings(r);
+
+      const [roomRes] = await db.pool.query(`
+        INSERT INTO rooms (hostel_id, floor_id, room_number, capacity, status)
+        VALUES (?, ?, ?, ?, 'ACTIVE')
+      `, [hostelId, floorId, roomNumStr, ROOM_CAPACITY]);
+      const roomId = roomRes.insertId;
+
+      const bedLetters = ['A', 'B', 'C'];
+      for (let b = 0; b < ROOM_CAPACITY; b++) {
+        const bedNum = `${roomNumStr}-${bedLetters[b]}`;
+        const hasStudent = studentIdx < studentList.length;
+        const bedStatus = hasStudent ? 'OCCUPIED' : 'AVAILABLE';
+
+        const [bedRes] = await db.pool.query(`
+          INSERT INTO beds (room_id, bed_number, status)
+          VALUES (?, ?, ?)
+        `, [roomId, bedNum, bedStatus]);
+        const bedId = bedRes.insertId;
+
+        if (hasStudent) {
+          const student = studentList[studentIdx];
+          await db.pool.query(`
+            UPDATE students 
+            SET bed_id = ?, hostel_id = ?
+            WHERE id = ?
+          `, [bedId, hostelId, student.id]);
+
+          await db.pool.query(`
+            INSERT INTO student_allocations (
+              student_id, hostel_id, room_id, bed_id, allocated_from, status, allocated_by
+            ) VALUES (?, ?, ?, ?, CURDATE(), 'ACTIVE', 1)
+          `, [student.id, hostelId, roomId, bedId]);
+
+          studentIdx++;
+        }
+      }
+    }
+    return { roomsCreated: totalRooms, studentsAllocated: studentIdx };
+  }
+
+  const boysRes = await allocateCohort(boys, boysHostel.id, 101, (rIndex) => {
+    if (rIndex < 20) return 1;
+    if (rIndex < 40) return 2;
+    return 3;
+  });
+
+  const girlsRes = await allocateCohort(girls, girlsHostel.id, 101, () => 4);
+
+  return {
+    success: true,
+    message: 'Auto-allotment executed successfully.',
+    totalHostellers: hostellers.length,
+    boys: { allocated: boysRes.studentsAllocated, rooms: boysRes.roomsCreated, hostel: boysHostel.name },
+    girls: { allocated: girlsRes.studentsAllocated, rooms: girlsRes.roomsCreated, hostel: girlsHostel.name }
+  };
+};
+
 module.exports = {
   getAllocations,
   getAllocationById,
@@ -833,5 +946,6 @@ module.exports = {
   allocateStudent,
   transferStudent,
   checkoutStudent,
-  getConsistencyReport
+  getConsistencyReport,
+  autoAllotFromReporting
 };

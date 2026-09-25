@@ -8,6 +8,7 @@ const StudentAccommodationPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isDayScholar, setIsDayScholar] = useState(false);
 
   useEffect(() => {
     fetchAccommodation();
@@ -16,13 +17,19 @@ const StudentAccommodationPage = () => {
   const fetchAccommodation = () => {
     setLoading(true);
     setError('');
+    setIsDayScholar(false);
     api.getMyAllocation()
       .then(res => {
         setData(res.data?.data || res.data || null);
       })
       .catch(err => {
         console.error('Error fetching accommodation profile:', err);
-        setError(err.response?.data?.message || 'Unable to load accommodation details.');
+        if (err.response?.data?.isDayScholar || err.response?.status === 403) {
+          setIsDayScholar(true);
+          setError(err.response?.data?.message || 'You are a Day Scholar. Hostel facility not applicable.');
+        } else {
+          setError(err.response?.data?.message || 'Unable to load accommodation details.');
+        }
       })
       .finally(() => setLoading(false));
   };
@@ -33,6 +40,40 @@ const StudentAccommodationPage = () => {
         <div className="loading-box">
           <div className="spinner-sm" style={{ margin: '0 auto 1rem auto' }}></div>
           <p style={{ color: '#64748b' }}>Loading your accommodation details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isDayScholar) {
+    return (
+      <div className="accommodation-container">
+        <div className="page-intro">
+          <div className="page-intro-badge" style={{ background: '#fef3c7', color: '#d97706' }}>
+            <i className="fa-solid fa-graduation-cap"></i> Non-Resident Status
+          </div>
+          <h1 className="page-title">Hostel Facility Not Applicable</h1>
+          <p className="page-subtitle">You are registered as a Day Scholar in college admission records.</p>
+        </div>
+
+        <div className="accommodation-hero-card" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
+          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#fef3c7', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.5rem auto' }}>
+            <i className="fa-solid fa-school"></i>
+          </div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.75rem' }}>
+            Day Scholar Student Profile
+          </h2>
+          <p style={{ color: '#64748b', maxWidth: '500px', margin: '0 auto 1.5rem auto', fontSize: '0.95rem', lineHeight: '1.6' }}>
+            Hostel accommodation is exclusively reserved for students registered with residential status. If you require hostel facility, please apply through the college administration.
+          </p>
+          <button 
+            type="button"
+            className="btn btn-primary" 
+            onClick={() => window.location.href = '/'}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            <i className="fa-solid fa-arrow-left"></i> Return to Campus Portal
+          </button>
         </div>
       </div>
     );
