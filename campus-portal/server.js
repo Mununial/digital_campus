@@ -58,10 +58,32 @@ app.use('/api/notices', gatewayNoticesRoutes);
 
 
 
-// Reporting System APIs
+// Reporting System APIs & Client Config
+const serveConfigJs = (req, res) => {
+  res.type('application/javascript');
+  const config = {
+    databaseType: 'mysql',
+    officialAdminEmails: (process.env.OFFICIAL_ADMIN_EMAILS || 'admin@college.ac.in,becreportingapp@gmail.com,genzuniversity26@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
+    allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
+    institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
+    institutionCode: process.env.INSTITUTION_CODE || 'BEC',
+    apiBaseUrl: '',
+    firebase: {
+      apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
+      authDomain: "genzuniversity.firebaseapp.com",
+      projectId: "genzuniversity",
+      storageBucket: "genzuniversity.firebasestorage.app",
+      messagingSenderId: "423748552299",
+      appId: "1:423748552299:web:8981f1300ad217afd7132e"
+    }
+  };
+  res.send(`window.APP_CONFIG = ${JSON.stringify(config)};`);
+};
+
+app.get('/config.js', serveConfigJs);
+app.get('/api/config.js', serveConfigJs);
 app.use('/api/reporting', gatewayReportingRoutes);
 app.use('/api/config', gatewayReportingRoutes);
-app.use('/api/config.js', gatewayReportingRoutes);
 app.use('/api/sign-upload', gatewayReportingRoutes);
 
 // -------------------------------------------------------------
@@ -127,7 +149,6 @@ try {
   app.use('/api/attendance', attendanceRoutes);
   app.use('/api/room-applications', roomApplicationRoutes);
   app.use('/api/users', userRoutes);
-  app.use('/api', userRoutes);
   try {
     app.use('/api/dashboard', require('../Hostel Management/backend/src/routes/dashboardRoutes'));
   } catch (dErr) {}
