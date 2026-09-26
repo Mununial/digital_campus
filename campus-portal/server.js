@@ -33,10 +33,8 @@ app.use((req, res, next) => {
 // -------------------------------------------------------------
 // 1. MODULE ROUTING & DOORWAY ACCESS
 // -------------------------------------------------------------
-app.get('/attendance/login',           (req, res) => res.redirect('/'));
-app.get('/attendance/login/*',         (req, res) => res.redirect('/'));
 app.get('/reporting/login',            (req, res) => res.redirect('/reporting/pages/login.html'));
-app.get('/login',                      (req, res) => res.redirect('/'));
+app.get('/login',                      (req, res) => res.sendFile(path.join(publicDir, 'index.html')));
 app.get('/library',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'library.html')));
 app.get('/library/admin',              (req, res) => res.sendFile(path.join(__dirname, 'public', 'library-admin.html')));
 app.get('/notices',                    (req, res) => res.sendFile(path.join(__dirname, 'public', 'notices.html')));
@@ -221,7 +219,7 @@ app.get('/api/health', (req, res) => {
 // Global Fallback for unknown /login or /signup
 app.use((req, res, next) => {
   if (req.path === '/login' || req.path === '/signup') {
-    return res.redirect('/');
+    return res.sendFile(path.join(publicDir, 'index.html'));
   }
   next();
 });

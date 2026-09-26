@@ -22,7 +22,7 @@ export const AdminDashboard = () => {
   const [subjects, setSubjects] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [attendance, setAttendance] = useState([]);
-  const [activeTab, setActiveTab] = useState("pending");
+  const [activeTab, setActiveTab] = useState("users");
   const [photoFilter, setPhotoFilter] = useState({ branch: "All", year: "All", section: "All", teacher: "All" });
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedTeacherReport, setSelectedTeacherReport] = useState(null);
@@ -265,17 +265,33 @@ export const AdminDashboard = () => {
   };
 
   const loadAdminData = async () => {
-    const allUsers = await DataService.getUsers();
-    setUsers(allUsers);
+    try {
+      const allUsers = await DataService.getUsers();
+      setUsers(allUsers || []);
+    } catch (e) {
+      console.warn("Failed to load users:", e);
+    }
 
-    const allSubs = await DataService.getSubjects();
-    setSubjects(allSubs);
+    try {
+      const allSubs = await DataService.getSubjects();
+      setSubjects(allSubs || []);
+    } catch (e) {
+      console.warn("Failed to load subjects:", e);
+    }
 
-    const allSess = await DataService.getSessions();
-    setSessions(allSess);
+    try {
+      const allSess = await DataService.getSessions();
+      setSessions(allSess || []);
+    } catch (e) {
+      console.warn("Failed to load sessions:", e);
+    }
 
-    const allAtt = await DataService.getAttendance();
-    setAttendance(allAtt);
+    try {
+      const allAtt = await DataService.getAttendance();
+      setAttendance(allAtt || []);
+    } catch (e) {
+      console.warn("Failed to load attendance:", e);
+    }
   };
 
   useEffect(() => {
@@ -756,8 +772,125 @@ export const AdminDashboard = () => {
           </button>
         </div>
 
+        {/* Institutional KPI Metric Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+          <div 
+            onClick={() => setActiveTab("users")}
+            className="bg-white/95 backdrop-blur-sm p-4 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-slate-500 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Students</span>
+              <GraduationCap className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-2xl font-black text-slate-900">
+              {users.filter(u => u.role === "student").length}
+            </div>
+            <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1 mt-0.5">
+              <CheckCircle2 className="w-3 h-3" /> Enrolled &amp; Active
+            </span>
+          </div>
+
+          <div 
+            onClick={() => setActiveTab("users")}
+            className="bg-white/95 backdrop-blur-sm p-4 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-slate-500 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Faculty &amp; Staff</span>
+              <Users className="w-4 h-4 text-indigo-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-2xl font-black text-slate-900">
+              {users.filter(u => u.role === "teacher" || u.role === "admin").length}
+            </div>
+            <span className="text-[10px] text-blue-600 font-semibold mt-0.5 block">
+              Teaching &amp; Admin
+            </span>
+          </div>
+
+          <div 
+            onClick={() => setActiveTab("academic")}
+            className="bg-white/95 backdrop-blur-sm p-4 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-slate-500 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Subjects</span>
+              <BookOpen className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-2xl font-black text-slate-900">
+              {subjects.length}
+            </div>
+            <span className="text-[10px] text-amber-700 font-semibold mt-0.5 block">
+              14 BPUT Branches
+            </span>
+          </div>
+
+          <div 
+            onClick={() => setActiveTab("reports")}
+            className="bg-white/95 backdrop-blur-sm p-4 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-slate-500 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Class Lectures</span>
+              <Clock className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-2xl font-black text-slate-900">
+              {sessions.length}
+            </div>
+            <span className="text-[10px] text-slate-500 font-medium mt-0.5 block">
+              Conducted Sessions
+            </span>
+          </div>
+
+          <div 
+            onClick={() => setActiveTab("pending")}
+            className="bg-white/95 backdrop-blur-sm p-4 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          >
+            <div className="flex items-center justify-between text-slate-500 mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Pending Signups</span>
+              <UserCheck className="w-4 h-4 text-rose-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-2xl font-black text-slate-900">
+              {pendingUsers.length}
+            </div>
+            <span className="text-[10px] text-slate-500 font-medium mt-0.5 block">
+              {pendingUsers.length === 0 ? "All verified" : "Requires review"}
+            </span>
+          </div>
+        </div>
+
         {/* Tab Navigation Bar */}
         <div className="flex space-x-2 border-b border-blue-200/80 overflow-x-auto pb-1">
+          <button
+            onClick={() => setActiveTab("users")}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ${
+              activeTab === "users"
+                ? "bg-gradient-to-r from-blue-600 to-sky-600 text-white shadow-md shadow-blue-500/25"
+                : "bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border border-slate-200"
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>Manage Users</span>
+            {users.length > 0 && (
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-900 font-black rounded-full text-[10px]">
+                {users.length}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("academic")}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ${
+              activeTab === "academic"
+                ? "bg-gradient-to-r from-blue-600 to-sky-600 text-white shadow-md shadow-blue-500/25"
+                : "bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border border-slate-200"
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>Subjects &amp; Branches</span>
+            {subjects.length > 0 && (
+              <span className="px-2 py-0.5 bg-amber-100 text-amber-900 font-black rounded-full text-[10px]">
+                {subjects.length}
+              </span>
+            )}
+          </button>
+
           <button
             onClick={() => setActiveTab("pending")}
             className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ${
@@ -773,30 +906,6 @@ export const AdminDashboard = () => {
                 {pendingUsers.length}
               </span>
             )}
-          </button>
-
-          <button
-            onClick={() => setActiveTab("users")}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ${
-              activeTab === "users"
-                ? "bg-gradient-to-r from-blue-600 to-sky-600 text-white shadow-md shadow-blue-500/25"
-                : "bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border border-slate-200"
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>Manage Users</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("academic")}
-            className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center space-x-2 transition-all cursor-pointer ${
-              activeTab === "academic"
-                ? "bg-gradient-to-r from-blue-600 to-sky-600 text-white shadow-md shadow-blue-500/25"
-                : "bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-700 border border-slate-200"
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Subjects &amp; Branches</span>
           </button>
 
           <button
@@ -833,6 +942,11 @@ export const AdminDashboard = () => {
           >
             <FileText className="w-4 h-4" />
             <span>Macro Reports</span>
+            {sessions.length > 0 && (
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-900 font-black rounded-full text-[10px]">
+                {sessions.length}
+              </span>
+            )}
           </button>
 
           <button
@@ -845,6 +959,11 @@ export const AdminDashboard = () => {
           >
             <Camera className="w-4 h-4" />
             <span>Photo Access</span>
+            {teacherClassLogs.length > 0 && (
+              <span className="px-2 py-0.5 bg-sky-100 text-sky-900 font-black rounded-full text-[10px]">
+                {teacherClassLogs.length}
+              </span>
+            )}
           </button>
         </div>
 

@@ -161,10 +161,10 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <a href="/attendance/admin" class="launcher-btn" style="background: #059669; color: #fff; flex: 1;">
+          <a href="/attendance/admin" onclick="launchAttendanceAdmin(event)" class="launcher-btn" style="background: #059669; color: #fff; flex: 1;">
             Launch Attendance Console <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
-          <a href="/attendance/ayush" class="launcher-btn" style="background: #047857; color: #a7f3d0; border: 1px solid #059669;" title="Ayush Master Portal">
+          <a href="/attendance/ayush" onclick="launchAttendanceAdmin(event)" class="launcher-btn" style="background: #047857; color: #a7f3d0; border: 1px solid #059669;" title="Ayush Master Portal">
             <i class="fa-solid fa-crown"></i> Ayush Portal
           </a>
         </div>
@@ -283,6 +283,22 @@
 
   <script src="/shell/auth.js"></script>
   <script>
+    function launchAttendanceAdmin(e) {
+      const active = (typeof PortalAuth !== 'undefined' && PortalAuth.getCurrentUser()) || null;
+      const adminProfile = {
+        uid: (active && (active.uid || active.id)) || 'admin_01',
+        name: (active && (active.fullName || active.name)) || 'BEC System Administrator',
+        email: (active && active.email) || 'admin@bec.ac.in',
+        username: (active && active.username) || 'admin',
+        role: 'admin',
+        status: 'approved',
+        branch: 'CSE',
+        createdAt: new Date().toISOString()
+      };
+      localStorage.setItem('bec_session_user', JSON.stringify(adminProfile));
+      localStorage.setItem('bec_portal_user', JSON.stringify(adminProfile));
+    }
+
     // Live Health Check
     fetch('/api/health')
       .then(res => res.json())

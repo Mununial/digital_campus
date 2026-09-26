@@ -658,17 +658,62 @@ const DEFAULT_USERS = [
   {
     uid: "admin_01",
     email: "admin@bec.ac.in",
-    name: "System Administrator",
+    username: "admin",
+    name: "BEC System Administrator",
     role: "admin",
+    password: "Ayushtech@26",
+    status: "approved",
+    createdAt: new Date().toISOString()
+  },
+  {
+    uid: "admin_genz",
+    email: "genzuniversity26@gmail.com",
+    username: "genzuniversity26",
+    name: "GenZ Super Administrator",
+    role: "admin",
+    password: "Ayushtech@26",
+    status: "approved",
+    createdAt: new Date().toISOString()
+  },
+  {
+    uid: "admin_ayush",
+    email: "ayush@bec.ac.in",
+    username: "ayush",
+    name: "Ayush Kumar (Master Admin)",
+    role: "admin",
+    password: "Ayushtech@26",
+    status: "approved",
+    createdAt: new Date().toISOString()
+  },
+  {
+    uid: "admin_attendance",
+    email: "attendance_admin@bec.ac.in",
+    username: "attendance_admin",
+    name: "Attendance Officer Priya",
+    role: "admin",
+    password: "password123",
     status: "approved",
     createdAt: new Date().toISOString()
   },
   {
     uid: "teacher_01",
     email: "teacher@bec.ac.in",
+    username: "teacher",
     name: "Dr. Rajesh Sharma",
     role: "teacher",
     department: "CSE",
+    password: "demo123",
+    status: "approved",
+    createdAt: new Date().toISOString()
+  },
+  {
+    uid: "teacher_02",
+    email: "faculty@bec.ac.in",
+    username: "faculty",
+    name: "Prof. Ananya Senapati",
+    role: "teacher",
+    department: "CSE",
+    password: "demo123",
     status: "approved",
     createdAt: new Date().toISOString()
   }
@@ -725,22 +770,34 @@ export const DataService = {
     // Merge baseline seeds + 183 1st Year Students + remote updates
     const userMap = new Map();
     [...DEFAULT_USERS, ...FIRST_YEAR_STUDENTS].forEach(u => {
-      userMap.set(u.uid, u);
-      if (u.email) userMap.set(u.email.toLowerCase(), u);
+      if (u && u.uid) {
+        userMap.set(u.uid, { ...u });
+      }
     });
 
     remoteUsers.forEach(u => {
-      const existing = userMap.get(u.uid) || (u.email ? userMap.get(u.email.toLowerCase()) : null) || {};
+      if (!u || !u.uid) return;
+      const existing = userMap.get(u.uid) || Array.from(userMap.values()).find(x => (x.email && u.email && x.email.toLowerCase() === u.email.toLowerCase())) || {};
       const merged = { ...existing, ...u };
       // Ensure password follows dob if dob was updated or if password is missing
       if (merged.dob && (!merged.password || merged.password.startsWith("2026-") || merged.password.startsWith("2025-") || merged.password.startsWith("2024-"))) {
         merged.password = merged.dob;
       }
-      userMap.set(u.uid, merged);
-      if (u.email) userMap.set(u.email.toLowerCase(), merged);
+      userMap.set(merged.uid, merged);
     });
 
-    const uniqueUsers = Array.from(new Set(Array.from(userMap.values())))
+    // Also include any active session user if not already present
+    try {
+      const activeRaw = typeof localStorage !== 'undefined' ? localStorage.getItem('bec_session_user') : null;
+      if (activeRaw) {
+        const activeUser = JSON.parse(activeRaw);
+        if (activeUser && activeUser.uid && !userMap.has(activeUser.uid)) {
+          userMap.set(activeUser.uid, activeUser);
+        }
+      }
+    } catch(e) {}
+
+    const uniqueUsers = Array.from(userMap.values())
       .filter(u => !deletedUids.has(u.uid) && !(u.email && deletedUids.has(u.email.toLowerCase())) && !u.isDeleted);
 
     return uniqueUsers;
@@ -857,10 +914,30 @@ export const DataService = {
   // --- SUBJECTS ---
   async getSubjects() {
     if (isLiveFirebaseConfigured && db) {
-      const snap = await getDocs(collection(db, "subjects"));
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      try {
+        const snap = await getDocs(collection(db, "subjects"));
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch (e) {
+        console.warn("Firestore getSubjects SDK failed, trying REST:", e.message);
+        try {
+          const res = await fetch("https://firestore.googleapis.com/v1/projects/bec-at-system/databases/(default)/documents/subjects");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.documents) {
+              return data.documents.map(d => {
+                const fields = d.fields || {};
+                const resObj = { id: d.name.split("/").pop() };
+                for (const [k, v] of Object.entries(fields)) {
+                  resObj[k] = v.stringValue ?? v.booleanValue ?? v.integerValue ?? null;
+                }
+                return resObj;
+              });
+            }
+          }
+        } catch (restErr) {}
+      }
     }
-    throw new Error("Firebase is not configured. Cannot load subjects.");
+    return [];
   },
 
   async createSubject(subjectData) {
@@ -884,10 +961,30 @@ export const DataService = {
   // --- SESSIONS ---
   async getSessions() {
     if (isLiveFirebaseConfigured && db) {
-      const snap = await getDocs(collection(db, "sessions"));
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      try {
+        const snap = await getDocs(collection(db, "sessions"));
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch (e) {
+        console.warn("Firestore getSessions SDK failed, trying REST:", e.message);
+        try {
+          const res = await fetch("https://firestore.googleapis.com/v1/projects/bec-at-system/databases/(default)/documents/sessions");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.documents) {
+              return data.documents.map(d => {
+                const fields = d.fields || {};
+                const resObj = { id: d.name.split("/").pop() };
+                for (const [k, v] of Object.entries(fields)) {
+                  resObj[k] = v.stringValue ?? v.booleanValue ?? v.integerValue ?? null;
+                }
+                return resObj;
+              });
+            }
+          }
+        } catch (restErr) {}
+      }
     }
-    throw new Error("Firebase is not configured. Cannot load sessions.");
+    return [];
   },
 
   async createSession(sessionData) {
@@ -941,10 +1038,30 @@ export const DataService = {
   // --- ATTENDANCE ---
   async getAttendance() {
     if (isLiveFirebaseConfigured && db) {
-      const snap = await getDocs(collection(db, "attendance"));
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      try {
+        const snap = await getDocs(collection(db, "attendance"));
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch (e) {
+        console.warn("Firestore getAttendance SDK failed, trying REST:", e.message);
+        try {
+          const res = await fetch("https://firestore.googleapis.com/v1/projects/bec-at-system/databases/(default)/documents/attendance");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.documents) {
+              return data.documents.map(d => {
+                const fields = d.fields || {};
+                const resObj = { id: d.name.split("/").pop() };
+                for (const [k, v] of Object.entries(fields)) {
+                  resObj[k] = v.stringValue ?? v.booleanValue ?? v.integerValue ?? null;
+                }
+                return resObj;
+              });
+            }
+          }
+        } catch (restErr) {}
+      }
     }
-    throw new Error("Firebase is not configured. Cannot load attendance.");
+    return [];
   },
 
   async markAttendance({ student, session, token, livePhoto, isManual = false, markedBy = null }) {
