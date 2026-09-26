@@ -116,7 +116,15 @@ try {
   app.use('/api/data-integrity', masterRoutes);
   app.use('/api/cafeteria', cafeteriaRoutes);
   app.use('/api/documents', documentRoutes);
-  app.use('/api/students', hostelStudentRoutes);
+  app.use('/api/reporting/students', gatewayReportingRoutes);
+  app.use('/api/students', (req, res, next) => {
+    const pathParts = req.path.split('/').filter(Boolean);
+    const firstPart = pathParts[0] || '';
+    if (req.query.limit || firstPart.includes('_') || (firstPart && isNaN(firstPart))) {
+      return gatewayReportingRoutes(req, res, next);
+    }
+    return hostelStudentRoutes(req, res, next);
+  });
   app.use('/api/hostel-students', hostelStudentRoutes);
   app.use('/api/attendance', attendanceRoutes);
   app.use('/api/room-applications', roomApplicationRoutes);
