@@ -727,6 +727,41 @@ export const DataService = {
     let remoteUsers = [];
     let deletedUids = new Set();
 
+    // 1. Fetch authentic student data from Hostinger ERP / Reporting Gateway API
+    try {
+      const apiHost = typeof window !== 'undefined' ? (window.location.origin || 'http://localhost:5002') : 'http://localhost:5002';
+      const res = await fetch(`${apiHost}/api/reporting/students?limit=1000`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.students && Array.isArray(data.students)) {
+          remoteUsers = data.students.map(s => {
+            const p = s.personal || {};
+            const r = s.reporting || {};
+            const doc = s.documents || {};
+            return {
+              uid: s.uid || s.id,
+              name: p.studentFullName || s.name || s.full_name,
+              email: p.email || s.email || `${(s.rollNumber || s.id || '').toLowerCase()}@bec.ac.in`,
+              rollNo: s.rollNumber || s.registrationNumber || s.id,
+              tempId: s.enrollmentNumber || s.rollNumber || s.id,
+              branch: r.branch || s.branch || 'CSE',
+              year: r.year || s.year || '1st',
+              section: r.section || s.section || 'A',
+              semester: r.semester || s.semester || '1',
+              status: s.status || 'approved',
+              role: 'student',
+              dob: p.dob || s.dob || '',
+              gender: p.gender || s.gender || 'Male',
+              phone: p.studentMobile || s.phone || '',
+              studentPhotoUrl: doc.studentPhoto?.url || doc.studentPhoto || s.studentPhotoUrl || ''
+            };
+          });
+        }
+      }
+    } catch (apiErr) {
+      console.warn("Hostinger ERP Reporting API fetch failed, using static seed fallback:", apiErr.message);
+    }
+
     if (isLiveFirebaseConfigured && db) {
       try {
         const delSnap = await getDocs(collection(db, "deleted_users"));
@@ -739,35 +774,9 @@ export const DataService = {
       } catch (e) {
         console.warn("Could not fetch deleted_users collection:", e.message);
       }
-
-      try {
-        const snap = await getDocs(collection(db, "users"));
-        remoteUsers = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
-      } catch (e) {
-        console.warn("Firestore SDK getUsers failed, trying REST:", e.message);
-        try {
-          const url = `https://firestore.googleapis.com/v1/projects/bec-at-system/databases/(default)/documents/users`;
-          const res = await fetch(url);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.documents) {
-              remoteUsers = data.documents.map(d => {
-                const fields = d.fields || {};
-                const result = { uid: d.name.split("/").pop() };
-                for (const [key, val] of Object.entries(fields)) {
-                  result[key] = val.stringValue ?? val.booleanValue ?? val.integerValue ?? val.doubleValue ?? null;
-                }
-                return result;
-              });
-            }
-          }
-        } catch (restErr) {
-          console.warn("Firestore REST fallback also failed:", restErr.message);
-        }
-      }
     }
 
-    // Merge baseline seeds + 183 1st Year Students + remote updates
+    // Merge baseline seeds + 349 Hostinger ERP Students
     const userMap = new Map();
     [...DEFAULT_USERS, ...FIRST_YEAR_STUDENTS].forEach(u => {
       if (u && u.uid) {
@@ -775,18 +784,27 @@ export const DataService = {
       }
     });
 
+    // Only update existing students or add valid Hostinger ERP records
     remoteUsers.forEach(u => {
       if (!u || !u.uid) return;
-      const existing = userMap.get(u.uid) || Array.from(userMap.values()).find(x => (x.email && u.email && x.email.toLowerCase() === u.email.toLowerCase())) || {};
-      const merged = { ...existing, ...u };
-      // Ensure password follows dob if dob was updated or if password is missing
-      if (merged.dob && (!merged.password || merged.password.startsWith("2026-") || merged.password.startsWith("2025-") || merged.password.startsWith("2024-"))) {
-        merged.password = merged.dob;
+      const existing = userMap.get(u.uid) || Array.from(userMap.values()).find(x => (
+        (x.email && u.email && x.email.toLowerCase() === u.email.toLowerCase()) ||
+        (x.rollNo && u.rollNo && x.rollNo.toUpperCase() === u.rollNo.toUpperCase()) ||
+        (x.tempId && u.tempId && x.tempId.toUpperCase() === u.tempId.toUpperCase())
+      ));
+
+      if (existing) {
+        const merged = { ...existing, ...u, uid: existing.uid };
+        if (merged.dob && (!merged.password || merged.password.startsWith("2026-") || merged.password.startsWith("2025-") || merged.password.startsWith("2024-"))) {
+          merged.password = merged.dob;
+        }
+        userMap.set(existing.uid, merged);
+      } else if (u.role === 'admin' || u.role === 'teacher' || (u.rollNo && String(u.rollNo).toUpperCase().startsWith('BEC'))) {
+        userMap.set(u.uid, u);
       }
-      userMap.set(merged.uid, merged);
     });
 
-    // Also include any active session user if not already present
+    // Also include active session user
     try {
       const activeRaw = typeof localStorage !== 'undefined' ? localStorage.getItem('bec_session_user') : null;
       if (activeRaw) {
