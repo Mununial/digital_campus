@@ -49,7 +49,7 @@ async function getStudentAssignment(userId) {
       throw err;
     }
     const st = stRows[0];
-    const numericStudentId = typeof st.id === 'number' ? st.id : parseInt(st.id, 10);
+    const numericStudentId = (Number(st.id) && !isNaN(Number(st.id))) ? Number(st.id) : 0;
     return {
       student_id: numericStudentId,
       full_name: st.full_name,
@@ -62,7 +62,7 @@ async function getStudentAssignment(userId) {
   }
 
   const row = rows[0];
-  const studentDbId = typeof row.student_id === 'number' ? row.student_id : (typeof row.id === 'number' ? row.id : parseInt(row.id, 10));
+  const studentDbId = (Number(row.id) && !isNaN(Number(row.id))) ? Number(row.id) : ((Number(row.student_id) && !isNaN(Number(row.student_id))) ? Number(row.student_id) : 0);
 
   return {
     student_id: studentDbId,

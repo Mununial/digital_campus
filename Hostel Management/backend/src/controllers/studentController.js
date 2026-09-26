@@ -33,6 +33,12 @@ const getAllStudents = async (req, res, next) => {
 const getStudentById = async (req, res, next) => {
   try {
     const studentId = Number(req.params.id);
+    if (!studentId || isNaN(studentId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid student ID parameter.'
+      });
+    }
     const student = await studentService.getStudentById(studentId, req.user);
     return res.status(200).json({
       success: true,
