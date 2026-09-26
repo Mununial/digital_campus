@@ -7,7 +7,7 @@ const db = require('../config/db');
  */
 const requireAuth = async (req, res, next) => {
   try {
-    let token = req.cookies?.token;
+    let token = req.cookies?.token || req.cookies?.portalToken || req.cookies?.authToken;
     
     // Fallback to Authorization Bearer header (for robust cross-domain API calls)
     if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {

@@ -19,6 +19,9 @@ const getUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const targetId = Number(req.params.id);
+    if (isNaN(targetId)) {
+      return res.status(400).json({ success: false, message: 'Invalid user ID' });
+    }
     if (req.user.role !== 'SUPER_ADMIN' && req.user.id !== targetId) {
       return res.status(403).json({ success: false, message: 'Forbidden: Cannot view another user profile.' });
     }

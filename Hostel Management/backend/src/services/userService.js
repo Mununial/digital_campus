@@ -44,7 +44,7 @@ const getUsers = async ({ page = 1, limit = 20, role, status, search }) => {
   const total = countRows[0]?.total || 0;
 
   const [users] = await db.pool.query(
-    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login_at, u.created_at, u.updated_at,
+    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login as last_login_at, u.created_at, u.updated_at,
             r.name as role,
             s.id as student_record_id, s.full_name as student_name, s.student_id as student_code, s.roll_number,
             (SELECT GROUP_CONCAT(h.name SEPARATOR ', ')
@@ -74,7 +74,7 @@ const getUsers = async ({ page = 1, limit = 20, role, status, search }) => {
  */
 const getUserById = async (targetId) => {
   const [users] = await db.pool.query(
-    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login_at, u.created_at, u.updated_at,
+    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login as last_login_at, u.created_at, u.updated_at,
             r.name as role
      FROM users u
      JOIN roles r ON u.role_id = r.id

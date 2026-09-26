@@ -118,7 +118,7 @@ try {
   app.use('/api/students', (req, res, next) => {
     const pathParts = req.path.split('/').filter(Boolean);
     const firstPart = pathParts[0] || '';
-    if (req.query.limit || firstPart.includes('_') || (firstPart && isNaN(firstPart))) {
+    if (firstPart.includes('_') || (firstPart && isNaN(firstPart) && firstPart !== 'profile' && firstPart !== 'me' && firstPart !== 'bulk-import')) {
       return gatewayReportingRoutes(req, res, next);
     }
     return hostelStudentRoutes(req, res, next);

@@ -10,12 +10,12 @@ router.patch('/profile', requireAuth, userController.updateSelfProfile);
 router.get('/security/audit', requireAuth, requireRole('SUPER_ADMIN'), userController.getAuditLogs);
 
 // User Management Endpoints (SUPER_ADMIN only except get single user)
-router.get('/users', requireAuth, requireRole('SUPER_ADMIN'), userController.getUsers);
-router.post('/users', requireAuth, requireRole('SUPER_ADMIN'), userController.createUser);
-router.get('/users/:id', requireAuth, userController.getUserById);
-router.patch('/users/:id/status', requireAuth, requireRole('SUPER_ADMIN'), userController.updateUserStatus);
-router.patch('/users/:id/role', requireAuth, requireRole('SUPER_ADMIN'), userController.updateUserRole);
-router.post('/users/:id/reset-password', requireAuth, requireRole('SUPER_ADMIN'), userController.adminResetPassword);
-router.put('/users/:id/hostels', requireAuth, requireRole('SUPER_ADMIN'), userController.updateSuperintendentHostels);
+router.get('/', requireAuth, userController.getUsers);
+router.post('/', requireAuth, requireRole('SUPER_ADMIN'), userController.createUser);
+router.get('/:id', requireAuth, userController.getUserById);
+router.patch('/:id/status', requireAuth, requireRole('SUPER_ADMIN'), userController.updateUserStatus);
+router.patch('/:id/role', requireAuth, requireRole('SUPER_ADMIN'), userController.updateUserRole);
+router.post('/:id/reset-password', requireAuth, requireRole('SUPER_ADMIN'), userController.adminResetPassword);
+router.put('/:id/hostels', requireAuth, requireRole('SUPER_ADMIN'), userController.updateSuperintendentHostels);
 
 module.exports = router;

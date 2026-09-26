@@ -99,8 +99,8 @@ const validateUser = async (loginIdentifier, password, reqContext = {}) => {
     return { error: 'ACCOUNT_INACTIVE' };
   }
 
-  // Update last_login_at
-  await db.pool.query('UPDATE users SET last_login_at = NOW() WHERE id = ?', [user.id]);
+  // Update last_login
+  await db.pool.query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
 
   // Log successful login
   await securityService.logSecurityEvent({
@@ -195,7 +195,7 @@ const changePassword = async (userId, currentPassword, newPassword, reqContext =
  */
 const getUserProfile = async (userId) => {
   const [users] = await db.pool.query(
-    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login_at, u.created_at, r.name as role
+    `SELECT u.id, u.username, u.email, u.full_name, u.gender, u.phone, u.status, u.must_change_password, u.last_login as last_login_at, u.created_at, r.name as role
      FROM users u
      JOIN roles r ON u.role_id = r.id
      WHERE u.id = ?`,

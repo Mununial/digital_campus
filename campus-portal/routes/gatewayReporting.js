@@ -203,9 +203,17 @@ router.get(['/students', '/'], async (req, res) => {
       updatedAt: r.updated_at
     }));
 
+    const total = countResult[0]?.total || students.length;
     return res.json({
       students,
-      total: countResult[0]?.total || students.length,
+      data: {
+        students,
+        totalStudents: total,
+        totalPages: Math.ceil(total / limit)
+      },
+      total,
+      totalStudents: total,
+      totalPages: Math.ceil(total / limit),
       limit,
       offset
     });
@@ -222,7 +230,14 @@ router.get(['/students', '/'], async (req, res) => {
     const paged = all.slice(offset, offset + limit);
     return res.json({
       students: paged,
+      data: {
+        students: paged,
+        totalStudents: all.length,
+        totalPages: Math.ceil(all.length / limit)
+      },
       total: all.length,
+      totalStudents: all.length,
+      totalPages: Math.ceil(all.length / limit),
       limit,
       offset
     });

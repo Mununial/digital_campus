@@ -303,9 +303,13 @@ const StudentsPage = () => {
           course: courseFilter || undefined
         }
       });
-      setStudents(res.data.students || []);
-      setTotalPages(res.data.totalPages || 0);
-      setTotalStudents(res.data.totalStudents || 0);
+      const studentList = res?.data?.students || res?.students || (Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []));
+      const totalP = res?.data?.totalPages || res?.totalPages || Math.ceil((res?.data?.totalStudents || res?.totalStudents || res?.total || studentList.length) / limit);
+      const totalS = res?.data?.totalStudents || res?.totalStudents || res?.total || studentList.length;
+
+      setStudents(studentList);
+      setTotalPages(totalP || 1);
+      setTotalStudents(totalS);
     } catch (err) {
       setError(err.message || 'Failed to fetch student directories.');
     } finally {
