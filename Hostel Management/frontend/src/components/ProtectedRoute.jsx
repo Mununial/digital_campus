@@ -21,8 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (!isAuthenticated) {
-    window.location.replace('/');
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   const userRoleUpper = String(user?.role || '').toUpperCase();
@@ -30,10 +29,23 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     const rUpper = String(r).toUpperCase();
     if (rUpper === userRoleUpper) return true;
     if ((rUpper.includes('ADMIN') || rUpper === 'SUPER_ADMIN') && (userRoleUpper.includes('ADMIN') || userRoleUpper === 'SUPER_ADMIN')) return true;
+    if ((rUpper.includes('SUPERINTENDENT') || rUpper.includes('FACULTY') || rUpper.includes('WARDEN')) && 
+        (userRoleUpper.includes('SUPERINTENDENT') || userRoleUpper.includes('FACULTY') || userRoleUpper.includes('WARDEN'))) return true;
     return false;
   });
 
   if (!isAllowed) {
+    // If authenticated user is simply on the wrong role view, route them to their proper dashboard
+    if (userRoleUpper.includes('ADMIN') || userRoleUpper === 'SUPER_ADMIN') {
+      return <Navigate to="/admin/dashboard" replace />;
+    }
+    if (userRoleUpper.includes('SUPERINTENDENT') || userRoleUpper.includes('FACULTY') || userRoleUpper.includes('WARDEN')) {
+      return <Navigate to="/superintendent/dashboard" replace />;
+    }
+    if (userRoleUpper.includes('STUDENT')) {
+      return <Navigate to="/student/dashboard" replace />;
+    }
+
     return (
       <div className="forbidden-container">
         <div className="forbidden-card">

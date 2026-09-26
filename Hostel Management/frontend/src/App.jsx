@@ -40,17 +40,6 @@ import AttendancePage from './pages/AttendancePage';
 import StudentAttendancePage from './pages/StudentAttendancePage';
 import Loading from './components/Loading';
 
-/**
- * RoleRedirect — sends authenticated users to their role-specific dashboard.
- * Unauthenticated users go to /login (handled by ProtectedRoute).
- */
-const DoorwayLoginRedirect = () => {
-  React.useEffect(() => {
-    window.location.replace('/');
-  }, []);
-  return null;
-};
-
 const RoleRedirect = () => {
   const { user, isLoading } = useAuth();
   if (isLoading) return <div className="fullscreen-loading"><Loading message="Loading..." /></div>;
@@ -71,7 +60,7 @@ function App() {
       <Router basename="/hostel">
         <Routes>
           {/* Public */}
-          <Route path="/login" element={<DoorwayLoginRedirect />} />
+          <Route path="/login" element={<Login />} />
 
           {/* Root — redirect by role */}
           <Route

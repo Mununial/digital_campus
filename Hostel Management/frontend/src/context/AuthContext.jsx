@@ -5,13 +5,20 @@ import ForcePasswordChangeModal from '../components/ForcePasswordChangeModal';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const initialToken = localStorage.getItem('authToken');
+  const initialToken = localStorage.getItem('authToken') ||
+                       localStorage.getItem('portalToken') ||
+                       localStorage.getItem('token') ||
+                       localStorage.getItem('college_erp_token');
+
   const storedPortalUser = (() => {
     try {
-      const raw = localStorage.getItem('bec_portal_user') || localStorage.getItem('user');
+      const raw = localStorage.getItem('bec_portal_user') ||
+                  localStorage.getItem('user') ||
+                  localStorage.getItem('college_erp_user') ||
+                  localStorage.getItem('bec_session_user');
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      const roleStr = String(parsed.role || '').toUpperCase();
+      const roleStr = String(parsed.role || (parsed.isAdmin ? 'Admin' : '')).toUpperCase();
       const hostelRole = roleStr.includes('ADMIN') ? 'SUPER_ADMIN' : (roleStr.includes('TEACH') || roleStr.includes('FAC') || roleStr.includes('SUPER') ? 'SUPERINTENDENT' : 'STUDENT');
       const realPhoto = parsed.photo_url || parsed.studentPhotoUrl || parsed.photoUrl || null;
       return {
@@ -28,14 +35,21 @@ export const AuthProvider = ({ children }) => {
     }
   })();
 
+  // Synchronize authToken in localStorage if portalToken or token was available
+  if (initialToken && !localStorage.getItem('authToken')) {
+    try {
+      localStorage.setItem('authToken', initialToken);
+    } catch (e) {}
+  }
+
   const [user, setUser] = useState(storedPortalUser);
-  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(initialToken));
-  const [isLoading, setIsLoading] = useState(!initialToken);
+  const [isAuthenticated, setIsAuthenticated] = useState(Boolean(initialToken || storedPortalUser));
+  const [isLoading, setIsLoading] = useState(!initialToken && !storedPortalUser);
 
   const checkAuthStatus = async () => {
     try {
       const response = await api.get('/auth/me');
-      if (response.success && response.user) {
+      if (response && response.success && response.user) {
         const u = response.user;
         const photo = u.photo_url || u.studentPhotoUrl || u.photoUrl || storedPortalUser?.photo_url || null;
         setUser({
@@ -45,16 +59,22 @@ export const AuthProvider = ({ children }) => {
           studentPhotoUrl: photo
         });
         setIsAuthenticated(true);
-      } else if (!initialToken) {
+      } else if (!storedPortalUser && !initialToken) {
         localStorage.removeItem('authToken');
         setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
       if (error?.status === 401 || error?.status === 403) {
-        localStorage.removeItem('authToken');
-        setUser(null);
-        setIsAuthenticated(false);
+        if (!storedPortalUser) {
+          localStorage.removeItem('authToken');
+          setUser(null);
+          setIsAuthenticated(false);
+        } else {
+          // Keep active portal session if available
+          setUser(storedPortalUser);
+          setIsAuthenticated(true);
+        }
       }
     } finally {
       setIsLoading(false);

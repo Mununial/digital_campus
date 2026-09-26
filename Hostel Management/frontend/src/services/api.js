@@ -15,7 +15,10 @@ const api = axios.create({
 // Request interceptor (for future authorization tokens)
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken') ||
+                  localStorage.getItem('portalToken') ||
+                  localStorage.getItem('token') ||
+                  localStorage.getItem('college_erp_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

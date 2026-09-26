@@ -471,7 +471,7 @@
             </a>
 
             <!-- SERVICE 2: HOSTEL (Direct Role Destination) -->
-            <a id="link-hostel" href="/hostel/student/dashboard" class="portal-card">
+            <a id="link-hostel" href="/hostel" onclick="openHostelPortal(event)" class="portal-card">
               <div class="portal-icon" style="background: #eff6ff; color: #2563eb;">
                 <i class="fa-solid fa-hotel"></i>
               </div>
@@ -611,7 +611,7 @@
           <i class="fa-solid fa-qrcode"></i>
           <span>Attendance</span>
         </a>
-        <a id="nav-hostel" href="/hostel/student/dashboard" class="bottom-nav-item">
+        <a id="nav-hostel" href="/hostel" onclick="openHostelPortal(event)" class="bottom-nav-item">
           <i class="fa-solid fa-hotel"></i>
           <span>Hostel</span>
         </a>
@@ -645,6 +645,36 @@
         pwdInput.type = 'password';
         icon.className = 'fa-solid fa-eye';
         icon.style.color = '#94a3b8';
+      }
+    }
+
+    function openHostelPortal(e) {
+      if (e) e.preventDefault();
+      try {
+        let user = PortalAuth.getCurrentUser();
+        let token = PortalAuth.getToken();
+
+        // Ensure hostel session keys are synchronized
+        if (user) {
+          if (!token) token = 'token_' + Date.now();
+          PortalAuth.saveSession(token, user, { hostel: token, reporting: token });
+        }
+
+        // Determine proper role dashboard
+        const roleStr = String(user?.role || (user?.isAdmin ? 'Admin' : '')).toUpperCase();
+        let target = '/hostel';
+        if (roleStr.includes('ADMIN') || user?.isAdmin) {
+          target = '/hostel/admin/dashboard';
+        } else if (roleStr.includes('TEACH') || roleStr.includes('FAC') || roleStr.includes('SUPER')) {
+          target = '/hostel/superintendent/dashboard';
+        } else if (roleStr.includes('STUDENT')) {
+          target = '/hostel/student/dashboard';
+        }
+
+        window.location.href = target;
+      } catch (err) {
+        console.error('Error navigating to hostel:', err);
+        window.location.href = '/hostel';
       }
     }
 
