@@ -35,7 +35,7 @@ router.get('/config', (req, res) => {
 });
 
 // GET Dynamic Client Config JS
-router.get('/config.js', (req, res) => {
+router.get(['/config.js', '/config'], (req, res) => {
   res.type('application/javascript');
   const config = {
     databaseType: 'mysql',
@@ -43,7 +43,7 @@ router.get('/config.js', (req, res) => {
     allowedAdminDomains: (process.env.ALLOWED_ADMIN_DOMAINS || '@college.ac.in,@becbbsr.ac.in,@becbbsr.in,@bec.edu.in,@genzuniversity.in').split(',').map(d => d.trim()).filter(Boolean),
     institutionName: process.env.INSTITUTION_NAME || 'Bhubaneswar Engineering College',
     institutionCode: process.env.INSTITUTION_CODE || 'BEC',
-    apiBaseUrl: '',
+    apiBaseUrl: '/api/reporting',
     firebase: {
       apiKey: "AIzaSyBpLQvYjddu0LaEUhPmva08u89eOXKbImg",
       authDomain: "genzuniversity.firebaseapp.com",
@@ -53,7 +53,7 @@ router.get('/config.js', (req, res) => {
       appId: "1:423748552299:web:8981f1300ad217afd7132e"
     }
   };
-  res.send(`window.APP_CONFIG = ${JSON.stringify(config)};`);
+  return res.send(`window.APP_CONFIG = ${JSON.stringify(config)};`);
 });
 
 const fs = require('fs');
@@ -84,13 +84,26 @@ function getFallbackReportingStudents() {
       const adm = s.admin || {};
 
       const sId = s.id || s.uid || s.rollNo || `BEC-2026-${(idx + 1).toString().padStart(3, '0')}`;
-      const photoUrlStr = doc.studentPhoto?.url || doc.studentPhoto || s.studentPhotoUrl || '';
-      const sigUrlStr = doc.studentSignature?.url || doc.studentSignature || s.studentSignatureUrl || '';
-      const admUrlStr = doc.admissionLetter?.url || doc.admissionLetter || s.allotmentLetterUrl || '';
-      const feeUrlStr = doc.feeReceipt?.url || doc.feeReceipt || s.feeReceiptUrl || '';
-      const m10UrlStr = doc.marksheet10th?.url || doc.marksheet10th || s.marksheet10thUrl || '';
-      const m12UrlStr = doc.marksheet12th?.url || doc.marksheet12th || s.marksheet12thUrl || '';
-      const aadhUrlStr = doc.aadhaarCard?.url || doc.aadhaarCard || s.aadhaarDocumentUrl || '';
+      const rawPhoto = doc.studentPhoto?.url || doc.studentPhoto || s.studentPhotoUrl || '';
+      const photoUrlStr = (typeof rawPhoto === 'string' && rawPhoto.startsWith('http')) ? rawPhoto : '';
+      
+      const rawSig = doc.studentSignature?.url || doc.studentSignature || s.studentSignatureUrl || '';
+      const sigUrlStr = (typeof rawSig === 'string' && rawSig.startsWith('http')) ? rawSig : '';
+
+      const rawAdm = doc.admissionLetter?.url || doc.admissionLetter || s.allotmentLetterUrl || '';
+      const admUrlStr = (typeof rawAdm === 'string' && rawAdm.startsWith('http')) ? rawAdm : '';
+
+      const rawFee = doc.feeReceipt?.url || doc.feeReceipt || s.feeReceiptUrl || '';
+      const feeUrlStr = (typeof rawFee === 'string' && rawFee.startsWith('http')) ? rawFee : '';
+
+      const rawM10 = doc.marksheet10th?.url || doc.marksheet10th || s.marksheet10thUrl || '';
+      const m10UrlStr = (typeof rawM10 === 'string' && rawM10.startsWith('http')) ? rawM10 : '';
+
+      const rawM12 = doc.marksheet12th?.url || doc.marksheet12th || s.marksheet12thUrl || '';
+      const m12UrlStr = (typeof rawM12 === 'string' && rawM12.startsWith('http')) ? rawM12 : '';
+
+      const rawAadh = doc.aadhaarCard?.url || doc.aadhaarCard || s.aadhaarDocumentUrl || '';
+      const aadhUrlStr = (typeof rawAadh === 'string' && rawAadh.startsWith('http')) ? rawAadh : '';
 
       return {
         id: sId,
@@ -110,7 +123,7 @@ function getFallbackReportingStudents() {
           category: p.category || s.category || 'General',
           studentEmail: p.studentEmail || p.email || s.email || '',
           personalEmail: p.personalEmail || s.personalEmail || s.email || '',
-          studentMobile: p.studentMobile || p.mobile || s.phone || s.studentMobile || '9876543210',
+          studentMobile: p.studentMobile || p.mobile || s.studentMobile || s.phone || s.studentWhatsApp || '',
           studentWhatsApp: p.studentWhatsApp || s.studentWhatsApp || s.phone || '',
           bloodGroup: p.bloodGroup || s.bloodGroup || '',
           aadhaarNumber: p.aadhaarNumber || s.aadhaarNumber || '',
@@ -141,13 +154,13 @@ function getFallbackReportingStudents() {
           tuitionReceiptDate: fee.tuitionReceiptDate || s.tuitionReceiptDate || ''
         },
         documents: {
-          studentPhoto: typeof photoUrlStr === 'string' ? { url: photoUrlStr } : photoUrlStr,
-          studentSignature: typeof sigUrlStr === 'string' ? { url: sigUrlStr } : sigUrlStr,
-          admissionLetter: typeof admUrlStr === 'string' ? { url: admUrlStr } : admUrlStr,
-          feeReceipt: typeof feeUrlStr === 'string' ? { url: feeUrlStr } : feeUrlStr,
-          marksheet10th: typeof m10UrlStr === 'string' ? { url: m10UrlStr } : m10UrlStr,
-          marksheet12th: typeof m12UrlStr === 'string' ? { url: m12UrlStr } : m12UrlStr,
-          aadhaarCard: typeof aadhUrlStr === 'string' ? { url: aadhUrlStr } : aadhUrlStr
+          studentPhoto: { url: photoUrlStr },
+          studentSignature: { url: sigUrlStr },
+          admissionLetter: { url: admUrlStr },
+          feeReceipt: { url: feeUrlStr },
+          marksheet10th: { url: m10UrlStr },
+          marksheet12th: { url: m12UrlStr },
+          aadhaarCard: { url: aadhUrlStr }
         },
         admin: {
           status: adm.status || s.status || 'VERIFIED',
@@ -164,11 +177,79 @@ function getFallbackReportingStudents() {
   return list;
 }
 
+// Helper: Enrich DB row with authentic master data
+function enrichStudentWithMaster(r, masterList) {
+  const roll = (r.rollNumber || r.roll_number || '').toLowerCase().trim();
+  const reg = (r.registrationNumber || r.registration_number || '').toLowerCase().trim();
+  const idStr = (r.id || '').toLowerCase().trim();
+  const p = r.personal || {};
+  const nameStr = (p.studentFullName || p.fullName || r.name || '').toLowerCase().trim();
+
+  const match = masterList.find(m => {
+    if (!m) return false;
+    const mRoll = (m.rollNumber || '').toLowerCase().trim();
+    const mReg = (m.registrationNumber || '').toLowerCase().trim();
+    const mId = (m.id || m.uid || '').toLowerCase().trim();
+    const mName = (m.personal?.studentFullName || '').toLowerCase().trim();
+
+    if (roll && mRoll && roll === mRoll) return true;
+    if (reg && mReg && reg === mReg) return true;
+    if (idStr && mId && idStr === mId) return true;
+    if (nameStr && mName && nameStr.includes(mName)) return true;
+    if (mName && nameStr && mName.includes(nameStr)) return true;
+    return false;
+  });
+
+  if (!match) {
+    // Sanitize non-http photo URLs
+    const docRet = { ...r.documents };
+    const pPhoto = docRet.studentPhoto?.url || docRet.studentPhoto || '';
+    if (typeof pPhoto === 'string' && !pPhoto.startsWith('http')) {
+      docRet.studentPhoto = { url: '' };
+    }
+    return { ...r, documents: docRet };
+  }
+
+  const pRet = { ...r.personal };
+  if (!pRet.studentFullName || pRet.studentFullName === 'Student') pRet.studentFullName = match.personal?.studentFullName;
+  if (!pRet.studentMobile || pRet.studentMobile === '9876543210' || pRet.studentMobile === 'N/A') pRet.studentMobile = match.personal?.studentMobile;
+  if (!pRet.gender) pRet.gender = match.personal?.gender;
+  if (!pRet.dob) pRet.dob = match.personal?.dob;
+  if (!pRet.fatherName) pRet.fatherName = match.personal?.fatherName;
+  if (!pRet.fatherMobile) pRet.fatherMobile = match.personal?.fatherMobile;
+
+  const rRet = { ...r.reporting };
+  if (!rRet.branch || rRet.branch === 'N/A') rRet.branch = match.reporting?.branch;
+  if (!rRet.program) rRet.program = match.reporting?.program;
+  if (!rRet.academicYear) rRet.academicYear = match.reporting?.academicYear;
+
+  const facRet = { ...r.facilities };
+  if (!facRet.hostelRequired || facRet.hostelRequired === 'N/A') facRet.hostelRequired = match.facilities?.hostelRequired;
+  if (!facRet.transportRequired || facRet.transportRequired === 'N/A') facRet.transportRequired = match.facilities?.transportRequired;
+
+  const docRet = { ...r.documents };
+  const pPhoto = docRet.studentPhoto?.url || docRet.studentPhoto || '';
+  if (!pPhoto || typeof pPhoto !== 'string' || !pPhoto.startsWith('http')) {
+    docRet.studentPhoto = match.documents?.studentPhoto || { url: '' };
+  }
+
+  return {
+    ...r,
+    registrationNumber: r.registrationNumber || match.registrationNumber,
+    rollNumber: r.rollNumber || match.rollNumber,
+    personal: pRet,
+    reporting: rRet,
+    facilities: facRet,
+    documents: docRet
+  };
+}
+
 // GET All Students (Paginated + Search) — Strictly authentic data only
 router.get(['/students', '/'], async (req, res) => {
   const search = req.query.search ? req.query.search.toLowerCase() : '';
   const limit = parseInt(req.query.limit, 10) || 50;
   const offset = parseInt(req.query.offset, 10) || 0;
+  const masterList = getFallbackReportingStudents();
 
   try {
     let query = 'SELECT * FROM students';
@@ -185,7 +266,7 @@ router.get(['/students', '/'], async (req, res) => {
     const [rows] = await pool.query(query, params);
     const [countResult] = await pool.query('SELECT COUNT(*) as total FROM students');
 
-    const students = rows.map(r => ({
+    const rawStudents = rows.map(r => ({
       id: r.id,
       registrationNumber: r.registration_number,
       enrollmentNumber: r.enrollment_number,
@@ -203,6 +284,8 @@ router.get(['/students', '/'], async (req, res) => {
       updatedAt: r.updated_at
     }));
 
+    const students = rawStudents.map(s => enrichStudentWithMaster(s, masterList));
+
     return res.json({
       students,
       total: countResult[0]?.total || students.length,
@@ -211,7 +294,7 @@ router.get(['/students', '/'], async (req, res) => {
     });
   } catch (err) {
     console.warn('[Module C Gateway Students Fallback]: Using authentic student catalog due to DB:', err.message);
-    let all = getFallbackReportingStudents();
+    let all = masterList;
     if (search) {
       all = all.filter(s =>
         (s.rollNumber || '').toLowerCase().includes(search) ||
