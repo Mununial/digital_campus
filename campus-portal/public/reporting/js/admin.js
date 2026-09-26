@@ -325,9 +325,9 @@ function getStudentDataField(s, fieldName) {
         case 'studentName':
             return p.studentFullName || p.fullName || s.studentFullName || s.fullName || s.personalInfo?.fullName || s.personalInfo?.studentFullName || s.name || s.displayName || s.email || 'Student';
         case 'program':
-            return a.program || s.reporting?.program || s.academic?.program || s.academicInfo?.program || s.personal?.program || s.program || s.course || 'B.Tech';
+            return a.program || s.reporting?.program || s.academic?.program || s.academicInfo?.program || s.personal?.program || s.program || s.course || 'N/A';
         case 'branch':
-            return a.branch || s.reporting?.branch || s.academic?.branch || s.academicInfo?.branch || s.personal?.branch || s.branch || s.rawBranch || s.department || 'CSE';
+            return a.branch || s.reporting?.branch || s.academic?.branch || s.academicInfo?.branch || s.personal?.branch || s.branch || s.department || 'N/A';
         case 'mobile':
             return p.studentMobile || p.mobile || s.personalInfo?.studentMobile || s.personalInfo?.mobile || s.studentMobile || s.mobile || s.phone || 'N/A';
         case 'email':
@@ -345,9 +345,9 @@ function getStudentDataField(s, fieldName) {
         case 'category':
             return p.category || p.caste || s.personalInfo?.category || s.category || 'N/A';
         case 'registrationNumber':
-            return adm.registrationNumber || s.registrationNumber || s.rollNumber || s.rollNo || s.tempId || 'PENDING BY COLLEGE';
+            return adm.registrationNumber || s.registrationNumber || 'PENDING BY COLLEGE';
         case 'status':
-            return adm.status || s.submission?.status || s.status || (s.verified ? 'VERIFIED' : 'IN_PROGRESS');
+            return adm.status || s.submission?.status || s.status || 'IN_PROGRESS';
         case 'session':
             return a.academicSession || s.reporting?.academicSession || s.academicSession || 'N/A';
         case 'year':
@@ -370,8 +370,7 @@ function renderTable(students) {
     
     for (let i = 0; i < students.length; i++) {
         const s = students[i];
-        const rawPhoto = s.documents?.studentPhoto?.url || s.documents?.studentPhoto || s.studentPhotoUrl || s.photoUrl || null;
-        const photoUrl = (typeof rawPhoto === 'string' && rawPhoto.startsWith('http')) ? rawPhoto : null;
+        const photoUrl = s.documents?.studentPhoto?.url || null;
         const DEFAULT_AVATAR = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23cbd5e1'/><circle cx='50' cy='38' r='20' fill='%2364748b'/><path d='M 20 82 A 32 30 0 0 1 80 82 Z' fill='%2364748b'/></svg>";
         const photoImg = photoUrl 
             ? `<img src="${photoUrl}" class="student-photo" alt="Photo" onerror="this.src='${DEFAULT_AVATAR}'">` 

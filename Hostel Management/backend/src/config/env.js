@@ -25,10 +25,11 @@ requiredEnvVars.forEach((varName) => {
 });
 
 const defaultEnvVars = {
-  DB_HOST: 'localhost',
-  DB_USER: 'root',
-  DB_PASSWORD: '',
-  DB_NAME: 'hostel_management',
+  DB_HOST: process.env.DB_HOST || 'srv1334.hstgr.io',
+  DB_PORT: process.env.DB_PORT || '3306',
+  DB_USER: process.env.DB_USER || 'u847513759_ERP_COLLEGE',
+  DB_PASSWORD: process.env.DB_PASSWORD || 'Ayushtech@26',
+  DB_NAME: process.env.DB_NAME || 'u847513759_ERP_COLLEGE',
   JWT_SECRET: 'dev_jwt_secret_key_12345',
   CLOUDINARY_CLOUD_NAME: 'demo',
   CLOUDINARY_API_KEY: '1234567890',
