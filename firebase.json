@@ -1,12 +1,37 @@
 {
   "hosting": {
     "public": "campus-portal/public",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
     "rewrites": [
+      {
+        "source": "/admin",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "/admin/**",
+        "destination": "/admin.html"
+      },
+      {
+        "source": "/library",
+        "destination": "/library.html"
+      },
+      {
+        "source": "/library/admin",
+        "destination": "/library-admin.html"
+      },
+      {
+        "source": "/notices",
+        "destination": "/notices.html"
+      },
+      {
+        "source": "/notices/admin",
+        "destination": "/notice-admin.html"
+      },
       {
         "source": "/hostel/**",
         "destination": "/modules/hostel/index.html"
